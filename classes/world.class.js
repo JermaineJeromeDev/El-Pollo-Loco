@@ -41,7 +41,6 @@ class World {
         this.addObjectsToMap(this.enemies);
         this.addObjectsToMap(this.clouds);
 
-
         // Draw() wird immer wieder aufgerufen
         let self = this;
         requestAnimationFrame(function() {
@@ -49,23 +48,37 @@ class World {
         });
     }
 
+
     addObjectsToMap(objects){
         objects.forEach(o => {
             this.addToMap(o);
         });
     }
 
-    addToMap(MovableObject){
-        if(MovableObject.otherDirection) {
-            this.ctx.save();
-            this.ctx.translate(MovableObject.width, 0);
-            this.ctx.scale(-1, 1);
-            MovableObject.x = MovableObject.x * -1;
+
+    addToMap(mo){
+        if(mo.otherDirection) {
+            this.flipImage(mo);
         }
-        this.ctx.drawImage(MovableObject.img, MovableObject.x, MovableObject.y, MovableObject.width, MovableObject.height);
-        if(MovableObject.otherDirection) {
-            MovableObject.x = MovableObject.x * -1;
-            this.ctx.restore();
+
+        this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
+
+        if(mo.otherDirection) {
+            this.flipImageBack(mo);
         }
+    }
+
+
+    flipImage(mo) {
+        this.ctx.save();
+        this.ctx.translate(mo.width, 0);
+        this.ctx.scale(-1, 1);
+        mo.x = mo.x * -1;
+    }
+
+    
+    flipImageBack(mo) {
+        mo.x = mo.x * -1;
+        this.ctx.restore();
     }
 }
