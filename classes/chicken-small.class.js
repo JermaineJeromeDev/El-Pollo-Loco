@@ -15,14 +15,16 @@ class ChickenSmall extends MovableObject {
         this.loadImages(this.IMAGES_WALKING);
 
         this.x = 200 + Math.random() * 2000;
-        this.speed = 0.15 + Math.random() * 0.5;
+        this.speed = 0.15 + Math.random() * 0.8;
 
         this.animate();
     }
 
     animate(){
         setInterval(() => {
-            this.moveLeft();
+            if(this.x > 0){
+                this.moveLeft();
+            }
         }, 1000 / 60);
 
         setInterval( () => {
