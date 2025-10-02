@@ -4,6 +4,9 @@ class Character extends MovableObject{
     height = 280;
     width = 130;
     speed = 10;
+    world;
+    // walking_sound = new Audio();
+    idleTime = 0;
     IMAGES_WALKING = [
         'assets/img/2_character_pepe/2_walk/W-21.png',
         'assets/img/2_character_pepe/2_walk/W-22.png',
@@ -23,7 +26,7 @@ class Character extends MovableObject{
         'assets/img/2_character_pepe/3_jump/J-37.png',
         'assets/img/2_character_pepe/3_jump/J-38.png',
         'assets/img/2_character_pepe/3_jump/J-39.png'
-    ]
+    ];
 
     IMAGES_IDLE = [
         'assets/img/2_character_pepe/1_idle/idle/I-1.png',
@@ -49,12 +52,8 @@ class Character extends MovableObject{
         'assets/img/2_character_pepe/1_idle/long_idle/I-18.png',
         'assets/img/2_character_pepe/1_idle/long_idle/I-19.png',
         'assets/img/2_character_pepe/1_idle/long_idle/I-20.png',
-    ]
+    ];
 
-    world;
-    // walking_sound = new Audio();
-
-    idleTime = 0;
     
     constructor(){
         super().loadImage('assets/img/2_character_pepe/2_walk/W-21.png');
