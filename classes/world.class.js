@@ -51,7 +51,9 @@ class World {
 
     addToMap(mo){
         mo.otherDirection && this.flipImage(mo)
-        this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
+        mo.draw(this.ctx);
+        mo.drawFrame(this.ctx);
+
         mo.otherDirection && this.flipImageBack(mo)
     }
 
