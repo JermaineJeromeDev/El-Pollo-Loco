@@ -1,5 +1,5 @@
 class Character extends MovableObject{
-
+    x = 50;
     y = 160;
     height = 280;
     width = 130;
@@ -54,6 +54,13 @@ class Character extends MovableObject{
         'assets/img/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
 
+    offset = {
+        top: 150,
+        bottom: 20,
+        left: 30,
+        right: 40
+    }
+
     
     constructor(){
         super().loadImage('assets/img/2_character_pepe/2_walk/W-21.png');
@@ -65,6 +72,19 @@ class Character extends MovableObject{
         this.animate();
     }
 
+    drawFrame(ctx){
+        super.drawFrame(ctx);
+        ctx.beginPath();
+        ctx.lineWidth = '2';
+        ctx.strokeStyle = 'red';
+        ctx.rect(
+            this.x + this.offset.left,
+            this.y + this.offset.top,
+            this.width - this.offset.left - this.offset.right,
+            this.height - this.offset.top - this.offset.bottom
+        );
+        ctx.stroke();
+    }
 
     animate(){
 
