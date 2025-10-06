@@ -10,10 +10,11 @@ class ChickenSmall extends MovableObject {
     ];
     offset = {
         top: 6,
+        bottom: 6,
         left: 6,
-        right: 4,
-        bottom: 6
+        right: 6
     };
+
 
 
     constructor(){
