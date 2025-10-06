@@ -3,13 +3,27 @@ class MovableObject {
     y = 280;
     img;
     height = 150;
+    
     width = 100;
     imageCache = {};
     currentImage = 0;
     speed = 0.15;
+    
     otherDirection = false;
     speedY = 0;
     acceleration = 1.5;
+    offset = {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+    };
+
+    rX;
+    rY;
+    rW;
+    rH;
+
 
 
     applyGravity() {
@@ -50,11 +64,24 @@ class MovableObject {
     }
 
 
+    getRealFrame() {
+        this.rX = this.x + this.offset.left;
+        this.rY = this.y + this.offset.top;
+        this.rW = this.width - this.offset.left - this.offset.right;
+        this.rH = this.height - this.offset.top - this.offset.bottom;
+    }
+
+
     isColliding(mo) {
-        return this.x + this.width > mo.x &&
-        this.y + this.height > mo.y &&
-        this.x < mo.x &&
-        this.y < mo.y + mo.height;
+        this.getRealFrame();
+        mo.getRealFrame();
+    
+        return (
+            this.rX + this.rW > mo.rX &&
+            this.rY + this.rH > mo.rY &&
+            this.rX < mo.rX + mo.rW &&
+            this.rY < mo.rY + mo.rH
+        );
     }
 
 
