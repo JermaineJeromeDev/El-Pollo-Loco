@@ -16,6 +16,7 @@ class MovableObject extends DrawableObject {
     rH;
     energy = 100;
     lastHit = 0;
+    coin = 0;
 
 
     constructor() {
@@ -34,7 +35,11 @@ class MovableObject extends DrawableObject {
 
 
     isAboveGround() {
-        return this.y < 160;
+        if(this instanceof ThrowableObject) {
+            return true;
+        } else {
+            return this.y < 160;
+        }
     }
 
 
@@ -60,7 +65,7 @@ class MovableObject extends DrawableObject {
 
 
     hit() {
-        this.energy -= 1;
+        this.energy -= 2;
         if(this.energy < 0) {
             this.energy = 0;
         } else {
@@ -78,6 +83,13 @@ class MovableObject extends DrawableObject {
 
     isDead() {
         return this.energy == 0;
+    }
+
+    addCoin() {
+        this.coin += 20;
+        if(this.coin > 100) {
+            this.coin = 100;
+        }
     }
 
 
