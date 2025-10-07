@@ -23,6 +23,7 @@ class MovableObject {
     rY;
     rW;
     rH;
+    energy = 100;
 
 
 
@@ -82,6 +83,19 @@ class MovableObject {
             this.rX < mo.rX + mo.rW &&
             this.rY < mo.rY + mo.rH
         );
+    }
+
+
+    hit() {
+        this.energy -= 1;
+        if(this.energy < 0) {
+            this.energy = 0;
+        }
+    }
+
+
+    isDead() {
+        return this.energy == 0;
     }
 
 
