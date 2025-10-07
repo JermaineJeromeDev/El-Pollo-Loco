@@ -30,6 +30,7 @@ class World {
                     if (this.character.isColliding(enemy)) {
                         console.log('Collision with Character', enemy);
                         this.character.hit();
+                        this.statusBar.setPercentage(this.character.energy)
                     }
                 }
             });
@@ -43,7 +44,11 @@ class World {
         this.ctx.translate(this.camera_x, 0);
 
         this.addObjectsToMap(this.level.backgroundObjects);
+
+        this.ctx.translate(-this.camera_x, 0);
+        // ------ Spaced for fixed objects ------ 
         this.addObjectsToMap([this.statusBar]);
+        this.ctx.translate(this.camera_x, 0); 
 
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.clouds);
