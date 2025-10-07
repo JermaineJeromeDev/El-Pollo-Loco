@@ -15,20 +15,24 @@ class Coin extends MovableObject {
 
     constructor() {
         super()
-        this.loadImage('assets/img/8_coin/coin_1.png');
+        this.loadImage(this.COIN_IMAGES[0]);
         this.loadImages(this.COIN_IMAGES);
         this.x = 200 + Math.random() * 1700;
         this.y = 200 + Math.random() * 50;
         this.animate();
+        this.randomizePosition();
     }
 
 
     animate() {
         setInterval(() => {
-            let i = this.currentImage % this.COIN_IMAGES.length;
-            let path = this.COIN_IMAGES[i];
-            this.img = this.imageCache[path];
-            this.currentImage++;
+        this.playAnimation(this.COIN_IMAGES);
         }, 300);
+    }
+
+
+    randomizePosition() {
+    this.x = 500 + Math.random() * 1800;
+    this.y = 125 + Math.random() * 250;
     }
 }
