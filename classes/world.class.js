@@ -23,17 +23,17 @@ class World {
 
 
     checkCollisions() { 
-    setInterval(() => {
-        this.level.enemies.forEach((enemy) => {
-            if(enemy instanceof Chicken || enemy instanceof ChickenSmall || enemy instanceof Endboss) {
-                if (this.character.isColliding(enemy)) {
-                    console.log('Collision with Character', enemy);
+        setInterval(() => {
+            this.level.enemies.forEach((enemy) => {
+                if(enemy instanceof Chicken || enemy instanceof ChickenSmall || enemy instanceof Endboss) {
+                    if (this.character.isColliding(enemy)) {
+                        console.log('Collision with Character', enemy);
+                        this.character.hit();
+                    }
                 }
-            }
-        });
-    }, 50);
-}
-
+            });
+        }, 50);
+    }
 
 
     draw() {
