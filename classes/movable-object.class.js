@@ -24,6 +24,7 @@ class MovableObject {
     rW;
     rH;
     energy = 100;
+    lastHit = 0;
 
 
 
@@ -90,7 +91,16 @@ class MovableObject {
         this.energy -= 1;
         if(this.energy < 0) {
             this.energy = 0;
+        } else {
+            this.lastHit = new Date().getTime();
         }
+    }
+
+
+    isHurt() {
+        let timepassed = new Date().getTime() - this.lastHit;
+        timepassed = timepassed / 1000;
+        return timepassed < 0.75;
     }
 
 
@@ -113,7 +123,7 @@ class MovableObject {
 
 
     playAnimation(images) {
-        let i = this.currentImage % this.IMAGES_WALKING.length;
+        let i = this.currentImage % images.length;
                 let path = images[i];
                 this.img = this.imageCache[path];
                 this.currentImage ++;
