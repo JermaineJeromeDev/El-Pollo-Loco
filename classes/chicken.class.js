@@ -1,5 +1,7 @@
 class Chicken extends MovableObject {
     y = 360;
+    speedY = 15;
+    energy = 100;
     width = 75;
     height = 70;
     offset = {
@@ -15,38 +17,60 @@ class Chicken extends MovableObject {
         'assets/img/3_enemies_chicken/chicken_normal/1_walk/3_w.png'
     ];
 
+    IMAGE_DEAD = [
+        'assets/img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
+    ]
+
     constructor(){
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
+        this.loadImage(this.IMAGE_DEAD);
         this.x = 200 + Math.random() * 2000;
+        this.y = 365;
         this.speed = 0.15 + Math.random() * 0.5;
         this.animate();
     }
 
     animate() {
-        setInterval(() => { 
-            if (this.x > 0) {
-                this.moveLeft();
-            }
+    this.moveChicken();
+    this.checkIfDead(); 
+    }
+
+    moveChicken() {
+        this.moveInterval = setInterval(() => {
+            this.moveLeft();
         }, 1000 / 60);
 
-        setInterval(() => { 
+        this.animationInterval = setInterval(() => {
             this.playAnimation(this.IMAGES_WALKING);
         }, 200);
     }
 
+    checkIfDead() {
+        this.deathCheckInterval = setInterval(() => {
+            if (this.isDead()) {
+                this.handleDeath();
+            }
+        }, 100);
+    }
 
-    drawFrame(ctx){
-        super.drawFrame(ctx);
-        ctx.beginPath();
-        ctx.lineWidth = '2';
-        ctx.strokeStyle = 'red';
-        ctx.rect(
-            this.x + this.offset.left,
-            this.y + this.offset.top,
-            this.width - this.offset.left - this.offset.right,
-            this.height - this.offset.top - this.offset.bottom
-        );
-        ctx.stroke();
+    handleDeath() {
+        if (this.isDeadHandled) return;
+        this.isDeadHandled = true;
+        this.loadImage(this.IMAGE_DEAD);
+        clearInterval(this.moveInterval);
+        clearInterval(this.animationInterval);
+        clearInterval(this.deathCheckInterval);
+        setTimeout(() => {
+            let fallSpeed = 2; 
+            let groundLevel = 365;
+
+            let fallInterval = setInterval(() => {
+                this.y += fallSpeed;
+                if (this.y >= groundLevel) {
+                    clearInterval(fallInterval);
+                }
+            }, 40);
+        }, 300);
     }
 }
