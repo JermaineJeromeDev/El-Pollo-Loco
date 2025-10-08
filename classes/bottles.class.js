@@ -17,10 +17,9 @@ class Bottle extends MovableObject {
         super()
         this.loadImage(this.IMAGES_BOTTLES[0]);
         this.loadImages(this.IMAGES_BOTTLES);
-        this.x = 200 + Math.random() * 1700;
-        this.y = 200 + Math.random() * 50;
+        this.x = 200 + Math.random() * 1900;
+        this.y = 350;
         this.animate();
-        this.randomizePosition();
     }
 
 
@@ -28,11 +27,5 @@ class Bottle extends MovableObject {
         setInterval(() => {
         this.playAnimation(this.IMAGES_BOTTLES);
         }, 300);
-    }
-
-
-    randomizePosition() {
-    this.x = 500 + Math.random() * 1800;
-    this.y = 125 + Math.random() * 250;
     }
 }
