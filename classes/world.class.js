@@ -56,14 +56,48 @@ class World {
     // ----------------- Kollisionen -----------------
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-            if(enemy instanceof Chicken || enemy instanceof ChickenSmall || enemy instanceof Endboss) {
-                if(this.character.isColliding(enemy)) {
+            if ((enemy instanceof Chicken || enemy instanceof ChickenSmall) && !enemy.isDead()) {
+                if (this.character.isColliding(enemy)) {
+                    const characterBottom = this.character.y + this.character.height;
+                    const enemyTop = enemy.y;
+                    // Von oben: Gegner stirbt, kein Schaden für Character
+                    if (this.character.speedY > 0 && characterBottom <= enemyTop + enemy.height) {
+                        enemy.energy = 0;
+                        this.character.jump();
+                    } else if (!this.character.isHurt()) {
+                        // Von der Seite: Character bekommt nur Schaden, wenn nicht gerade unverwundbar
+                        this.character.hit();
+                        this.statusBarHealth.setPercentage(this.character.energy);
+                    }
+                }
+            } else if (enemy instanceof Endboss) {
+                if (this.character.isColliding(enemy) && !enemy.isDead() && !this.character.isHurt()) {
                     this.character.hit();
                     this.statusBarHealth.setPercentage(this.character.energy);
                 }
             }
         });
+
+        // Flaschen-Kollisionen
+        this.hitEnemyWithBottle();
     }
+
+    hitEnemyWithBottle() {
+        this.level.enemies.forEach((enemy, enemyIndex) => {
+            this.throwableObjects.forEach((bottle, bottleIndex) => {
+                if (bottle.isColliding(enemy) && !enemy.isDead()) {
+                    if (enemy instanceof Chicken || enemy instanceof ChickenSmall) {
+                        enemy.energy = 0; 
+                    } else if (enemy instanceof Endboss) {
+                        enemy.hit(); 
+                    }
+                    this.throwableObjects.splice(bottleIndex, 1);
+                }
+            });
+        });
+    }
+
+
 
     checkCoinCollision() {
         this.level.coins.forEach((coin, index) => {
@@ -82,6 +116,22 @@ class World {
                 this.statusBarBottles.setPercentageBottles(this.character.bottle);
                 this.level.bottles.splice(index, 1)
             }
+        });
+    }
+
+    hitEnemy() {
+        this.level.enemies.forEach((enemy, index) => {
+            this.throwableObjects.forEach((bottle, bottleIndex) => {
+                if(bottle.isColliding(enemy)) {
+                    enemy.isDead();
+                    this.throwableObjects.splice(bottleIndex, 1);
+                }
+                if(enemy.isDead()) {
+                    setTimeout(() => {
+                        this.level.enemies.splice(index, 1);
+                    }, 1000);
+                }
+            });
         });
     }
 
