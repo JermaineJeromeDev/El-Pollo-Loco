@@ -17,6 +17,7 @@ class MovableObject extends DrawableObject {
     energy = 100;
     lastHit = 0;
     coin = 0;
+    bottle = 0;
 
 
     constructor() {
@@ -89,6 +90,13 @@ class MovableObject extends DrawableObject {
         this.coin += 20;
         if(this.coin > 100) {
             this.coin = 100;
+        }
+    }
+
+    addBottle() {
+        this.bottle += 20;
+        if(this.bottle > 100) {
+            this.bottle = 100;
         }
     }
 
