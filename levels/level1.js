@@ -46,6 +46,15 @@ const level1 = new Level(
         new Coin(),
         new Coin()
     ],
+
+    [
+        new Bottle(),
+        new Bottle(),
+        new Bottle(),
+        new Bottle(),
+        new Bottle(),
+        new Bottle()
+    ],
     
     [
         new BackgroundObject('assets/img/5_background/layers/air.png', -720),
