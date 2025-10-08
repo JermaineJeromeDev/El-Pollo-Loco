@@ -3,8 +3,8 @@ body {
     flex-direction: column;
     align-items: center;
     background-image: url('assets/img/5_background/self_background.png');
-    background-position: center center;
     background-size: cover;
+    background-repeat: no-repeat;
 }
 
 canvas {
