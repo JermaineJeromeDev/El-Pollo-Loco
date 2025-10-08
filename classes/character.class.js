@@ -91,21 +91,12 @@ class Character extends MovableObject {
         this.animate();
     }
 
-    drawFrame(ctx){
-        super.drawFrame(ctx);
-        ctx.beginPath();
-        ctx.lineWidth = '2';
-        ctx.strokeStyle = 'red';
-        ctx.rect(
-            this.x + this.offset.left,
-            this.y + this.offset.top,
-            this.width - this.offset.left - this.offset.right,
-            this.height - this.offset.top - this.offset.bottom
-        );
-        ctx.stroke();
+    animate(){
+        this.controlCharacter();
+        this.animateCharacter();
     }
 
-    animate(){
+    controlCharacter() {
         setInterval(() => {
             if(this.isDead()) return;
             if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x){
@@ -113,20 +104,20 @@ class Character extends MovableObject {
                 this.otherDirection = false;
                 this.idleTime = 0;
             }
-
             if(this.world.keyboard.LEFT && this.x > 0){
                 this.moveLeft();
                 this.otherDirection = true;
                 this.idleTime = 0;
             }
-
             if(this.world.keyboard.SPACE && !this.isAboveGround()){
                 this.jump();
                 this.idleTime = 0;
             }
             this.world.camera_x = -this.x + 100;
-        }, 1000/60);
+        }, 1000 / 60);
+    }
 
+    animateCharacter() {
         setInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
@@ -151,5 +142,9 @@ class Character extends MovableObject {
                 }
             }
         }, 200);
+    }
+
+    jump() {
+        this.speedY = 20;
     }
 }
