@@ -56,48 +56,61 @@ class World {
     // ----------------- Kollisionen -----------------
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-            if ((enemy instanceof Chicken || enemy instanceof ChickenSmall) && !enemy.isDead()) {
-                if (this.character.isColliding(enemy)) {
-                    const characterBottom = this.character.y + this.character.height;
-                    const enemyTop = enemy.y;
-                    // Von oben: Gegner stirbt, kein Schaden für Character
-                    if (this.character.speedY > 0 && characterBottom <= enemyTop + enemy.height) {
-                        enemy.energy = 0;
-                        this.character.jump();
-                    } else if (!this.character.isHurt()) {
-                        // Von der Seite: Character bekommt nur Schaden, wenn nicht gerade unverwundbar
-                        this.character.hit();
-                        this.statusBarHealth.setPercentage(this.character.energy);
-                    }
-                }
+            if (this.isChicken(enemy)) {
+                this.handleChickenCollision(enemy);
             } else if (enemy instanceof Endboss) {
-                if (this.character.isColliding(enemy) && !enemy.isDead() && !this.character.isHurt()) {
-                    this.character.hit();
-                    this.statusBarHealth.setPercentage(this.character.energy);
-                }
+                this.handleEndbossCollision(enemy);
             }
         });
-
-        // Flaschen-Kollisionen
         this.hitEnemyWithBottle();
     }
+
+    isChicken(enemy) {
+        return (enemy instanceof Chicken || enemy instanceof ChickenSmall) && !enemy.isDead();
+    }
+
+    handleChickenCollision(enemy) {
+        if (this.character.isColliding(enemy)) {
+            const characterBottom = this.character.y + this.character.height - this.character.offset.bottom;
+            const enemyTop = enemy.y + enemy.offset.top;
+            const hitsFromAbove = this.character.speedY < 0 && characterBottom <= enemyTop + enemy.height * 0.3;
+            if (hitsFromAbove) {
+                enemy.energy = 0;
+                enemy.die && enemy.die();
+                this.character.speedY = 20;
+            } else if (!this.character.isHurt()) {
+                this.character.hit();
+                this.statusBarHealth.setPercentage(this.character.energy);
+            }
+        }
+    }
+
+    handleEndbossCollision(enemy) {
+        if (this.character.isColliding(enemy) && !enemy.isDead() && !this.character.isHurt()) {
+            this.character.hit();
+            this.statusBarHealth.setPercentage(this.character.energy);
+        }
+    }
+
 
     hitEnemyWithBottle() {
         this.level.enemies.forEach((enemy, enemyIndex) => {
             this.throwableObjects.forEach((bottle, bottleIndex) => {
                 if (bottle.isColliding(enemy) && !enemy.isDead()) {
                     if (enemy instanceof Chicken || enemy instanceof ChickenSmall) {
-                        enemy.energy = 0; 
+                        enemy.energy = 0;
+                        enemy.die && enemy.die();
+                        setTimeout(() => {
+                            this.level.enemies.splice(enemyIndex, 1);
+                        }, 1000);
                     } else if (enemy instanceof Endboss) {
-                        enemy.hit(); 
+                        enemy.hit();
                     }
                     this.throwableObjects.splice(bottleIndex, 1);
                 }
             });
         });
     }
-
-
 
     checkCoinCollision() {
         this.level.coins.forEach((coin, index) => {
@@ -116,22 +129,6 @@ class World {
                 this.statusBarBottles.setPercentageBottles(this.character.bottle);
                 this.level.bottles.splice(index, 1)
             }
-        });
-    }
-
-    hitEnemy() {
-        this.level.enemies.forEach((enemy, index) => {
-            this.throwableObjects.forEach((bottle, bottleIndex) => {
-                if(bottle.isColliding(enemy)) {
-                    enemy.isDead();
-                    this.throwableObjects.splice(bottleIndex, 1);
-                }
-                if(enemy.isDead()) {
-                    setTimeout(() => {
-                        this.level.enemies.splice(index, 1);
-                    }, 1000);
-                }
-            });
         });
     }
 
