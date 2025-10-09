@@ -55,6 +55,8 @@ class Endboss extends MovableObject {
     alertAnimationDone = false;
     alertAnimationIndex = 0;
     activated = false;
+    deadAnimationPlayed = false;
+    deadAnimationFrame = 0;
 
     constructor() {
         super().loadImage(this.IMAGES_ALERT[0]);
@@ -77,11 +79,13 @@ class Endboss extends MovableObject {
     }
 
     animate() {
+        this.deadAnimationInterval = null;
         setInterval(() => {
             if (this.isDead()) {
                 this.speed = 0;
-                this.playAnimation(this.IMAGES_DEAD);
-                if (this.world) this.world.win = true;
+                if (!this.deadAnimationPlayed) {
+                    this.playDeadAnimationLooped(3); // 3x bis 4x abspielen
+                }
             } else if (this.isHurtEndboss()) {
                 this.speed = 0;
                 this.playAnimation(this.IMAGES_HURT);
@@ -101,12 +105,38 @@ class Endboss extends MovableObject {
             if (this.statusBarEndboss) {
                 this.statusBarEndboss.setPercentage(this.energy);
             }
-        }, 120); 
+        }, 120);
         setInterval(() => {
             if (!this.isDead() && !this.isHurtEndboss() && (this.alertAnimationDone || this.activated)) {
                 this.handleMovement();
             }
         }, 1000 / 60);
+    }
+
+    playDeadAnimationLooped(loopCount = 3) {
+        this.deadAnimationPlayed = true;
+        let frames = this.IMAGES_DEAD.length;
+        let frameDuration = 120;
+        let frame = 0;
+        let loops = 0;
+        this.deadAnimationInterval = setInterval(() => {
+            let path = this.IMAGES_DEAD[frame];
+            this.img = this.imageCache[path];
+            frame++;
+            if (frame >= frames) {
+                frame = 0;
+                loops++;
+            }
+            if (loops >= loopCount) {
+                clearInterval(this.deadAnimationInterval);
+                if (this.world) {
+                    setTimeout(() => {
+                        this.world.showWinScreen();
+                        if (this.world.stopGame) this.world.stopGame();
+                    }, 300);
+                }
+            }
+        }, frameDuration);
     }
 
     isPlayerNear() {
@@ -124,7 +154,7 @@ class Endboss extends MovableObject {
         }
         this.playAnimation(this.IMAGES_ALERT);
         this.alertAnimationIndex++;
-        if (this.alertAnimationIndex >= this.IMAGES_ALERT.length * 2) {
+        if (this.alertAnimationIndex >= this.IMAGES_ALERT.length) {
             this.alertAnimationDone = true;
             this.alertSound.pause();
             this.alertSound.currentTime = 0;
