@@ -47,8 +47,8 @@ class Endboss extends MovableObject {
         'assets/img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
-    alertSound = new Audio('./audio/chicken/chicken_single_alarm.mp3');
-    hurtSound = new Audio('./audio/chicken/chicken_single_alarm.mp3');
+    alertSound = new Audio('audio/2_chicken/chicken_single_alarm.mp3');
+    hurtSound = new Audio('audio/2_chicken/chicken_single_alarm.mp3');
     audioArrayEndboss = [];
 
     alertPlayed = false;
@@ -80,37 +80,46 @@ class Endboss extends MovableObject {
 
     animate() {
         this.deadAnimationInterval = null;
-        setInterval(() => {
-            if (this.isDead()) {
-                this.speed = 0;
-                if (!this.deadAnimationPlayed) {
-                    this.playDeadAnimationLooped(3); // 3x bis 4x abspielen
-                }
-            } else if (this.isHurtEndboss()) {
-                this.speed = 0;
-                this.playAnimation(this.IMAGES_HURT);
-                this.playHurtSound();
-            } else if (!this.alertAnimationDone && this.isPlayerNear()) {
-                this.speed = 0;
-                this.playAlertAnimation();
-                this.activated = true;
-                if (!this.statusBarEndboss) {
-                    this.statusBarEndboss = new StatusBarEndboss();
-                }
-            } else if (this.alertAnimationDone || this.activated) { 
-                this.alertAnimationDone = true; 
-                this.activated = true; 
-                this.handleMovementAndAnimation();
-            }
-            if (this.statusBarEndboss) {
-                this.statusBarEndboss.setPercentage(this.energy);
-            }
-        }, 120);
-        setInterval(() => {
-            if (!this.isDead() && !this.isHurtEndboss() && (this.alertAnimationDone || this.activated)) {
-                this.handleMovement();
-            }
-        }, 1000 / 60);
+        setInterval(() => this.updateState(), 120);
+        setInterval(() => this.moveIfNeeded(), 1000 / 60);
+    }
+
+    updateState() {
+        if (this.isDead()) return this.handleDead();
+        if (this.isHurtEndboss()) return this.handleHurt();
+        if (!this.alertAnimationDone && this.isPlayerNear()) return this.handleAlert();
+        if (this.alertAnimationDone || this.activated) this.handleActive();
+        if (this.statusBarEndboss) this.statusBarEndboss.setPercentage(this.energy);
+    }
+
+    moveIfNeeded() {
+        if (!this.isDead() && !this.isHurtEndboss() && (this.alertAnimationDone || this.activated)) {
+            this.handleMovement();
+        }
+    }
+
+    handleDead() {
+        this.speed = 0;
+        if (!this.deadAnimationPlayed) this.playDeadAnimationLooped(3);
+    }
+
+    handleHurt() {
+        this.speed = 0;
+        this.playAnimation(this.IMAGES_HURT);
+        this.playHurtSound();
+    }
+
+    handleAlert() {
+        this.speed = 0;
+        this.playAlertAnimation();
+        this.activated = true;
+        if (!this.statusBarEndboss) this.statusBarEndboss = new StatusBarEndboss();
+    }
+
+    handleActive() {
+        this.alertAnimationDone = true;
+        this.activated = true;
+        this.handleMovementAndAnimation();
     }
 
     playDeadAnimationLooped(loopCount = 3) {
