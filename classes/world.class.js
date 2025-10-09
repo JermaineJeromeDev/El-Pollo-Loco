@@ -12,6 +12,7 @@ class World {
     throwableObjects = [];
     canThrow = true; 
     endbossActivated = false;
+    gameStopped = false;
 
     constructor(canvas, keyboard){
         this.ctx = canvas.getContext('2d');
@@ -34,6 +35,7 @@ class World {
 
     // ----------------- Draw() -----------------
     draw() {
+        if (this.gameStopped) return; // Stoppe das Zeichnen nach Win-Screen
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
@@ -203,5 +205,27 @@ class World {
                 this.level.bottles.splice(index, 1)
             }
         });
+    }
+
+    stopGame() {
+        this.gameStopped = true;
+    }
+
+    showWinScreen() {
+        let img = new Image();
+        img.src = 'assets/img/You won, you lost/You Win A.png';
+        img.onload = () => {
+            this.ctx.save();
+            this.ctx.globalAlpha = 1;
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            const scale = 0.6;
+            const targetWidth = this.canvas.width * scale;
+            const aspect = img.width / img.height;
+            const targetHeight = targetWidth / aspect;
+            const x = (this.canvas.width - targetWidth) / 2;
+            const y = (this.canvas.height - targetHeight) / 2;
+            this.ctx.drawImage(img, x, y, targetWidth, targetHeight);
+            this.ctx.restore();
+        };
     }
 }
