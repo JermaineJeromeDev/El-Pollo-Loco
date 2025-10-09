@@ -25,7 +25,6 @@ class World {
 
     setWorld() {
         this.character.world = this;
-        // Endboss-Referenz setzen
         this.level.enemies.forEach(enemy => {
             if (enemy instanceof Endboss) {
                 enemy.setWorld(this);
@@ -38,41 +37,42 @@ class World {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
-
         this.ctx.translate(-this.camera_x, 0);
+        this.drawStatusBars();
+        this.drawEndbossStatusBar();
+        this.ctx.translate(this.camera_x, 0);
+        this.drawGameObjects();
+        this.ctx.translate(-this.camera_x, 0);
+        requestAnimationFrame(() => this.draw());
+    }
 
-        // Zeichne die drei normalen StatusBars links
+    drawStatusBars() {
         this.addToMap(this.statusBarHealth);
         this.addToMap(this.statusBarBottles);
         this.addToMap(this.statusBarCoins);
+    }
 
-        // Endboss-StatusBar separat oben rechts zeichnen, sobald aktiviert
+    drawEndbossStatusBar() {
         let endboss = this.level.enemies.find(e => e instanceof Endboss);
         if (endboss && endboss.statusBarEndboss) {
-            // Endboss dauerhaft aktivieren, sobald Spieler ihn erreicht hat
             if (!this.endbossActivated && endboss.world && endboss.world.character.x > endboss.x - 300) {
                 this.endbossActivated = true;
             }
             if (this.endbossActivated) {
-                // Positioniere die StatusBar oben rechts
                 endboss.statusBarEndboss.x = this.canvas.width - endboss.statusBarEndboss.width - 20;
                 endboss.statusBarEndboss.y = 20;
                 endboss.statusBarEndboss.draw(this.ctx);
             }
         }
+    }
 
-        this.ctx.translate(this.camera_x, 0);
-
+    drawGameObjects() {
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.clouds);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.throwableObjects);
-
-        this.ctx.translate(-this.camera_x, 0);
-
-        requestAnimationFrame(() => this.draw());
     }
 
     addObjectsToMap(objects){
