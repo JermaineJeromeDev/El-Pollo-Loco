@@ -7,7 +7,8 @@ class Character extends MovableObject {
     speed = 10;
     world;
     idleTime = 0;
-    // walking_sound = new Audio();
+    loseScreenShown = false;
+    loseSound = new Audio('audio/win_lose/lose.wav');
     
     IMAGES_WALKING = [
         'assets/img/2_character_pepe/2_walk/W-21.png',
@@ -89,11 +90,34 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.applyGravity();
         this.animate();
+        this.loseScreenShown = false; // Reset beim Erstellen
     }
 
     animate(){
         this.controlCharacter();
         this.animateCharacter();
+        this.checkIfDeadShowLoseScreen();
+    }
+
+    checkIfDeadShowLoseScreen() {
+        // Nur ein einziges Intervall pro Character-Instanz
+        if (this._loseCheckInterval) return;
+        this._loseCheckInterval = setInterval(() => {
+            if (this.isDead() && this.world && typeof this.world.showLoseScreen === 'function' && !this.loseScreenShown) {
+                this.loseScreenShown = true;
+                this.playLoseSoundOnce();
+                setTimeout(() => {
+                    this.world.showLoseScreen();
+                }, 400);
+            }
+        }, 100);
+    }
+
+    playLoseSoundOnce() {
+        this.loseSound.pause();
+        this.loseSound.currentTime = 0;
+        this.loseSound.volume = this.world && this.world.gameIsMuted ? 0 : 1;
+        this.loseSound.play();
     }
 
     controlCharacter() {
