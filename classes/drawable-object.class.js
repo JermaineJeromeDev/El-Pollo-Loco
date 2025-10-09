@@ -30,7 +30,6 @@ class DrawableObject {
         }
     }
 
-
     /**
      * 
      * @param {Array} arr - ['img/image1.png', 'img/image2.png', ...]
