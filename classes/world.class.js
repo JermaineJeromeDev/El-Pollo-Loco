@@ -8,8 +8,10 @@ class World {
     statusBarHealth = new StatusBarHealth();
     statusBarCoins = new StatusBarCoins();
     statusBarBottles = new StatusBarBottles();
+    statusBarEndBoss = new StatusBarEndboss();
     throwableObjects = [];
     canThrow = true; 
+    endbossActivated = false;
 
     constructor(canvas, keyboard){
         this.ctx = canvas.getContext('2d');
@@ -23,6 +25,77 @@ class World {
 
     setWorld() {
         this.character.world = this;
+        // Endboss-Referenz setzen
+        this.level.enemies.forEach(enemy => {
+            if (enemy instanceof Endboss) {
+                enemy.setWorld(this);
+            }
+        });
+    }
+
+    // ----------------- Draw() -----------------
+    draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.translate(this.camera_x, 0);
+        this.addObjectsToMap(this.level.backgroundObjects);
+
+        this.ctx.translate(-this.camera_x, 0);
+
+        // Zeichne die drei normalen StatusBars links
+        this.addToMap(this.statusBarHealth);
+        this.addToMap(this.statusBarBottles);
+        this.addToMap(this.statusBarCoins);
+
+        // Endboss-StatusBar separat oben rechts zeichnen, sobald aktiviert
+        let endboss = this.level.enemies.find(e => e instanceof Endboss);
+        if (endboss && endboss.statusBarEndboss) {
+            // Endboss dauerhaft aktivieren, sobald Spieler ihn erreicht hat
+            if (!this.endbossActivated && endboss.world && endboss.world.character.x > endboss.x - 300) {
+                this.endbossActivated = true;
+            }
+            if (this.endbossActivated) {
+                // Positioniere die StatusBar oben rechts
+                endboss.statusBarEndboss.x = this.canvas.width - endboss.statusBarEndboss.width - 20;
+                endboss.statusBarEndboss.y = 20;
+                endboss.statusBarEndboss.draw(this.ctx);
+            }
+        }
+
+        this.ctx.translate(this.camera_x, 0);
+
+        this.addToMap(this.character);
+        this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.coins);
+        this.addObjectsToMap(this.level.bottles);
+        this.addObjectsToMap(this.throwableObjects);
+
+        this.ctx.translate(-this.camera_x, 0);
+
+        requestAnimationFrame(() => this.draw());
+    }
+
+    addObjectsToMap(objects){
+        objects.forEach(o => this.addToMap(o));
+    }
+
+    addToMap(mo){
+        if(mo.otherDirection) this.flipImage(mo);
+        mo.draw(this.ctx);
+        mo.drawFrame(this.ctx);
+        if(mo.otherDirection) this.flipImageBack(mo);
+    }
+
+    flipImage(mo) {
+        this.ctx.save();
+        this.ctx.translate(mo.width, 0);
+        this.ctx.scale(-1, 1);
+        mo.x = mo.x * -1;
+    }
+
+    flipImageBack(mo) {
+        mo.x = mo.x * -1;
+        this.ctx.restore();
     }
 
     run() {
@@ -130,50 +203,5 @@ class World {
                 this.level.bottles.splice(index, 1)
             }
         });
-    }
-
-    // ----------------- Draw() -----------------
-    draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.translate(this.camera_x, 0);
-        this.addObjectsToMap(this.level.backgroundObjects);
-
-        this.ctx.translate(-this.camera_x, 0);
-        this.addObjectsToMap([this.statusBarHealth, this.statusBarBottles, this.statusBarCoins]);
-        this.ctx.translate(this.camera_x, 0);
-
-        this.addToMap(this.character);
-        this.addObjectsToMap(this.level.clouds);
-        this.addObjectsToMap(this.level.enemies);
-        this.addObjectsToMap(this.level.coins);
-        this.addObjectsToMap(this.level.bottles);
-        this.addObjectsToMap(this.throwableObjects);
-
-        this.ctx.translate(-this.camera_x, 0);
-
-        requestAnimationFrame(() => this.draw());
-    }
-
-    addObjectsToMap(objects){
-        objects.forEach(o => this.addToMap(o));
-    }
-
-    addToMap(mo){
-        if(mo.otherDirection) this.flipImage(mo);
-        mo.draw(this.ctx);
-        mo.drawFrame(this.ctx);
-        if(mo.otherDirection) this.flipImageBack(mo);
-    }
-
-    flipImage(mo) {
-        this.ctx.save();
-        this.ctx.translate(mo.width, 0);
-        this.ctx.scale(-1, 1);
-        mo.x = mo.x * -1;
-    }
-
-    flipImageBack(mo) {
-        mo.x = mo.x * -1;
-        this.ctx.restore();
     }
 }
