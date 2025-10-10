@@ -17,10 +17,10 @@ window.addEventListener('DOMContentLoaded', () => {
     if (canvas && typeof canvas.addEventListener === 'function') {
         // Verhindere mehrfaches Hinzufügen von EventListenern
         if (!canvas._listenersAdded) {
-            canvas.addEventListener('click', function(e) {
+            canvas.addEventListener('click', function(event) {
                 let rect = canvas.getBoundingClientRect();
-                let mx = e.clientX - rect.left;
-                let my = e.clientY - rect.top;
+                let mx = event.clientX - rect.left;
+                let my = event.clientY - rect.top;
                 menuButtons.forEach(btn => {
                     if (mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h) {
                         btn.onClick();
@@ -28,11 +28,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            canvas.addEventListener('mousemove', function(e) {
+            canvas.addEventListener('mousemove', function(event) {
                 if (gameState === 'start' || gameState === 'options' || gameState === 'win' || gameState === 'lose') {
                     let rect = canvas.getBoundingClientRect();
-                    let mx = e.clientX - rect.left;
-                    let my = e.clientY - rect.top;
+                    let mx = event.clientX - rect.left;
+                    let my = event.clientY - rect.top;
                     hoveredButtonIndex = -1;
                     menuButtons.forEach((btn, idx) => {
                         if (mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h) {
@@ -300,28 +300,28 @@ function setGameScreen(status) {
 // setGameScreen('lose');
 // setGameScreen('start');
 
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'f' || e.key === 'F') {
+window.addEventListener('keydown', (event) => {
+    if (event.key === 'f' || event.key === 'F') {
         toggleFullscreen();
     }
     if (gameState === 'playing') {
-        if(e.keyCode == 39) keyboard.RIGHT = true;
-        if(e.keyCode == 37) keyboard.LEFT = true;
-        if(e.keyCode == 38) keyboard.UP = true;
-        if(e.keyCode == 40) keyboard.DOWN = true;
-        if(e.keyCode == 32) keyboard.SPACE = true;
-        if(e.keyCode == 68) keyboard.D = true;
+        if(event.keyCode == 39) keyboard.RIGHT = true;
+        if(event.keyCode == 37) keyboard.LEFT = true;
+        if(event.keyCode == 38) keyboard.UP = true;
+        if(event.keyCode == 40) keyboard.DOWN = true;
+        if(event.keyCode == 32) keyboard.SPACE = true;
+        if(event.keyCode == 68) keyboard.D = true;
     }
 });
 
-window.addEventListener('keyup', (e) => {
+window.addEventListener('keyup', (event) => {
     if (gameState === 'playing') {
-        if(e.keyCode == 39) keyboard.RIGHT = false;
-        if(e.keyCode == 37) keyboard.LEFT = false;
-        if(e.keyCode == 38) keyboard.UP = false;
-        if(e.keyCode == 40) keyboard.DOWN = false;
-        if(e.keyCode == 32) keyboard.SPACE = false;
-        if(e.keyCode == 68) keyboard.D = false;
+        if(event.keyCode == 39) keyboard.RIGHT = false;
+        if(event.keyCode == 37) keyboard.LEFT = false;
+        if(event.keyCode == 38) keyboard.UP = false;
+        if(event.keyCode == 40) keyboard.DOWN = false;
+        if(event.keyCode == 32) keyboard.SPACE = false;
+        if(event.keyCode == 68) keyboard.D = false;
     }
 });
 
@@ -353,4 +353,32 @@ function getMute() {
             muteImg && muteImg.classList.remove('muted');
         }
     }
+}
+
+function isMobileLandscape() {
+    return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) &&
+        window.innerWidth > window.innerHeight;
+}
+
+function updateMobileBtnsVisibility() {
+    const mobileBtns = document.getElementById('mobile-btns');
+    if (mobileBtns) {
+        if (isMobileLandscape()) {
+            mobileBtns.style.display = 'block';
+        } else {
+            mobileBtns.style.display = 'none';
+        }
+    }
+}
+
+// Beim Start und bei jeder Größen-/Ausrichtungsänderung prüfen
+window.addEventListener('DOMContentLoaded', updateMobileBtnsVisibility);
+window.addEventListener('resize', updateMobileBtnsVisibility);
+window.addEventListener('orientationchange', updateMobileBtnsVisibility);
+
+function init() {
+    canvas = document.getElementById('canvas');
+    world = new World(canvas, keyboard);
+    updateMobileBtnsVisibility();
+    if (ingameOptionsOverlay) ingameOptionsOverlay.classList.remove('d-none');
 }
