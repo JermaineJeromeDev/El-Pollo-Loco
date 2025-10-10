@@ -8,8 +8,8 @@ class Character extends MovableObject {
     world;
     idleTime = 0;
     loseScreenShown = false;
-    loseSound = new Audio('audio/win_lose/lose.wav');
-    
+    hurtCooldown = false;
+
     IMAGES_WALKING = [
         'assets/img/2_character_pepe/2_walk/W-21.png',
         'assets/img/2_character_pepe/2_walk/W-22.png',
@@ -90,7 +90,6 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.applyGravity();
         this.animate();
-        this.loseScreenShown = false; // Reset beim Erstellen
     }
 
     animate(){
@@ -100,7 +99,6 @@ class Character extends MovableObject {
     }
 
     checkIfDeadShowLoseScreen() {
-        // Nur ein einziges Intervall pro Character-Instanz
         if (this._loseCheckInterval) return;
         this._loseCheckInterval = setInterval(() => {
             if (this.isDead() && this.world && typeof this.world.showLoseScreen === 'function' && !this.loseScreenShown) {
@@ -114,10 +112,7 @@ class Character extends MovableObject {
     }
 
     playLoseSoundOnce() {
-        this.loseSound.pause();
-        this.loseSound.currentTime = 0;
-        this.loseSound.volume = this.world && this.world.gameIsMuted ? 0 : 1;
-        this.loseSound.play();
+        if (!this.world.gameIsMuted) SoundManager.play('lose');
     }
 
     controlCharacter() {
@@ -133,40 +128,57 @@ class Character extends MovableObject {
                 this.otherDirection = true;
                 this.idleTime = 0;
             }
-            if(this.world.keyboard.SPACE && !this.isAboveGround()){
-                this.jump();
-                this.idleTime = 0;
+            // Nur beim Drücken (Edge) und nur wenn wirklich am Boden
+            if(this.world.keyboard.SPACE){
+                if(!this.isAboveGround()){ 
+                    if (!this._jumpPressed) {
+                        this.jump();
+                        this._jumpPressed = true;
+                        if (!this.world.gameIsMuted) {
+                            setTimeout(() => SoundManager.play('jump', 0.5, true), 50);
+                        }
+                    }
+                }
+            } else {
+                this._jumpPressed = false;
             }
             this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
     }
 
     animateCharacter() {
-        setInterval(() => {
-            if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
-            } else if(this.isHurt()){
-                this.playAnimation(this.IMAGES_HURT);
-            } 
-            else if (this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_JUMPING);
-                this.idleTime = 0;
-            } 
-            else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.playAnimation(this.IMAGES_WALKING);
-                this.idleTime = 0;
+    setInterval(() => {
+        if (this.isDead()) {
+            this.playAnimation(this.IMAGES_DEAD);
+        } 
+        else if(this.isHurt()) {
+            this.playAnimation(this.IMAGES_HURT);
+            if (!this._hurtSoundPlaying && !this.world.gameIsMuted) {
+                this._hurtSoundPlaying = true;
+                SoundManager.play('hurt', 0.3, false);
+                setTimeout(() => { this._hurtSoundPlaying = false; }, 500); 
+            }
+        } 
+        else if (this.isAboveGround()) {
+            this.playAnimation(this.IMAGES_JUMPING);
+            this.idleTime = 0;
+        } 
+        else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.playAnimation(this.IMAGES_WALKING);
+            this.idleTime = 0;
+        } 
+        else {
+            this.idleTime++;
+            if (this.idleTime > 150) {
+                this.playAnimation(this.IMAGES_LONG_IDLE);
             } 
             else {
-                this.idleTime++;
-                if (this.idleTime > 150) {
-                    this.playAnimation(this.IMAGES_LONG_IDLE);
-                } 
-                else {
-                    this.playAnimation(this.IMAGES_IDLE);
-                }
+                this.playAnimation(this.IMAGES_IDLE);
             }
-        }, 200);
-    }
+        }
+    }, 200);
+}
+
 
     jump() {
         this.speedY = 20;
