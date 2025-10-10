@@ -218,8 +218,10 @@ function drawButton(btn, idx, hoverColor, normalColor, radius) {
 }
 
 function startGame() {
+    if (world) world.clearAllIntervals(); 
     canvas.classList.remove('fullscreen');
-    canvas.width = 720; canvas.height = 480;
+    canvas.width = 720; 
+    canvas.height = 480;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     world = new World(canvas, keyboard);
     world.showWinScreen = showWinScreen;
