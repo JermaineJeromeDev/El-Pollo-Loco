@@ -25,7 +25,94 @@
     <script src="./js/game.js"></script>
 </head>
 <body>
-    <h1>El pollo loco</h1>
-    <canvas id="canvas" width="720" height="480"></canvas>
+    <h1 id="title">El pollo loco</h1>
+
+    <div class="container">
+        <canvas id="canvas" width="720" height="480"></canvas>
+
+        <div class="startscreen" id="startscreen">
+            <button id="start-btn">Spiel starten</button>
+            <button id="options-btn-startscreen">Optionen</button>
+        </div>
+
+        <div class="ingame-options d-none" id="ingame-options">
+            <button id="options-btn-overlay">
+                <img src="assets/img/10_button_icons/options.png" alt="options-icon">
+            </button>
+            <button id="audio-btn" onclick="toggleMute()">
+                <img src="assets/img/10_button_icons/volume.png" alt="unmute-icon">
+            </button>
+        </div>
+
+        <div class="mobile-btns" id="mobile-btns">
+            <div class="mobile-btns-left">
+                <button id="walk-left">
+                    <img src="assets/img/10_button_icons/left.png" alt="arrow-left">
+                </button>
+                <button id="walk-right">
+                    <img src="assets/img/10_button_icons/right.png" alt="arrow-right">
+                </button>
+            </div>
+            <div class="mobile-btns-right">
+                <button id="jump">
+                    <img src="assets/img/10_button_icons/jump.png" alt="arrow-up">
+                </button>
+                <button id="throw">
+                    <img src="assets/img/10_button_icons/throw.png" alt="share-arrow">
+                </button>
+            </div>
+        </div>
+
+        <div class="menu-options d-none" id="menu-options">
+            <button id="btn-restart-game">Neu starten</button>
+            <button id="btn-controls">Steuerungen</button>
+            <button id="btn-how-to-play">Spielerklärung</button>
+            <button id="btn-credits">Impressum</button>
+            <button id="btn-back-menu">Zurück</button>
+            <button id="btn-back-ingame" class="d-none">Zurück</button>
+            <a id="btn-credits" href="" target="_blank" rel="noopener noreferrer">Impressum</a>
+        </div>
+
+        <div class="game-over-menu d-none" id="game-over-menu">
+            <button id="restart-btn">Neu starten</button>
+        </div>
+        <div class="rotate-screen-hint d-none" id="rotate-screen-hint">
+            <h2>Dreh dein Gerät - das Abenteuer wartet!</h2>
+            <img src="assets/img/11_screen_rotate/screen-rotate.png" alt="screen-rotate">
+        </div>
+
+        <div class="menu-options control-description d-none" id="control-description">
+            <div class="control-keys">
+                <h2>Links:</h2>
+                <img src="assets/img/10_button_icons/left.png" alt="">
+            </div>
+            <div class="control-keys">
+                <h2>Rechts:</h2>
+                <img src="assets/img/10_button_icons/right.png" alt="">
+            </div>
+            <div class="control-keys">
+                <h2>Springen:</h2>
+                <img src="assets/img/10_button_icons/jump.png" alt="">
+            </div>
+            <div class="control-keys">
+                <h2>Flasche werfen:</h2>
+                <img src="assets/img/10_button_icons/throw.png" alt="">
+            </div>
+            <button id="close-control-description">Zurück</button>
+        </div>
+
+        <div class="menu-options control-description d-none" id="game-description">
+            <p>
+                In einer Welt voller Federn und Chaos erhebt sich ein wahrer Held gegen die Hühnerarmee! 🦸‍♂️🐔
+                Drei Gegnerarten stellen sich dir in den Weg: kleine Küken, starke Hühner und der gefürchtete Endgegner.
+                Zertrample die kleinen und normalen Gegner mit präzisen Sprüngen von oben.
+                Doch der Endgegner… ist anders. Nur gezielte Flaschenwürfe können seine Macht brechen.
+                Setze deine Ressourcen mit Bedacht ein –
+                denn wer alles verschleudert, wird im finalen Kampf keine Chance haben.
+            </p>
+            <button id="close-game-description">Zurück</button>
+        </div>
+    </div>
+    
 </body>
 </html>
