@@ -210,31 +210,4 @@ class World {
     stopGame() {
         this.gameStopped = true;
     }
-
-    stopSounds(state) {
-        this.GAME_MUSIC.muted = state;
-        this.CHICKEN_SOUND.muted = state;
-        this.ENEMY_HIT_SOUND.muted = state;
-        this.SOUND_BOTTLE.muted = state;
-        if (this.character) {
-            this.character.walking_sound && (this.character.walking_sound.muted = state);
-            this.character.jumping_sound && (this.character.jumping_sound.muted = state);
-            this.character.hurt_sound && (this.character.hurt_sound.muted = state);
-        }
-    }
-
-    stopWinAndLostSound(state) {
-        this.GAME_LOST_SOUND.muted = state;
-        this.GAME_WIN_SOUND.muted = state;
-    }
-
-    stopSoundsAndIntervals() {
-        this.stopSounds(true);
-        if (this.character && this.character.intervalIds) {
-            this.character.intervalIds.forEach(clearInterval);
-        }
-        if (this.character && typeof this.character.stopGame === 'function') {
-            this.character.stopGame();
-        }
-    }
 }
