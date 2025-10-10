@@ -130,7 +130,7 @@ class Character extends MovableObject {
         setInterval(() => {
             if (this.isDead() && !this.deadAnimationPlayed) {
                 this.playDeadAnimationAndLose();
-            } else if (this.isHurt() && !this.loseScreenShown) { // <--- nur wenn LoseScreen noch nicht gezeigt wurde
+            } else if (this.isHurt() && !this.loseScreenShown) {
                 this.handleHurtAnimation();
             } else if (this.isAboveGround()) {
                 this.handleJumpingAnimation();
@@ -144,7 +144,6 @@ class Character extends MovableObject {
         }, 200);
     }
 
-    /** --- ANIMATIONEN --- **/
     handleHurtAnimation() {
         this.playAnimation(this.IMAGES_HURT);
         if (!this._hurtSoundPlaying && !this.world.gameIsMuted) {
@@ -173,35 +172,38 @@ class Character extends MovableObject {
         }
     }
 
-    /** --- NEUE DEAD-SEQUENZ --- **/
     playDeadAnimationAndLose() {
         this.deadAnimationPlayed = true;
+        this.playDeadAnimation(() => {
+            this.handleLoseScreen();
+        });
+    }
+
+    playDeadAnimation(callback) {
         let frames = this.IMAGES_DEAD.length;
         let frameDuration = 120;
         let frame = 0;
-
         let interval = setInterval(() => {
             this.img = this.imageCache[this.IMAGES_DEAD[frame]];
             frame++;
             if (frame >= frames) {
                 clearInterval(interval);
-                if (this.world && !this.loseScreenShown) {
-                    this.loseScreenShown = true;
-                    if (!this.world.gameIsMuted) SoundManager.play('lose');
-                    setTimeout(() => {
-                        // Entferne die Konsolenausgaben für Produktion
-                        // console.log('Character is dead:', this.isDead());
-                        // console.log('Playing dead animation...');
-                        // console.log('Showing lose screen...');
-                        // Korrekte Lose-Screen-Logik:
-                        if (typeof this.world.showLoseScreen === 'function') {
-                            this.world.stopGame(); // Stoppe das Spiel
-                            this.world.showLoseScreen(); // Zeige Lose-Screen
-                        }
-                    }, 400);
-                }
+                if (typeof callback === 'function') callback();
             }
         }, frameDuration);
+    }
+
+    handleLoseScreen() {
+        if (this.world && !this.loseScreenShown) {
+            this.loseScreenShown = true;
+            if (!this.world.gameIsMuted) SoundManager.play('lose');
+            setTimeout(() => {
+                if (typeof this.world.showLoseScreen === 'function') {
+                    this.world.stopGame();
+                    this.world.showLoseScreen();
+                }
+            }, 400);
+        }
     }
 
     jump() {
