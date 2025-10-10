@@ -211,36 +211,6 @@ class World {
         this.gameStopped = true;
     }
 
-    showWinScreen() {
-        this.GAME_WIN_SOUND.currentTime = 0;
-        this.GAME_WIN_SOUND.play();
-        let img = new Image();
-        img.src = 'assets/img/You won, you lost/You Win A.png';
-        img.onload = () => {
-            this.ctx.save();
-            this.ctx.globalAlpha = 1;
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            const scale = 0.6;
-            const targetWidth = this.canvas.width * scale;
-            const aspect = img.width / img.height;
-            const targetHeight = targetWidth / aspect;
-            const x = (this.canvas.width - targetWidth) / 2;
-            const y = (this.canvas.height - targetHeight) / 2;
-            this.ctx.drawImage(img, x, y, targetWidth, targetHeight);
-            this.ctx.restore();
-        };
-        this.stopSoundsAndIntervals();
-    }
-
-    showLoseScreen() {
-        this.GAME_LOST_SOUND.currentTime = 0;
-        this.GAME_LOST_SOUND.play();
-        if (typeof window.showLoseScreen === 'function') {
-            window.showLoseScreen();
-        }
-        this.stopSoundsAndIntervals();
-    }
-
     stopSounds(state) {
         this.GAME_MUSIC.muted = state;
         this.CHICKEN_SOUND.muted = state;
