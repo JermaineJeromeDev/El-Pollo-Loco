@@ -48,6 +48,7 @@ const SoundManager = {
     playHurt() { this.play('hurt', 0.3, false); },
     playWin() { this.play('win', 0.5, false); },
     playLose() { this.play('lose', 0.5, false); },
+    playCoin() { this.play('coin', 0.5, true); },
 
     // Gameplay-Loop Sound
     playGameplay() {
@@ -73,4 +74,8 @@ const SoundManager = {
         });
     }
 };
+
+// Sound laden (z.B. beim Spielstart)
+SoundManager.load('coin', [{ src: 'audio/3_coin/collect.wav', type: 'audio/wav' }]);
+
 
