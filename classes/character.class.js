@@ -8,6 +8,7 @@ class Character extends MovableObject {
     world;
     idleTime = 0;
     loseScreenShown = false;
+    deadAnimationPlayed = false;
     hurtCooldown = false;
 
     IMAGES_WALKING = [
@@ -80,7 +81,7 @@ class Character extends MovableObject {
         right: 30
     }
 
-    constructor(){
+    constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_JUMPING);
@@ -92,27 +93,9 @@ class Character extends MovableObject {
         this.animate();
     }
 
-    animate(){
+    animate() {
         this.controlCharacter();
         this.animateCharacter();
-        this.checkIfDeadShowLoseScreen();
-    }
-
-    checkIfDeadShowLoseScreen() {
-        if (this._loseCheckInterval) return;
-        this._loseCheckInterval = setInterval(() => {
-            if (this.isDead() && this.world && typeof this.world.showLoseScreen === 'function' && !this.loseScreenShown) {
-                this.loseScreenShown = true;
-                this.playLoseSoundOnce();
-                setTimeout(() => {
-                    this.world.showLoseScreen();
-                }, 400);
-            }
-        }, 100);
-    }
-
-    playLoseSoundOnce() {
-        if (!this.world.gameIsMuted) SoundManager.play('lose');
     }
 
     controlCharacter() {
@@ -145,24 +128,23 @@ class Character extends MovableObject {
 
     animateCharacter() {
         setInterval(() => {
-            if (this.isDead()) {
-                this.handleDeadAnimation();
-            } else if (this.isHurt()) {
+            if (this.isDead() && !this.deadAnimationPlayed) {
+                this.playDeadAnimationAndLose();
+            } else if (this.isHurt() && !this.loseScreenShown) { // <--- nur wenn LoseScreen noch nicht gezeigt wurde
                 this.handleHurtAnimation();
             } else if (this.isAboveGround()) {
                 this.handleJumpingAnimation();
+                this.idleTime = 0;
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 this.handleWalkingAnimation();
+                this.idleTime = 0;
             } else {
                 this.handleIdleAnimation();
             }
         }, 200);
     }
 
-    handleDeadAnimation() {
-        this.playAnimation(this.IMAGES_DEAD);
-    }
-
+    /** --- ANIMATIONEN --- **/
     handleHurtAnimation() {
         this.playAnimation(this.IMAGES_HURT);
         if (!this._hurtSoundPlaying && !this.world.gameIsMuted) {
@@ -191,10 +173,41 @@ class Character extends MovableObject {
         }
     }
 
+    /** --- NEUE DEAD-SEQUENZ --- **/
+    playDeadAnimationAndLose() {
+        this.deadAnimationPlayed = true;
+        let frames = this.IMAGES_DEAD.length;
+        let frameDuration = 120;
+        let frame = 0;
+
+        let interval = setInterval(() => {
+            this.img = this.imageCache[this.IMAGES_DEAD[frame]];
+            frame++;
+            if (frame >= frames) {
+                clearInterval(interval);
+                if (this.world && !this.loseScreenShown) {
+                    this.loseScreenShown = true;
+                    if (!this.world.gameIsMuted) SoundManager.play('lose');
+                    setTimeout(() => {
+                        // Entferne die Konsolenausgaben für Produktion
+                        // console.log('Character is dead:', this.isDead());
+                        // console.log('Playing dead animation...');
+                        // console.log('Showing lose screen...');
+                        // Korrekte Lose-Screen-Logik:
+                        if (typeof this.world.showLoseScreen === 'function') {
+                            this.world.stopGame(); // Stoppe das Spiel
+                            this.world.showLoseScreen(); // Zeige Lose-Screen
+                        }
+                    }, 400);
+                }
+            }
+        }, frameDuration);
+    }
+
     jump() {
-    this.speedY = 20;
-    if (!this.world.gameIsMuted) {
-        SoundManager.play('jump', 0.5, true);
+        this.speedY = 20;
+        if (!this.world.gameIsMuted) {
+            SoundManager.play('jump', 0.5, true);
         }
     }
 }
