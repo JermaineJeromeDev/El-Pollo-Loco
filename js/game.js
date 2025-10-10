@@ -7,16 +7,19 @@ let gameState = 'start';
 let menuButtons = [];
 let isFullscreen = false;
 let hoveredButtonIndex = -1;
-
 let winSoundPlayed = false;
 let loseSoundPlayed = false;
 
-// ====================== INIT ======================
 function init() {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
+    loadAllSounds();
+    setupCanvasListeners();
+    setupMobileEvents();
+    drawStartScreen();
+}
 
-    // Sounds laden
+function loadAllSounds() {
     SoundManager.load('jump', [{ src: 'audio/1_character/jump.mp3', type: 'audio/mpeg' }]);
     SoundManager.load('throw', [{ src: 'audio/4_bottle/throw.mp3', type: 'audio/mpeg' }]);
     SoundManager.load('break', [{ src: 'audio/4_bottle/break.mp3', type: 'audio/mpeg' }]);
@@ -25,86 +28,77 @@ function init() {
     SoundManager.load('win', [{ src: 'audio/5_win_lose/win.wav', type: 'audio/wav' }]);
     SoundManager.load('gameplay', [{ src: 'audio/0_gameplay/gamesound.wav', type: 'audio/mpeg' }]);
     SoundManager.load('coin', [{ src: 'audio/3_coin/collect.wav', type: 'audio/wav' }]);
-
-    // Event-Listener für Menü
-    setupCanvasListeners();
-
-    // Mobile Buttons prüfen
-    updateMobileBtnsVisibility();
-    window.addEventListener('resize', updateMobileBtnsVisibility);
-    window.addEventListener('orientationchange', updateMobileBtnsVisibility);
-
-    // Startscreen anzeigen
-    drawStartScreen();
 }
 
-// ====================== CANVAS LISTENERS ======================
 function setupCanvasListeners() {
     if (!canvas._listenersAdded) {
         canvas.addEventListener('click', handleMenuClick);
         canvas.addEventListener('mousemove', handleMenuHover);
         canvas._listenersAdded = true;
     }
-
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 }
 
+function setupMobileEvents() {
+    updateMobileBtnsVisibility();
+    window.addEventListener('resize', updateMobileBtnsVisibility);
+    window.addEventListener('orientationchange', updateMobileBtnsVisibility);
+}
+
 function handleMenuClick(event) {
-    let rect = canvas.getBoundingClientRect();
-    let mx = event.clientX - rect.left;
-    let my = event.clientY - rect.top;
+    let { x, y } = getMousePos(event);
     menuButtons.forEach(btn => {
-        if (mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h) {
-            btn.onClick();
-        }
+        if (isPointInButton(x, y, btn)) btn.onClick();
     });
 }
 
 function handleMenuHover(event) {
     if (!['start', 'options', 'win', 'lose'].includes(gameState)) return;
-    let rect = canvas.getBoundingClientRect();
-    let mx = event.clientX - rect.left;
-    let my = event.clientY - rect.top;
+    let { x, y } = getMousePos(event);
     hoveredButtonIndex = -1;
     menuButtons.forEach((btn, idx) => {
-        if (mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h) {
-            hoveredButtonIndex = idx;
-        }
+        if (isPointInButton(x, y, btn)) hoveredButtonIndex = idx;
     });
+    redrawMenuScreen();
+}
 
+function getMousePos(event) {
+    let rect = canvas.getBoundingClientRect();
+    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+}
+
+function isPointInButton(mx, my, btn) {
+    return mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h;
+}
+
+function redrawMenuScreen() {
     if (gameState === 'start') drawStartScreen();
     if (gameState === 'options') drawOptionsScreen();
     if (gameState === 'win') showWinScreen();
     if (gameState === 'lose') showLoseScreen();
 }
 
-// ====================== KEYBOARD HANDLING ======================
 function handleKeyDown(event) {
     if (event.key === 'Escape') toggleFullscreen();
     if (gameState !== 'playing') return;
-
-    if (event.keyCode === 37) keyboard.LEFT = true;
-    if (event.keyCode === 38) keyboard.UP = true;
-    if (event.keyCode === 39) keyboard.RIGHT = true;
-    if (event.keyCode === 40) keyboard.DOWN = true;
-    if (event.keyCode === 32) keyboard.SPACE = true;
-    if (event.keyCode === 68) keyboard.D = true; 
+    setKeyState(event.keyCode, true);
 }
 
 function handleKeyUp(event) {
     if (gameState !== 'playing') return;
-
-    if (event.keyCode === 37) keyboard.LEFT = false;
-    if (event.keyCode === 38) keyboard.UP = false;
-    if (event.keyCode === 39) keyboard.RIGHT = false;
-    if (event.keyCode === 40) keyboard.DOWN = false;
-    if (event.keyCode === 32) keyboard.SPACE = false;
-    if (event.keyCode === 68) keyboard.D = false; 
+    setKeyState(event.keyCode, false);
 }
 
+function setKeyState(keyCode, state) {
+    if (keyCode === 37) keyboard.LEFT = state;
+    if (keyCode === 38) keyboard.UP = state;
+    if (keyCode === 39) keyboard.RIGHT = state;
+    if (keyCode === 40) keyboard.DOWN = state;
+    if (keyCode === 32) keyboard.SPACE = state;
+    if (keyCode === 68) keyboard.D = state;
+}
 
-// ====================== SCREENS ======================
 function drawStartScreen() {
     gameState = 'start';
     let bg = new Image();
@@ -118,127 +112,148 @@ function drawStartScreen() {
 }
 
 function setupStartMenuButtons() {
-    let buttonWidth = 160, buttonHeight = 50, gap = 30;
-    let totalWidth = buttonWidth * 3 + gap * 2;
-    let startX = (canvas.width - totalWidth) / 2;
+    let w = 160, h = 50, gap = 30;
+    let totalW = w * 3 + gap * 2;
+    let x = (canvas.width - totalW) / 2;
     let y = canvas.height - 120;
-
     menuButtons = [
-        { text: 'Start', x: startX, y: y, w: buttonWidth, h: buttonHeight, onClick: () => { gameState='playing'; menuButtons=[]; startGame(); }},
-        { text: 'Optionen', x: startX+buttonWidth+gap, y:y, w:buttonWidth, h:buttonHeight, onClick: drawOptionsScreen},
-        { text: gameIsMuted ? 'Unmute':'Mute', x:startX+2*(buttonWidth+gap), y:y, w:buttonWidth, h:buttonHeight, onClick:()=>{gameIsMuted=!gameIsMuted; drawStartScreen();}},
-        { text: isFullscreen?'Kleiner Screen':'Fullscreen', x: canvas.width-170, y:20, w:150, h:40, onClick: toggleFullscreen }
+        { text: 'Start', x, y, w, h, onClick: () => { gameState = 'playing'; menuButtons = []; startGame(); } },
+        { text: 'Optionen', x: x + w + gap, y, w, h, onClick: drawOptionsScreen },
+        { text: gameIsMuted ? 'Unmute' : 'Mute', x: x + 2 * (w + gap), y, w, h, onClick: () => { gameIsMuted = !gameIsMuted; drawStartScreen(); } },
+        { text: isFullscreen ? 'Kleiner Screen' : 'Fullscreen', x: canvas.width - 170, y: 20, w: 150, h: 40, onClick: toggleFullscreen }
     ];
 }
 
 function drawOptionsScreen() {
-    gameState='options';
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle="#222"; ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle="#fff"; ctx.font="bold 36px Arial"; ctx.textAlign="center";
-    ctx.fillText("Optionen", canvas.width/2,100);
-    ctx.font="20px Arial"; ctx.fillText("Hier könnten Optionen stehen.", canvas.width/2,180);
-
-    menuButtons=[{text:"Zurück", x:canvas.width/2-90, y:canvas.height-100, w:180, h:60, onClick: drawStartScreen}];
+    gameState = 'options';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#222"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#fff"; ctx.font = "bold 36px Arial"; ctx.textAlign = "center";
+    ctx.fillText("Optionen", canvas.width / 2, 100);
+    ctx.font = "20px Arial"; ctx.fillText("Hier könnten Optionen stehen.", canvas.width / 2, 180);
+    menuButtons = [{ text: "Zurück", x: canvas.width / 2 - 90, y: canvas.height - 100, w: 180, h: 60, onClick: drawStartScreen }];
     drawMenuButtons();
 }
 
 function showWinScreen() {
-    gameState='win';
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    gameState = 'win';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     SoundManager.stopGameplay();
-    if(!gameIsMuted && !winSoundPlayed) { SoundManager.playWin(); winSoundPlayed = true; }
-
-    let img=new Image();
-    img.src='assets/img/You won, you lost/You Win A.png';
-    img.onload = ()=>{
-        ctx.drawImage(img, (canvas.width-img.width*0.6)/2, (canvas.height-img.height*0.6)/2, img.width*0.6, img.height*0.6);
-        drawWinLoseButtons();
-    };
-
-    menuButtons=[
-        {text:'Nochmal spielen', x:canvas.width/2-180, y:canvas.height-100, w:160, h:50, onClick:()=>{winSoundPlayed=false; drawStartScreen();}},
-        {text:isFullscreen?'Kleiner Screen':'Fullscreen', x:canvas.width/2+20, y:canvas.height-100, w:160, h:50, onClick:toggleFullscreen}
-    ];
+    if (!gameIsMuted && !winSoundPlayed) { SoundManager.playWin(); winSoundPlayed = true; }
+    let img = new Image();
+    img.src = 'assets/img/You won, you lost/You Win A.png';
+    img.onload = () => { drawEndScreen(img, 'win'); };
 }
 
 function showLoseScreen() {
-    gameState='lose';
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
+    gameState = 'lose';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     SoundManager.stopGameplay();
-    if(!gameIsMuted && !loseSoundPlayed) { SoundManager.playLose(); loseSoundPlayed = true; }
+    if (!gameIsMuted && !loseSoundPlayed) { SoundManager.playLose(); loseSoundPlayed = true; }
+    let img = new Image();
+    img.src = 'assets/img/9_intro_outro_screens/game_over/oh no you lost!.png';
+    img.onload = () => { drawEndScreen(img, 'lose'); };
+}
 
-    let img=new Image();
-    img.src='assets/img/9_intro_outro_screens/game_over/oh no you lost!.png';
-    img.onload = ()=>{
-        ctx.drawImage(img, (canvas.width-img.width*0.6)/2, (canvas.height-img.height*0.6)/2, img.width*0.6, img.height*0.6);
-        drawWinLoseButtons();
-    };
+function drawEndScreen(img, type) {
+    let opacity = 0, scale = 1.2;
+    let w = img.width * 0.6, h = img.height * 0.6;
+    let x = (canvas.width - w) / 2, y = (canvas.height - h) / 2;
+    let fadeInterval = setInterval(() => {
+        drawEndScreenFrame(img, x, y, w, h, opacity, scale);
+        if (opacity < 1) opacity += 0.04;
+        if (scale > 1) scale -= 0.02;
+        if (opacity >= 1 && scale <= 1) {
+            clearInterval(fadeInterval);
+            setupWinLoseButtons(type);
+            drawWinLoseButtons();
+        }
+    }, 50);
+}
 
-    menuButtons=[
-        {text:'Nochmal spielen', x:canvas.width/2-180, y:canvas.height-100, w:160, h:50, onClick:()=>{loseSoundPlayed=false; startGame();}},
-        {text:isFullscreen?'Kleiner Screen':'Fullscreen', x:canvas.width/2+20, y:canvas.height-100, w:160, h:50, onClick:toggleFullscreen}
+function drawEndScreenFrame(img, x, y, w, h, opacity, scale) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = opacity;
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    let drawW = w * scale, drawH = h * scale;
+    let drawX = x - (drawW - w) / 2, drawY = y - (drawH - h) / 2;
+    ctx.drawImage(img, drawX, drawY, drawW, drawH);
+    ctx.globalAlpha = 1;
+}
+
+function setupWinLoseButtons(type) {
+    let w = 200, h = 55, gap = 25;
+    let totalW = w * 3 + gap * 2;
+    let x = (canvas.width - totalW) / 2;
+    let y = canvas.height - 120;
+    menuButtons = [
+        { text: type === 'win' ? 'Nochmal spielen' : 'Nochmal versuchen', x, y, w, h, onClick: () => { winSoundPlayed = false; loseSoundPlayed = false; drawStartScreen(); } },
+        { text: 'Zurück zum Menü', x: x + w + gap, y, w, h, onClick: drawStartScreen },
+        { text: isFullscreen ? 'Kleiner Screen' : 'Fullscreen', x: x + 2 * (w + gap), y, w, h, onClick: toggleFullscreen }
     ];
 }
 
-// ====================== MENU DRAWING ======================
 function drawMenuButtons() {
-    menuButtons.forEach((btn, idx)=>{
-        ctx.save();
-        ctx.fillStyle=(idx===hoveredButtonIndex)?"#388e3c":"#43cea2";
-        ctx.strokeStyle="#fff"; ctx.lineWidth=3;
-        ctx.beginPath(); ctx.roundRect?ctx.roundRect(btn.x,btn.y,btn.w,btn.h,14):ctx.rect(btn.x,btn.y,btn.w,btn.h);
-        ctx.fill(); ctx.stroke();
-        ctx.fillStyle="#fff"; ctx.font="bold 24px Arial"; ctx.textAlign="center"; ctx.textBaseline="middle";
-        ctx.fillText(btn.text, btn.x+btn.w/2, btn.y+btn.h/2);
-        ctx.restore();
-    });
+    menuButtons.forEach((btn, idx) => drawButton(btn, idx, "#388e3c", "#43cea2", 14));
 }
 
 function drawWinLoseButtons() {
-    menuButtons.forEach(btn=>{
-        ctx.save();
-        ctx.fillStyle="#4caf50"; ctx.strokeStyle="#fff"; ctx.lineWidth=2;
-        ctx.fillRect(btn.x,btn.y,btn.w,btn.h); ctx.strokeRect(btn.x,btn.y,btn.w,btn.h);
-        ctx.fillStyle="#fff"; ctx.font="bold 22px Arial"; ctx.textAlign="center"; ctx.textBaseline="middle";
-        ctx.fillText(btn.text, btn.x+btn.w/2, btn.y+btn.h/2);
-        ctx.restore();
-    });
+    menuButtons.forEach(btn => drawButton(btn, -1, "#4caf50", "#4caf50", 12));
 }
 
-// ====================== GAME START ======================
+function drawButton(btn, idx, hoverColor, normalColor, radius) {
+    ctx.save();
+    ctx.fillStyle = (idx === hoveredButtonIndex) ? hoverColor : normalColor;
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(btn.x, btn.y, btn.w, btn.h, radius) : ctx.rect(btn.x, btn.y, btn.w, btn.h);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 24px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(btn.text, btn.x + btn.w / 2, btn.y + btn.h / 2);
+    ctx.restore();
+}
+
 function startGame() {
     canvas.classList.remove('fullscreen');
     canvas.width = 720; canvas.height = 480;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     world = new World(canvas, keyboard);
     world.showWinScreen = showWinScreen;
     world.showLoseScreen = showLoseScreen;
-    if(world.character) world.character.loseScreenShown = false;
+    if (world.character) world.character.loseScreenShown = false;
     gameState = 'playing';
-    if(!gameIsMuted) SoundManager.playGameplay(); // starte Gameplay-Sound
+    if (!gameIsMuted) SoundManager.playGameplay();
 }
 
-
-// ====================== FULLSCREEN ======================
 function toggleFullscreen() {
-    isFullscreen=!isFullscreen;
-    if(isFullscreen){ canvas.classList.add('fullscreen'); canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
-    else{ canvas.classList.remove('fullscreen'); canvas.width=720; canvas.height=480; }
-
-    if(gameState==='start') drawStartScreen();
-    if(gameState==='win') showWinScreen();
-    if(gameState==='lose') showLoseScreen();
+    isFullscreen = !isFullscreen;
+    if (isFullscreen) {
+        canvas.classList.add('fullscreen');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    } else {
+        canvas.classList.remove('fullscreen');
+        canvas.width = 720;
+        canvas.height = 480;
+    }
+    if (gameState === 'start') drawStartScreen();
+    if (gameState === 'win') showWinScreen();
+    if (gameState === 'lose') showLoseScreen();
 }
 
-// ====================== MOBILE CHECK ======================
-function isMobileLandscape() { return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) && window.innerWidth>window.innerHeight; }
+function isMobileLandscape() {
+    return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) && window.innerWidth > window.innerHeight;
+}
+
 function updateMobileBtnsVisibility() {
-    const mobileBtns=document.getElementById('mobile-btns');
-    if(mobileBtns){ mobileBtns.style.display=isMobileLandscape()?'block':'none'; }
+    const mobileBtns = document.getElementById('mobile-btns');
+    if (mobileBtns) mobileBtns.style.display = isMobileLandscape() ? 'block' : 'none';
 }
 
-// ====================== START THE GAME ======================
 window.addEventListener('DOMContentLoaded', init);
-
