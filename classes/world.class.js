@@ -14,13 +14,6 @@ class World {
     endbossActivated = false;
     gameStopped = false;
 
-    GAME_WIN_SOUND = new Audio('audio/win_lose/win.wav');
-    GAME_LOST_SOUND = new Audio('audio/win_lose/lose.wav');
-    GAME_MUSIC = new Audio('audio/music/game_music.mp3');
-    CHICKEN_SOUND = new Audio('audio/chicken/chicken_single_alarm.mp3');
-    ENEMY_HIT_SOUND = new Audio('audio/enemy_hit.wav');
-    SOUND_BOTTLE = new Audio('audio/bottle.wav');
-
     constructor(canvas, keyboard){
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
