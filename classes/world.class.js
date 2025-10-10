@@ -14,6 +14,13 @@ class World {
     endbossActivated = false;
     gameStopped = false;
 
+    GAME_WIN_SOUND = new Audio('audio/win_lose/win.wav');
+    GAME_LOST_SOUND = new Audio('audio/win_lose/lose.wav');
+    GAME_MUSIC = new Audio('audio/music/game_music.mp3');
+    CHICKEN_SOUND = new Audio('audio/chicken/chicken_single_alarm.mp3');
+    ENEMY_HIT_SOUND = new Audio('audio/enemy_hit.wav');
+    SOUND_BOTTLE = new Audio('audio/bottle.wav');
+
     constructor(canvas, keyboard){
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -212,6 +219,8 @@ class World {
     }
 
     showWinScreen() {
+        this.GAME_WIN_SOUND.currentTime = 0;
+        this.GAME_WIN_SOUND.play();
         let img = new Image();
         img.src = 'assets/img/You won, you lost/You Win A.png';
         img.onload = () => {
@@ -227,5 +236,42 @@ class World {
             this.ctx.drawImage(img, x, y, targetWidth, targetHeight);
             this.ctx.restore();
         };
+        this.stopSoundsAndIntervals();
+    }
+
+    showLoseScreen() {
+        this.GAME_LOST_SOUND.currentTime = 0;
+        this.GAME_LOST_SOUND.play();
+        if (typeof window.showLoseScreen === 'function') {
+            window.showLoseScreen();
+        }
+        this.stopSoundsAndIntervals();
+    }
+
+    stopSounds(state) {
+        this.GAME_MUSIC.muted = state;
+        this.CHICKEN_SOUND.muted = state;
+        this.ENEMY_HIT_SOUND.muted = state;
+        this.SOUND_BOTTLE.muted = state;
+        if (this.character) {
+            this.character.walking_sound && (this.character.walking_sound.muted = state);
+            this.character.jumping_sound && (this.character.jumping_sound.muted = state);
+            this.character.hurt_sound && (this.character.hurt_sound.muted = state);
+        }
+    }
+
+    stopWinAndLostSound(state) {
+        this.GAME_LOST_SOUND.muted = state;
+        this.GAME_WIN_SOUND.muted = state;
+    }
+
+    stopSoundsAndIntervals() {
+        this.stopSounds(true);
+        if (this.character && this.character.intervalIds) {
+            this.character.intervalIds.forEach(clearInterval);
+        }
+        if (this.character && typeof this.character.stopGame === 'function') {
+            this.character.stopGame();
+        }
     }
 }
