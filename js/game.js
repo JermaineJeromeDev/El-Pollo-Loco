@@ -54,7 +54,7 @@ function handleMenuClick(event) {
 }
 
 function handleMenuHover(event) {
-    if (!['start', 'options', 'win', 'lose'].includes(gameState)) return;
+    if (!['start', 'options'].includes(gameState)) return;
     let { x, y } = getMousePos(event);
     hoveredButtonIndex = -1;
     menuButtons.forEach((btn, idx) => {
@@ -75,8 +75,6 @@ function isPointInButton(mx, my, btn) {
 function redrawMenuScreen() {
     if (gameState === 'start') drawStartScreen();
     if (gameState === 'options') drawOptionsScreen();
-    if (gameState === 'win') showWinScreen();
-    if (gameState === 'lose') showLoseScreen();
 }
 
 function handleKeyDown(event) {
