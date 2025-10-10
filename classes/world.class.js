@@ -13,6 +13,7 @@ class World {
     canThrow = true; 
     endbossActivated = false;
     gameStopped = false;
+    intervals = [];
 
     constructor(canvas, keyboard){
         this.ctx = canvas.getContext('2d');
@@ -35,7 +36,7 @@ class World {
 
     // ----------------- Draw() -----------------
     draw() {
-        if (this.gameStopped) return; // Stoppe das Zeichnen nach Win-Screen
+        if (this.gameStopped) return; 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
@@ -101,12 +102,18 @@ class World {
     }
 
     run() {
-        setInterval(() => {
+        let id = setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
             this.checkCoinCollision();
             this.checkBottleCollision();
         }, 50);
+        this.intervals.push(id);
+    }
+
+    clearAllIntervals() {
+        this.intervals.forEach(i => clearInterval(i));
+        this.intervals = [];
     }
 
     // ----------------- Flaschen werfen -----------------
