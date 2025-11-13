@@ -212,4 +212,16 @@ class Character extends MovableObject {
             SoundManager.play('jump', 0.5, true);
         }
     }
+
+    addCoin() {
+        super.addCoin();
+        const muted = this.world ? this.world.gameIsMuted : (typeof gameIsMuted !== 'undefined' ? gameIsMuted : false);
+        if (!muted) SoundManager.playCoin();
+    }
+
+    addBottle() {
+        super.addBottle();
+        const muted = this.world ? this.world.gameIsMuted : (typeof gameIsMuted !== 'undefined' ? gameIsMuted : false);
+        if (!muted) SoundManager.playThrow();
+    }
 }
