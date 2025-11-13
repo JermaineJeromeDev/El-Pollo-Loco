@@ -75,6 +75,10 @@ class ThrowableObject extends MovableObject {
         }
         this.playAnimation(this.IMAGES_BOTTLE_SPLASH, () => {
             this.fadeOut();
+            let muted = (this.world && this.world.gameIsMuted) ? true : (typeof gameIsMuted !== 'undefined' ? gameIsMuted : false);
+            if (!muted) {
+                SoundManager.play('break', 0.7, true);
+            }
         });
     }
 
