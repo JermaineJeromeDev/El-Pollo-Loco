@@ -201,29 +201,32 @@ canvas.fullscreen {
 
 /* Sichtbarkeit und Stil des Modals — jetzt INSIDE .container, zentriert absolut, maximale Höhe auf Canvas-Größe */
 #options-modal {
-    position: absolute;                /* innerhalb .container positionieren */
+    /* innerhalb .container positionieren (einzelne, konsolidierte Definition) */
+    position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     max-width: 680px;
     width: calc(100% - 48px);
-    max-height: 420px;                 /* sorgt dafür, dass es im Canvas bleibt (Canvas Höhe 480) */
-    overflow: hidden;                  /* kein Scrollbar auf der Seite */
+    max-height: 440px;
+    overflow: hidden;
     box-sizing: border-box;
-    padding: 18px 22px;                /* etwas kompakter */
+    padding: 46px 18px 18px;
     background: rgba(8, 12, 18, 0.65);
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     color: #ffffff;
     margin: 0 auto;
     transition: opacity 0.18s ease;
-    z-index: 2020; /* über Icons/Titel */
+    z-index: 2020;
 }
 
 /* Gesamt-Inhalt innen ggf. scrollfrei und kompakt; sorgt dafür, dass Inhalte sich anpassen */
 .tab-contents {
-    max-height: calc(100% - 100px); /* Berücksichtigt Buttons & Tabs */
-    overflow: hidden;               /* kein interner Scrollbar */
+    max-height: calc(100% - 92px);   /* Platz für Tabs + Close-Icon */
+    overflow-y: auto;
+    padding-right: 8px;              /* verhindert, dass Inhalt vom Scrollbar überlappt wird */
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Container-Backdrop wenn Modal offen: halbtransparenter dunkler Layer */
@@ -428,12 +431,14 @@ canvas.fullscreen + #title,
 #options-modal {
     /* sichtbar wird es per JS (overlay-screen) */
     display: block;
+    left: 50%;
+    top: 50%;
     max-width: 760px;
     width: calc(100% - 64px);
     box-sizing: border-box;
     padding: 28px 32px;
     /* weniger opak -> höhere Transparenz */
-    background: rgba(8, 12, 18, 0.70); /* was 0.92, jetzt transparenter */
+    background: transparent; /* was 0.92, jetzt transparenter */
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.6);
     color: #ffffff;
@@ -471,11 +476,7 @@ canvas.fullscreen + #title,
     line-height: 1.65;
     font-size: 1.05rem;
     color: #f7f7f7;
-    hyphens: auto;
-    -webkit-font-smoothing: antialiased;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
+    filter: drop-shadow(2px 4px 6px black);
 }
 
 /* Close-Button innerhalb des Modal deutlicher machen */
@@ -555,6 +556,36 @@ canvas.fullscreen + #title,
     color: #fff;
     cursor: pointer;
     font-weight: 600;
+}
+
+/* Close-Icon oben links im Options-Modal */
+.options-close-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    padding: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2030;
+    transition: background 0.12s ease, transform 0.08s ease;
+}
+.options-close-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: none;
+}
+.options-close-btn:hover {
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-1px);
 }
 
 /* Kleinere responsive Anpassung */
@@ -712,4 +743,20 @@ canvas.fullscreen + #title,
     .control-icon { width: 52px; height: 52px; margin-right: 10px; }
     .control-icon img { width: 36px; height: 36px; }
     .control-text { text-align: left; max-width: calc(100% - 72px); }
+}
+
+/* Link als Button in den Menü‑Optionen */
+.menu-link {
+    display: inline-block;
+    text-decoration: none;
+    padding: 12px 20px;
+    margin: 6px;
+    background: #4caf50;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.18s ease;
+}
+.menu-link:hover {
+    background: #388e3c;
 }
