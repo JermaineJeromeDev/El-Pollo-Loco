@@ -27,33 +27,23 @@
     <script src="./js/game.js"></script>
 </head>
 <body>
-    <h1 id="title">El pollo loco</h1>
-
     <div class="container">
+        <h1 id="title">El pollo loco</h1>
         <canvas id="canvas" width="720" height="480"></canvas>
-
-        <!-- Neuer persistenter Fullscreen-Button (oben rechts) -->
         <button id="fullscreen-btn" class="fullscreen-btn" aria-label="Toggle fullscreen">
             <img src="assets/img/10_button_icons/fullscreen.png" alt="fullscreen-toggle">
         </button>
-
-        <!-- Neuer persistenter Options-Button (oben rechts, links von Fullscreen/Mute) -->
         <button id="options-top-btn" class="options-btn" aria-label="Open options">
             <img src="assets/img/10_button_icons/options.png" alt="options-toggle">
         </button>
-
-        <!-- Neuer persistenter Mute-Button (oben rechts) -->
         <button id="mute-btn" class="mute-btn" aria-label="Toggle sound">
             <img src="assets/img/10_button_icons/volume.png" alt="sound-toggle">
         </button>
-
         <div class="startscreen" id="startscreen">
             <button id="start-btn">Spiel starten</button>
-            <!-- Optionen-Button entfernt (nutzt jetzt #options-top-btn) -->
         </div>
 
         <div class="ingame-options d-none" id="ingame-options">
-            <!-- options-btn-overlay entfernt; audio-btn bleibt -->
             <button id="audio-btn" onclick="toggleMute()">
                 <img src="assets/img/10_button_icons/volume.png" alt="unmute-icon">
             </button>
@@ -96,38 +86,84 @@
             <img src="assets/img/11_screen_rotate/screen-rotate.png" alt="screen-rotate">
         </div>
 
-        <div class="menu-options control-description d-none" id="control-description">
-            <div class="control-keys">
-                <h2>Links:</h2>
-                <img src="assets/img/10_button_icons/left.png" alt="">
-            </div>
-            <div class="control-keys">
-                <h2>Rechts:</h2>
-                <img src="assets/img/10_button_icons/right.png" alt="">
-            </div>
-            <div class="control-keys">
-                <h2>Springen:</h2>
-                <img src="assets/img/10_button_icons/jump.png" alt="">
-            </div>
-            <div class="control-keys">
-                <h2>Flasche werfen:</h2>
-                <img src="assets/img/10_button_icons/throw.png" alt="">
-            </div>
-            <button id="close-control-description">Zurück</button>
-        </div>
+        <!-- Optionen-Modal: Tab-Layout mit Story / Steuerung / Impressum / Datenschutz -->
+        <div class="menu-options control-description d-none" id="options-modal" aria-hidden="true">
+            <div class="options-tabs">
+                <div class="tab-buttons" role="tablist" aria-label="Options Tabs">
+                    <button id="tab-story" class="tab-btn active" role="tab" aria-selected="true">Story</button>
+                    <button id="tab-controls" class="tab-btn" role="tab" aria-selected="false">Steuerung</button>
+                    <button id="tab-imprint" class="tab-btn" role="tab" aria-selected="false">Impressum</button>
+                    <button id="tab-privacy" class="tab-btn" role="tab" aria-selected="false">Datenschutz</button>
+                </div>
 
-        <div class="menu-options control-description d-none" id="game-description">
-            <p>
-                In einer Welt voller Federn und Chaos erhebt sich ein wahrer Held gegen die Hühnerarmee! 🦸‍♂️🐔
-                Drei Gegnerarten stellen sich dir in den Weg: kleine Küken, starke Hühner und der gefürchtete Endgegner.
-                Zertrample die kleinen und normalen Gegner mit präzisen Sprüngen von oben.
-                Doch der Endgegner… ist anders. Nur gezielte Flaschenwürfe können seine Macht brechen.
-                Setze deine Ressourcen mit Bedacht ein –
-                denn wer alles verschleudert, wird im finalen Kampf keine Chance haben.
-            </p>
-            <button id="close-game-description">Zurück</button>
+                <div class="tab-contents">
+                    <div id="story-content" class="tab-content">
+                        <p>
+                            In einer Welt voller Federn und Chaos erhebt sich ein wahrer Held gegen die Hühnerarmee! 🦸‍♂️🐔
+                            Drei Gegnerarten stellen sich dir in den Weg: kleine Küken, starke Hühner und der gefürchtete Endgegner.
+                            Zertrample die kleinen und normalen Gegner mit präzisen Sprüngen von oben.
+                            Doch der Endgegner… ist anders. Nur gezielte Flaschenwürfe können seine Macht brechen.
+                            Setze deine Ressourcen mit Bedacht ein – 
+                            denn wer alles verschleudert, wird im finalen Kampf keine Chance haben.
+                        </p>
+                    </div>
+
+                    <div id="controls-content" class="tab-content d-none">
+                        <div class="controls-grid">
+                            <div class="control-item">
+                                <div class="control-icon">
+                                    <img src="assets/img/10_button_icons/left.png" alt="Links">
+                                </div>
+                                <div class="control-text">
+                                    <h3>Links</h3>
+                                    <p>Bewege Pepe nach links.</p>
+                                </div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-icon">
+                                    <img src="assets/img/10_button_icons/right.png" alt="Rechts">
+                                </div>
+                                <div class="control-text">
+                                    <h3>Rechts</h3>
+                                    <p>Bewege Pepe nach rechts.</p>
+                                </div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-icon">
+                                    <img src="assets/img/10_button_icons/jump.png" alt="Springen">
+                                </div>
+                                <div class="control-text">
+                                    <h3>Springen</h3>
+                                    <p>Drücke Springen, um Gegner zu überwinden.</p>
+                                </div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-icon">
+                                    <img src="assets/img/10_button_icons/throw.png" alt="Flasche werfen">
+                                </div>
+                                <div class="control-text">
+                                    <h3>Flasche werfen</h3>
+                                    <p>Werfe Flaschen auf den Endboss oder Gegner.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="imprint-content" class="tab-content d-none">
+                        <p>Impressum: Firma / Adresse / Kontakt (Platzhalter)</p>
+                    </div>
+
+                    <div id="privacy-content" class="tab-content d-none">
+                        <p>Datenschutz: Hinweise zum Umgang mit Daten (Platzhalter)</p>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="close-game-description" class="modal-close">Zurück</button>
+                </div>
+            </div>
         </div>
     </div>
-    
+
 </body>
 </html>
