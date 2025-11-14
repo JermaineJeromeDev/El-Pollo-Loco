@@ -9,6 +9,7 @@ let isFullscreen = false;
 let hoveredButtonIndex = -1;
 let winSoundPlayed = false;
 let loseSoundPlayed = false;
+let optionsOrigin = null; // 'playing' | 'start' | null
 
 function init() {
     canvas = document.getElementById('canvas');
@@ -16,8 +17,9 @@ function init() {
     loadAllSounds();
     setupCanvasListeners();
     setupMobileEvents();
-    initMuteButton(); // <-- neu
-    initFullscreenButton(); // <-- neu
+    initMuteButton();
+    initFullscreenButton();
+    initOptionsTopButton(); // <-- neu
     drawStartScreen();
 }
 
@@ -165,24 +167,86 @@ function drawStartScreen() {
 
 function setupStartMenuButtons() {
     let w = 160, h = 50, gap = 30;
-    let totalW = w * 2 + gap; // jetzt nur 2 Hauptbuttons (Start, Optionen) + Mute bleibt als HTML
+    let totalW = w; // nur ein Button (Start)
     let x = (canvas.width - totalW) / 2;
     let y = canvas.height - 120;
     menuButtons = [
-        { text: 'Start', x, y, w, h, onClick: () => { gameState = 'playing'; menuButtons = []; startGame(); } },
-        { text: 'Optionen', x: x + w + gap, y, w, h, onClick: drawOptionsScreen }
-        // Fullscreen-Canvas-Button entfernt; Fullscreen ist jetzt HTML-Button
+        { 
+            text: 'Start', 
+            x, 
+            y, 
+            w, 
+            h, 
+            onClick: () => { 
+                gameState = 'playing'; 
+                menuButtons = []; 
+                startGame(); 
+            } 
+        }
+        // Optionen über #options-top-btn (persistentes Icon)
     ];
 }
 
-function drawOptionsScreen() {
+function initOptionsTopButton() {
+    const optBtn = document.getElementById('options-top-btn');
+    if (!optBtn) return;
+    const img = optBtn.querySelector('img');
+    if (img) img.src = 'assets/img/10_button_icons/options.png';
+    optBtn.addEventListener('click', () => {
+        // Wenn wir spielen: Pause und Optionen öffnen
+        if (gameState === 'playing' && world) {
+            optionsOrigin = 'playing';
+            openOptionsFromGameplay();
+        } else {
+            // ansonsten aus Startscreen geöffnet
+            optionsOrigin = 'start';
+            drawOptionsScreen();
+        }
+    });
+}
+
+// Pausiert Spiel (stoppt world intervals/draw) und zeigt Optionen auf Canvas
+function openOptionsFromGameplay() {
+    if (!world) { drawOptionsScreen(); return; }
+    try { world.clearAllIntervals(); } catch(e) { /* ignore */ }
+    world.gameStopped = true;
+    // stoppe Gameplay-Audio
+    SoundManager.stopGameplay();
+    // setze Zustand und zeichne Optionen auf Canvas
     gameState = 'options';
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#222"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#fff"; ctx.font = "bold 36px Arial"; ctx.textAlign = "center";
-    ctx.fillText("Optionen", canvas.width / 2, 100);
-    ctx.font = "20px Arial"; ctx.fillText("Hier könnten Optionen stehen.", canvas.width / 2, 180);
-    menuButtons = [{ text: "Zurück", x: canvas.width / 2 - 90, y: canvas.height - 100, w: 180, h: 60, onClick: drawStartScreen }];
+    drawOptionsScreen();
+}
+
+// Schließt Optionen und resume / oder zurück zum Startscreen
+function closeOptions() {
+    if (optionsOrigin === 'playing' && world) {
+        // Resume game
+        world.gameStopped = false;
+        // restart intervals
+        if (typeof world.run === 'function') world.run();
+        // restart draw loop
+        if (typeof world.draw === 'function') world.draw();
+        gameState = 'playing';
+        if (!gameIsMuted) SoundManager.playGameplay();
+    } else {
+        // zurück zum Startscreen
+        drawStartScreen();
+    }
+    optionsOrigin = null;
+}
+
+// ====================== SCREENS ======================
+// Ersetze/überschreibe drawOptionsScreen damit Back-Button closeOptions aufruft
+function drawOptionsScreen() {
+    gameState='options';
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#222"; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#fff"; ctx.font="bold 36px Arial"; ctx.textAlign="center";
+    ctx.fillText("Optionen", canvas.width/2,100);
+    ctx.font="20px Arial"; ctx.fillText("Hier könnten Optionen stehen.", canvas.width/2,180);
+
+    // Back-Button ruft closeOptions statt drawStartScreen
+    menuButtons=[{text:"Zurück", x:canvas.width/2-90, y:canvas.height-100, w:180, h:60, onClick: closeOptions}];
     drawMenuButtons();
 }
 
