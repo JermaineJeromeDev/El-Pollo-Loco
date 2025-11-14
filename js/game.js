@@ -16,7 +16,18 @@ function init() {
     loadAllSounds();
     setupCanvasListeners();
     setupMobileEvents();
+    initMuteButton(); // <-- neu
+    initFullscreenButton(); // <-- neu
     drawStartScreen();
+}
+
+// -> Definiere updateMobileBtnsVisibility früh, damit setupMobileEvents() es verwenden kann
+function isMobileLandscape() {
+    return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) && window.innerWidth > window.innerHeight;
+}
+function updateMobileBtnsVisibility() {
+    const mobileBtns = document.getElementById('mobile-btns');
+    if (mobileBtns) mobileBtns.style.display = isMobileLandscape() ? 'block' : 'none';
 }
 
 function loadAllSounds() {
@@ -44,6 +55,49 @@ function setupMobileEvents() {
     updateMobileBtnsVisibility();
     window.addEventListener('resize', updateMobileBtnsVisibility);
     window.addEventListener('orientationchange', updateMobileBtnsVisibility);
+
+    // Mobile button handlers (touch + mouse). Verwendet sprechende Event-Parameter.
+    const controls = [
+        { id: 'walk-left', key: 'LEFT' },
+        { id: 'walk-right', key: 'RIGHT' },
+        { id: 'jump', key: 'SPACE' },
+        { id: 'throw', key: 'D' }
+    ];
+
+    controls.forEach(control => {
+        const btn = document.getElementById(control.id);
+        if (!btn) return;
+
+        const setKeyState = (pressed) => { keyboard[control.key] = pressed; };
+
+        // Touch events (mobile)
+        btn.addEventListener('touchstart', function touchStartHandler(touchEvent) {
+            touchEvent.preventDefault();
+            setKeyState(true);
+        }, { passive: false });
+        btn.addEventListener('touchend', function touchEndHandler(touchEvent) {
+            touchEvent.preventDefault();
+            setKeyState(false);
+        });
+        btn.addEventListener('touchcancel', function touchCancelHandler(touchEvent) {
+            touchEvent.preventDefault();
+            setKeyState(false);
+        });
+
+        // Mouse events (desktop / testing)
+        btn.addEventListener('mousedown', function mouseDownHandler(mouseEvent) {
+            mouseEvent.preventDefault();
+            setKeyState(true);
+        });
+        btn.addEventListener('mouseup', function mouseUpHandler(mouseEvent) {
+            mouseEvent.preventDefault();
+            setKeyState(false);
+        });
+        btn.addEventListener('mouseleave', function mouseLeaveHandler(mouseEvent) {
+            mouseEvent.preventDefault();
+            setKeyState(false);
+        });
+    });
 }
 
 function handleMenuClick(event) {
@@ -111,14 +165,13 @@ function drawStartScreen() {
 
 function setupStartMenuButtons() {
     let w = 160, h = 50, gap = 30;
-    let totalW = w * 3 + gap * 2;
+    let totalW = w * 2 + gap; // jetzt nur 2 Hauptbuttons (Start, Optionen) + Mute bleibt als HTML
     let x = (canvas.width - totalW) / 2;
     let y = canvas.height - 120;
     menuButtons = [
         { text: 'Start', x, y, w, h, onClick: () => { gameState = 'playing'; menuButtons = []; startGame(); } },
-        { text: 'Optionen', x: x + w + gap, y, w, h, onClick: drawOptionsScreen },
-        { text: gameIsMuted ? 'Unmute' : 'Mute', x: x + 2 * (w + gap), y, w, h, onClick: () => { gameIsMuted = !gameIsMuted; drawStartScreen(); } },
-        { text: isFullscreen ? 'Kleiner Screen' : 'Fullscreen', x: canvas.width - 170, y: 20, w: 150, h: 40, onClick: toggleFullscreen }
+        { text: 'Optionen', x: x + w + gap, y, w, h, onClick: drawOptionsScreen }
+        // Fullscreen-Canvas-Button entfernt; Fullscreen ist jetzt HTML-Button
     ];
 }
 
@@ -231,9 +284,11 @@ function startGame() {
     if (!gameIsMuted) SoundManager.playGameplay();
 }
 
+// Toggle global fullscreen and update icons
 function toggleFullscreen() {
     isFullscreen = !isFullscreen;
     if (isFullscreen) {
+        // fullscreen mode CSS on canvas
         canvas.classList.add('fullscreen');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -242,18 +297,74 @@ function toggleFullscreen() {
         canvas.width = 720;
         canvas.height = 480;
     }
+
+    // update fullscreen-button icon (use same image or change if you have exit icon)
+    const fsImg = document.querySelector('#fullscreen-btn img');
+    if (fsImg) {
+        fsImg.src = 'assets/img/10_button_icons/fullscreen.png';
+    }
+
+    // redraw menus if user is on start/options screens
     if (gameState === 'start') drawStartScreen();
     if (gameState === 'win') showWinScreen();
     if (gameState === 'lose') showLoseScreen();
 }
 
-function isMobileLandscape() {
-    return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) && window.innerWidth > window.innerHeight;
+// Initialisiert Fullscreen-Button-Icon und Listener
+function initFullscreenButton() {
+    const fsBtn = document.getElementById('fullscreen-btn');
+    if (!fsBtn) return;
+    const img = fsBtn.querySelector('img');
+    if (img) img.src = 'assets/img/10_button_icons/fullscreen.png';
+    fsBtn.addEventListener('click', () => {
+        toggleFullscreen();
+    });
 }
 
-function updateMobileBtnsVisibility() {
-    const mobileBtns = document.getElementById('mobile-btns');
-    if (mobileBtns) mobileBtns.style.display = isMobileLandscape() ? 'block' : 'none';
+function toggleMute() {
+    gameIsMuted = !gameIsMuted;
+
+    // Stoppe oder starte Playback sinnvoll
+    if (gameIsMuted) {
+        SoundManager.stopAll();
+    } else {
+        if (gameState === 'playing') SoundManager.playGameplay();
+    }
+
+    // Update Haupt-Button-Icon
+    const muteBtnImg = document.querySelector('#mute-btn img');
+    if (muteBtnImg) {
+        muteBtnImg.src = gameIsMuted ? 'assets/img/10_button_icons/mute.png' : 'assets/img/10_button_icons/volume.png';
+    }
+
+    // Falls es noch ein ingame audio button gibt, sync dessen Bild (falls vorhanden)
+    const ingameAudioImg = document.querySelector('#audio-btn img');
+    if (ingameAudioImg) {
+        ingameAudioImg.src = gameIsMuted ? 'assets/img/10_button_icons/mute.png' : 'assets/img/10_button_icons/volume.png';
+    }
+}
+
+// Initialisiert Mute-Button-Icon und Listener
+function initMuteButton() {
+    const muteBtn = document.getElementById('mute-btn');
+    if (!muteBtn) return;
+    // set initial icon
+    const img = muteBtn.querySelector('img');
+    if (img) img.src = gameIsMuted ? 'assets/img/10_button_icons/mute.png' : 'assets/img/10_button_icons/volume.png';
+    // attach listener
+    muteBtn.addEventListener('click', function onMuteClick() {
+        toggleMute();
+    });
+    // Sync existing ingame audio-btn (if used elsewhere)
+    const ingameAudioBtn = document.getElementById('audio-btn');
+    if (ingameAudioBtn) {
+        ingameAudioBtn.addEventListener('click', function onIngameAudioClick() {
+            toggleMute();
+        });
+        // ensure its icon matches initial state
+        const inImg = ingameAudioBtn.querySelector('img');
+        if (inImg) inImg.src = gameIsMuted ? 'assets/img/10_button_icons/mute.png' : 'assets/img/10_button_icons/volume.png';
+    }
 }
 
 window.addEventListener('DOMContentLoaded', init);
