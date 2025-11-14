@@ -205,11 +205,13 @@ function initOptionsTopButton() {
     });
 }
 
-// Neues: bindet Close-Button im Modal an closeOptions()
+// Neues: bindet Close-Icon im Modal an closeOptions()
 function initOptionsCloseButton() {
-    const closeBtn = document.getElementById('close-game-description');
+    // alter Selektor '#close-game-description' wurde ersetzt durch '#options-close-btn'
+    const closeBtn = document.getElementById('options-close-btn');
     if (!closeBtn) return;
-    closeBtn.addEventListener('click', () => {
+    closeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         closeOptions();
     });
 }
@@ -225,7 +227,11 @@ function initOptionsTabs() {
     tabs.forEach(t => {
         const btn = document.getElementById(t.btnId);
         if (!btn) return;
-        btn.addEventListener('click', () => switchOptionsTab(t.btnId, t.paneId));
+        btn.addEventListener('click', (e) => {
+            // Wenn Link verwendet wird: Navigation verhindern, Tab wechseln
+            if (e && typeof e.preventDefault === 'function') e.preventDefault();
+            switchOptionsTab(t.btnId, t.paneId);
+        });
     });
 }
 
