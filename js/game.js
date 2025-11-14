@@ -19,7 +19,9 @@ function init() {
     setupMobileEvents();
     initMuteButton();
     initFullscreenButton();
-    initOptionsTopButton(); // <-- neu
+    initOptionsTopButton();
+    initOptionsCloseButton();
+    initOptionsTabs(); // <-- neu: Tab-Eventbinding
     drawStartScreen();
 }
 
@@ -193,61 +195,123 @@ function initOptionsTopButton() {
     const img = optBtn.querySelector('img');
     if (img) img.src = 'assets/img/10_button_icons/options.png';
     optBtn.addEventListener('click', () => {
-        // Wenn wir spielen: Pause und Optionen öffnen
         if (gameState === 'playing' && world) {
             optionsOrigin = 'playing';
             openOptionsFromGameplay();
         } else {
-            // ansonsten aus Startscreen geöffnet
             optionsOrigin = 'start';
-            drawOptionsScreen();
+            showOptionsModal();
         }
     });
 }
 
-// Pausiert Spiel (stoppt world intervals/draw) und zeigt Optionen auf Canvas
-function openOptionsFromGameplay() {
-    if (!world) { drawOptionsScreen(); return; }
-    try { world.clearAllIntervals(); } catch(e) { /* ignore */ }
-    world.gameStopped = true;
-    // stoppe Gameplay-Audio
-    SoundManager.stopGameplay();
-    // setze Zustand und zeichne Optionen auf Canvas
-    gameState = 'options';
-    drawOptionsScreen();
+// Neues: bindet Close-Button im Modal an closeOptions()
+function initOptionsCloseButton() {
+    const closeBtn = document.getElementById('close-game-description');
+    if (!closeBtn) return;
+    closeBtn.addEventListener('click', () => {
+        closeOptions();
+    });
 }
 
-// Schließt Optionen und resume / oder zurück zum Startscreen
+// Tab-Logik für Options-Modal
+function initOptionsTabs() {
+    const tabs = [
+        { btnId: 'tab-story', paneId: 'story-content' },
+        { btnId: 'tab-controls', paneId: 'controls-content' },
+        { btnId: 'tab-imprint', paneId: 'imprint-content' },
+        { btnId: 'tab-privacy', paneId: 'privacy-content' }
+    ];
+    tabs.forEach(t => {
+        const btn = document.getElementById(t.btnId);
+        if (!btn) return;
+        btn.addEventListener('click', () => switchOptionsTab(t.btnId, t.paneId));
+    });
+}
+
+// Wechselt Tab: setzt aktive Klasse am Button und zeigt das Pane
+function switchOptionsTab(activeBtnId, activePaneId) {
+    // buttons
+    document.querySelectorAll('.tab-btn').forEach(b => {
+        if (b.id === activeBtnId) {
+            b.classList.add('active');
+            b.setAttribute('aria-selected', 'true');
+        } else {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+        }
+    });
+    // panes
+    document.querySelectorAll('.tab-content').forEach(p => {
+        if (p.id === activePaneId) p.classList.remove('d-none');
+        else p.classList.add('d-none');
+    });
+}
+
+// Im showOptionsModal standardmäßig Story öffnen
+function showOptionsModal() {
+    gameState = 'options';
+    const modal = document.getElementById('options-modal');
+    if (!modal) return;
+
+    const wasHidden = modal.classList.contains('d-none'); // merken ob Modal gerade geöffnet wird
+
+    modal.classList.remove('d-none');
+    // remove overlay-screen to keep modal INSIDE the canvas/container
+    // modal.classList.add('overlay-screen');  // <-- entfernt
+    modal.classList.add('fredoka-ui');
+
+    const containerEl = document.querySelector('.container');
+    if (containerEl) containerEl.classList.add('modal-open');
+
+    // Nur beim echten Öffnen das Story-Tab als Default setzen.
+    if (wasHidden) {
+        const anyVisible = Array.from(document.querySelectorAll('.tab-content')).some(p => !p.classList.contains('d-none'));
+        if (!anyVisible) switchOptionsTab('tab-story', 'story-content');
+    }
+}
+
+// Anpassung: openOptionsFromGameplay pausiert weiterhin das Spiel und zeigt Modal
+function openOptionsFromGameplay() {
+    if (!world) { showOptionsModal(); return; }
+    try { world.clearAllIntervals(); } catch(e) { /* ignore */ }
+    world.gameStopped = true;
+    SoundManager.stopGameplay();
+    showOptionsModal();
+}
+
+// Beim Schließen Modal verbergen und Spielzustand wiederherstellen
 function closeOptions() {
+    // hide modal
+    const modal = document.getElementById('options-modal');
+    if (modal) {
+        modal.classList.add('d-none');
+        // modal.classList.remove('overlay-screen'); // <-- entfernt (war nicht nötig)
+        modal.classList.remove('fredoka-ui');
+    }
+
+    // Neuer: container-Klasse entfernen
+    const containerEl = document.querySelector('.container');
+    if (containerEl) containerEl.classList.remove('modal-open');
+
     if (optionsOrigin === 'playing' && world) {
         // Resume game
         world.gameStopped = false;
-        // restart intervals
         if (typeof world.run === 'function') world.run();
-        // restart draw loop
         if (typeof world.draw === 'function') world.draw();
         gameState = 'playing';
         if (!gameIsMuted) SoundManager.playGameplay();
     } else {
-        // zurück zum Startscreen
         drawStartScreen();
     }
     optionsOrigin = null;
 }
 
 // ====================== SCREENS ======================
-// Ersetze/überschreibe drawOptionsScreen damit Back-Button closeOptions aufruft
+// Ersetze canvas-basierte drawOptionsScreen: jetzt zeigt Modal
 function drawOptionsScreen() {
-    gameState='options';
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle="#222"; ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle="#fff"; ctx.font="bold 36px Arial"; ctx.textAlign="center";
-    ctx.fillText("Optionen", canvas.width/2,100);
-    ctx.font="20px Arial"; ctx.fillText("Hier könnten Optionen stehen.", canvas.width/2,180);
-
-    // Back-Button ruft closeOptions statt drawStartScreen
-    menuButtons=[{text:"Zurück", x:canvas.width/2-90, y:canvas.height-100, w:180, h:60, onClick: closeOptions}];
-    drawMenuButtons();
+    // delegated to modal display (kept for backward compatibility)
+    showOptionsModal();
 }
 
 function showWinScreen() {
@@ -351,30 +415,43 @@ function startGame() {
 // Toggle global fullscreen and update icons
 function toggleFullscreen() {
     isFullscreen = !isFullscreen;
+    const containerEl = document.querySelector('.container');
     if (isFullscreen) {
-        // fullscreen mode CSS on canvas
+        // container als fullscreen markieren (verhindert Verschiebung durch vorherige Zentrierung)
+        if (containerEl) containerEl.classList.add('fullscreen');
+
+        // Canvas als fixed full-viewport darstellen
         canvas.classList.add('fullscreen');
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     } else {
+        // zurücksetzen
+        if (containerEl) containerEl.classList.remove('fullscreen');
+
         canvas.classList.remove('fullscreen');
+        canvas.style.width = '720px';
+        canvas.style.height = '480px';
         canvas.width = 720;
         canvas.height = 480;
+
+        // Stelle sicher, dass Container wieder zentriert bleibt (CSS übernimmt)
     }
 
-    // update fullscreen-button icon (use same image or change if you have exit icon)
+    // optional: update fullscreen-button icon (keine Änderung am src in dieser Version)
     const fsImg = document.querySelector('#fullscreen-btn img');
     if (fsImg) {
         fsImg.src = 'assets/img/10_button_icons/fullscreen.png';
     }
 
-    // redraw menus if user is on start/options screens
+    // redraw menus falls nötig
     if (gameState === 'start') drawStartScreen();
     if (gameState === 'win') showWinScreen();
     if (gameState === 'lose') showLoseScreen();
 }
 
-// Initialisiert Fullscreen-Button-Icon und Listener
+// Initialisiert Fullscreen-Button-Icon and Listener
 function initFullscreenButton() {
     const fsBtn = document.getElementById('fullscreen-btn');
     if (!fsBtn) return;
@@ -387,48 +464,39 @@ function initFullscreenButton() {
 
 function toggleMute() {
     gameIsMuted = !gameIsMuted;
-
-    // Stoppe oder starte Playback sinnvoll
     if (gameIsMuted) {
         SoundManager.stopAll();
     } else {
         if (gameState === 'playing') SoundManager.playGameplay();
     }
-
-    // Update Haupt-Button-Icon
     const muteBtnImg = document.querySelector('#mute-btn img');
     if (muteBtnImg) {
         muteBtnImg.src = gameIsMuted ? 'assets/img/10_button_icons/mute.png' : 'assets/img/10_button_icons/volume.png';
     }
-
-    // Falls es noch ein ingame audio button gibt, sync dessen Bild (falls vorhanden)
     const ingameAudioImg = document.querySelector('#audio-btn img');
     if (ingameAudioImg) {
         ingameAudioImg.src = gameIsMuted ? 'assets/img/10_button_icons/mute.png' : 'assets/img/10_button_icons/volume.png';
     }
 }
 
-// Initialisiert Mute-Button-Icon und Listener
+
 function initMuteButton() {
     const muteBtn = document.getElementById('mute-btn');
     if (!muteBtn) return;
-    // set initial icon
     const img = muteBtn.querySelector('img');
     if (img) img.src = gameIsMuted ? 'assets/img/10_button_icons/mute.png' : 'assets/img/10_button_icons/volume.png';
-    // attach listener
     muteBtn.addEventListener('click', function onMuteClick() {
         toggleMute();
     });
-    // Sync existing ingame audio-btn (if used elsewhere)
     const ingameAudioBtn = document.getElementById('audio-btn');
     if (ingameAudioBtn) {
         ingameAudioBtn.addEventListener('click', function onIngameAudioClick() {
             toggleMute();
         });
-        // ensure its icon matches initial state
         const inImg = ingameAudioBtn.querySelector('img');
         if (inImg) inImg.src = gameIsMuted ? 'assets/img/10_button_icons/mute.png' : 'assets/img/10_button_icons/volume.png';
     }
 }
+
 
 window.addEventListener('DOMContentLoaded', init);
