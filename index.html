@@ -39,9 +39,7 @@
         <button id="mute-btn" class="mute-btn" aria-label="Toggle sound">
             <img src="assets/img/10_button_icons/volume.png" alt="sound-toggle">
         </button>
-        <div class="startscreen" id="startscreen">
-            <button id="start-btn">Spiel starten</button>
-        </div>
+        <div class="startscreen" id="startscreen"></div>
 
         <div class="ingame-options d-none" id="ingame-options">
             <button id="audio-btn" onclick="toggleMute()">
@@ -72,10 +70,8 @@
             <button id="btn-restart-game">Neu starten</button>
             <button id="btn-controls">Steuerungen</button>
             <button id="btn-how-to-play">Spielerklärung</button>
-            <button id="btn-credits">Impressum</button>
             <button id="btn-back-menu">Zurück</button>
             <button id="btn-back-ingame" class="d-none">Zurück</button>
-            <a id="btn-credits" href="" target="_blank" rel="noopener noreferrer">Impressum</a>
         </div>
 
         <div class="game-over-menu d-none" id="game-over-menu">
@@ -89,20 +85,27 @@
         <!-- Optionen-Modal: Tab-Layout mit Story / Steuerung / Impressum / Datenschutz -->
         <div class="menu-options control-description d-none" id="options-modal" aria-hidden="true">
             <div class="options-tabs">
+                <!-- Neuer Close-Button oben links -->
+                <button id="options-close-btn" class="options-close-btn" aria-label="Close options">
+                    <img src="assets/img/10_button_icons/close.png" alt="close">
+                </button>
+
                 <div class="tab-buttons" role="tablist" aria-label="Options Tabs">
                     <button id="tab-story" class="tab-btn active" role="tab" aria-selected="true">Story</button>
                     <button id="tab-controls" class="tab-btn" role="tab" aria-selected="false">Steuerung</button>
-                    <button id="tab-imprint" class="tab-btn" role="tab" aria-selected="false">Impressum</button>
-                    <button id="tab-privacy" class="tab-btn" role="tab" aria-selected="false">Datenschutz</button>
+
+                    <!-- Buttons -> Links (noch ohne Ziel, href="#" als Platzhalter) -->
+                    <a id="tab-imprint" class="tab-btn" role="tab" aria-selected="false" href="#">Impressum</a>
+                    <a id="tab-privacy" class="tab-btn" role="tab" aria-selected="false" href="#">Datenschutz</a>
                 </div>
 
                 <div class="tab-contents">
                     <div id="story-content" class="tab-content">
                         <p>
-                            In einer Welt voller Federn und Chaos erhebt sich ein wahrer Held gegen die Hühnerarmee! 🦸‍♂️🐔
-                            Drei Gegnerarten stellen sich dir in den Weg: kleine Küken, starke Hühner und der gefürchtete Endgegner.
-                            Zertrample die kleinen und normalen Gegner mit präzisen Sprüngen von oben.
-                            Doch der Endgegner… ist anders. Nur gezielte Flaschenwürfe können seine Macht brechen.
+                            In einer Welt voller Federn und Chaos erhebt sich ein wahrer Held gegen die Hühnerarmee! 🦸‍♂️🐔<br>
+                            Drei Gegnerarten stellen sich dir in den Weg: <br>kleine Küken, starke Hühner und der gefürchtete Endgegner.
+                            Zertrample die kleinen und normalen Gegner mit präzisen Sprüngen von oben.<br>
+                            Doch der Endgegner… ist anders. Nur gezielte Flaschenwürfe können seine Macht brechen.<br>
                             Setze deine Ressourcen mit Bedacht ein – 
                             denn wer alles verschleudert, wird im finalen Kampf keine Chance haben.
                         </p>
@@ -156,10 +159,6 @@
                     <div id="privacy-content" class="tab-content d-none">
                         <p>Datenschutz: Hinweise zum Umgang mit Daten (Platzhalter)</p>
                     </div>
-                </div>
-
-                <div class="modal-actions">
-                    <button id="close-game-description" class="modal-close">Zurück</button>
                 </div>
             </div>
         </div>
