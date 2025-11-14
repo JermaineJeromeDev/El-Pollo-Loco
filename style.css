@@ -1,9 +1,27 @@
+/* Import der Google-Font */
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+
+.luckiest-guy-regular {
+    font-family: "Luckiest Guy", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.fredoka-ui {
+    font-family: "Fredoka", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
     background: url('assets/img/5_background/self_background.png') center center/cover no-repeat;
-    font-family: Arial, sans-serif;
+    font-family: "Luckiest Guy", cursive;
     min-height: 100vh;
 }
 
@@ -18,12 +36,13 @@ canvas {
 }
 
 canvas.fullscreen {
+    position: fixed;
+    left: 0;
+    top: 0;
     width: 100vw !important;
     height: 100vh !important;
     max-width: 100vw;
     max-height: 100vh;
-    position: fixed;
-    left: 0; top: 0;
     z-index: 1001;
 }
 
@@ -159,10 +178,72 @@ canvas.fullscreen {
 }
 
 .container {
-    position: relative;
+    position: fixed;           
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); 
     width: 720px;
     height: 480px;
+    margin: 0;                  
+    z-index: 10;
+}
+
+.container.fullscreen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: none;      /* entferne die Zentrier-Translate im Fullscreen */
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    z-index: 1000;
+}
+
+/* Sichtbarkeit und Stil des Modals — jetzt INSIDE .container, zentriert absolut, maximale Höhe auf Canvas-Größe */
+#options-modal {
+    position: absolute;                /* innerhalb .container positionieren */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 680px;
+    width: calc(100% - 48px);
+    max-height: 420px;                 /* sorgt dafür, dass es im Canvas bleibt (Canvas Höhe 480) */
+    overflow: hidden;                  /* kein Scrollbar auf der Seite */
+    box-sizing: border-box;
+    padding: 18px 22px;                /* etwas kompakter */
+    background: rgba(8, 12, 18, 0.65);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    color: #ffffff;
     margin: 0 auto;
+    transition: opacity 0.18s ease;
+    z-index: 2020; /* über Icons/Titel */
+}
+
+/* Gesamt-Inhalt innen ggf. scrollfrei und kompakt; sorgt dafür, dass Inhalte sich anpassen */
+.tab-contents {
+    max-height: calc(100% - 100px); /* Berücksichtigt Buttons & Tabs */
+    overflow: hidden;               /* kein interner Scrollbar */
+}
+
+/* Container-Backdrop wenn Modal offen: halbtransparenter dunkler Layer */
+.container.modal-open::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Blur-Effekt für Canvas und Startscreen, wenn Modal offen */
+.container.modal-open canvas,
+.container.modal-open .startscreen {
+    filter: blur(6px);
+    transition: filter 200ms ease;
 }
 
 #canvas {
@@ -278,7 +359,7 @@ canvas.fullscreen {
 .fullscreen-btn {
     position: absolute;
     top: 14px;
-    right: 72px; /* rechts neben fullscreen: mute sitzt bei right:14px */
+    right: 72px;
     z-index: 2000;
     width: 48px;
     height: 48px;
@@ -301,7 +382,7 @@ canvas.fullscreen {
 .options-btn {
     position: absolute;
     top: 14px;
-    right: 130px; /* links von fullscreen (72) und mute (14) */
+    right: 130px; 
     z-index: 2000;
     width: 48px;
     height: 48px;
@@ -319,4 +400,316 @@ canvas.fullscreen {
     height: 40px;
     display: block;
     pointer-events: none;
+}
+
+/* Titel über dem Canvas positionieren (relativ zur .container) */
+#title {
+    position: absolute;
+    top: -64px;               /* Abstand oberhalb des Canvas; bei Bedarf anpassen */
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    color: #fff;
+    font-size: 2.2rem;
+    text-align: center;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.7);
+    z-index: 2010;            /* über den Icon-Buttons */
+    pointer-events: none;
+}
+
+/* Wenn das Canvas in den Fullscreen-Modus wechselt, verstecken wir den Titel */
+canvas.fullscreen + #title,
+.container.fullscreen #title,
+#title.fullscreen {
+    display: none !important;
+}
+
+/* Optionen-Modal: zentrierter Block mit hohem Kontrast und Blocksatz-Text */
+#options-modal {
+    /* sichtbar wird es per JS (overlay-screen) */
+    display: block;
+    max-width: 760px;
+    width: calc(100% - 64px);
+    box-sizing: border-box;
+    padding: 28px 32px;
+    /* weniger opak -> höhere Transparenz */
+    background: rgba(8, 12, 18, 0.70); /* was 0.92, jetzt transparenter */
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    color: #ffffff;
+    margin: 0 auto;
+    transition: opacity 0.2s ease;
+    z-index: 1010; /* über dem backdrop */
+}
+
+/* Container-Backdrop wenn Modal offen: halbtransparenter dunkler Layer */
+.container.modal-open::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Blur-Effekt für Canvas und Startscreen, wenn Modal offen */
+.container.modal-open canvas,
+.container.modal-open .startscreen {
+    filter: blur(6px);
+    transition: filter 200ms ease;
+}
+
+/* Textstil im Modal: Fredoka (wird per JS als .fredoka-ui gesetzt), Blocksatz, zentriert als Block */
+#options-modal.fredoka-ui p,
+#options-modal p {
+    margin: 0;
+    text-align: justify;
+    text-justify: inter-word;
+    line-height: 1.65;
+    font-size: 1.05rem;
+    color: #f7f7f7;
+    hyphens: auto;
+    -webkit-font-smoothing: antialiased;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Close-Button innerhalb des Modal deutlicher machen */
+#options-modal button#close-game-description {
+    margin-top: 20px;
+    padding: 12px 22px;
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Tabs im Options-Modal */
+.options-tabs {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    border: 0;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background 150ms ease, transform 120ms ease;
+}
+
+.tab-btn:hover {
+    background: rgba(255,255,255,0.10);
+}
+
+.tab-btn.active {
+    background: linear-gradient(90deg,#43cea2,#185a9d);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+/* Inhalte der Tabs */
+.tab-contents {
+    display: block;
+}
+
+.tab-content {
+    display: block;
+    max-width: 760px;
+    margin: 0 auto;
+    color: #f7f7f7;
+}
+
+/* ensure d-none hides content */
+.tab-content.d-none { display: none !important; }
+
+/* Modal actions */
+.modal-actions {
+    text-align: center;
+    margin-top: 18px;
+}
+
+.modal-close {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    background: #4caf50;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Kleinere responsive Anpassung */
+@media (max-width: 480px) {
+    #options-modal { padding: 18px; width: calc(100% - 36px); }
+    #options-modal p { font-size: 0.98rem; line-height: 1.5; }
+    .tab-buttons { gap:8px; }
+    .tab-btn { padding: 8px 10px; font-size: 0.95rem; }
+    #options-modal { padding: 16px; width: calc(100% - 32px); }
+}
+
+/* Controls Grid: 2 Spalten auf breitem Bildschirm, 1 Spalte mobil */
+.controls-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 28px;
+    align-items: start;
+    padding: 8px 12px;
+    box-sizing: border-box;
+}
+
+/* Einzelnes Steuerungs-Item — hellerer Hintergrund, mehr Padding, begrenzte Breite */
+.control-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06));
+    padding: 18px;
+    border-radius: 12px;
+    min-height: 150px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.04);
+    overflow: hidden;            /* verhindert Herausragen */
+    box-sizing: border-box;
+    max-width: 340px;            /* sorgt dafür, dass nichts aus dem Modal/CANVAS herausragt */
+}
+
+/* Größerer, deutlich abgesetzter Icon-Container */
+.control-icon {
+    width: 96px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+    border-radius: 14px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+}
+
+.control-icon img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45)); /* stärkerer Kontrast */
+}
+
+/* Text unter dem Icon */
+.control-text {
+    text-align: center;
+    color: #f3f3f3;
+    max-width: 260px;
+    padding: 0 6px;
+}
+
+/* Mobile: Icon links, Text rechts (kompakter) */
+@media (max-width: 520px) {
+    .control-item {
+        flex-direction: row;
+        align-items: center;
+        min-height: 76px;
+        padding: 10px;
+        max-width: 100%;
+    }
+    .control-icon {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 0;
+        margin-right: 12px;
+    }
+    .control-icon img {
+        width: 40px;
+        height: 40px;
+    }
+    .control-text {
+        text-align: left;
+        max-width: calc(100% - 84px);
+    }
+}
+
+/* Controls Grid: kompakter, kleinere Gaps */
+.controls-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 14px;
+    align-items: start;
+    padding: 6px 6px;
+    box-sizing: border-box;
+}
+
+/* Einzelnes Steuerungs-Item — kompakter, verhindert Herausragen */
+.control-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.04));
+    padding: 12px;
+    border-radius: 10px;
+    min-height: 110px;       /* reduziert von 150 */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.03);
+    overflow: hidden;
+    box-sizing: border-box;
+    max-width: 320px;
+}
+
+/* Größerer, aber kompakter Icon-Container */
+.control-icon {
+    width: 64px;             /* verkleinert von 96 */
+    height: 64px;            /* verkleinert von 96 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.09), rgba(255,255,255,0.03));
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+}
+
+.control-icon img {
+    width: 44px;             /* verkleinert von 64 */
+    height: 44px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
+}
+
+/* Text unter dem Icon: kompakter */
+.control-text {
+    text-align: center;
+    color: #f3f3f3;
+    max-width: 220px;
+    padding: 0 6px;
+}
+
+.control-text h3 { font-size: 1rem; margin: 0 0 6px 0; }
+.control-text p  { font-size: 0.9rem; margin: 0; }
+
+/* Mobile: noch kompakter */
+@media (max-width: 520px) {
+    #options-modal { max-height: 86%; width: calc(100% - 28px); padding: 12px; }
+    .controls-grid { grid-template-columns: 1fr; gap: 10px; }
+    .control-item { flex-direction: row; min-height: 64px; padding: 8px; }
+    .control-icon { width: 52px; height: 52px; margin-right: 10px; }
+    .control-icon img { width: 36px; height: 36px; }
+    .control-text { text-align: left; max-width: calc(100% - 72px); }
 }
