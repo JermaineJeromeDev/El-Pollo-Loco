@@ -297,3 +297,26 @@ canvas.fullscreen {
     display: block;
     pointer-events: none;
 }
+
+.options-btn {
+    position: absolute;
+    top: 14px;
+    right: 130px; /* links von fullscreen (72) und mute (14) */
+    z-index: 2000;
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.options-btn img {
+    width: 40px;
+    height: 40px;
+    display: block;
+    pointer-events: none;
+}
