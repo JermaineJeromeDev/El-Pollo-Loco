@@ -37,15 +37,23 @@
             <img src="assets/img/10_button_icons/fullscreen.png" alt="fullscreen-toggle">
         </button>
 
+        <!-- Neuer persistenter Options-Button (oben rechts, links von Fullscreen/Mute) -->
+        <button id="options-top-btn" class="options-btn" aria-label="Open options">
+            <img src="assets/img/10_button_icons/options.png" alt="options-toggle">
+        </button>
+
         <!-- Neuer persistenter Mute-Button (oben rechts) -->
         <button id="mute-btn" class="mute-btn" aria-label="Toggle sound">
             <img src="assets/img/10_button_icons/volume.png" alt="sound-toggle">
         </button>
 
+        <div class="startscreen" id="startscreen">
+            <button id="start-btn">Spiel starten</button>
+            <!-- Optionen-Button entfernt (nutzt jetzt #options-top-btn) -->
+        </div>
+
         <div class="ingame-options d-none" id="ingame-options">
-            <button id="options-btn-overlay">
-                <img src="assets/img/10_button_icons/options.png" alt="options-icon">
-            </button>
+            <!-- options-btn-overlay entfernt; audio-btn bleibt -->
             <button id="audio-btn" onclick="toggleMute()">
                 <img src="assets/img/10_button_icons/volume.png" alt="unmute-icon">
             </button>
