@@ -36,8 +36,10 @@ const SoundManager = {
             audio.volume = volume;
             audio.play();
         } else {
-            let clone = audio.cloneNode();
+            // clone inkl. Kinder (deep clone), lade Quellen und spiele
+            let clone = audio.cloneNode(true);
             clone.volume = volume;
+            if (typeof clone.load === 'function') clone.load();
             clone.play();
         }
     },
