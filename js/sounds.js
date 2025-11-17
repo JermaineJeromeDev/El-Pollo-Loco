@@ -78,6 +78,6 @@ const SoundManager = {
 };
 
 // Sound laden (z.B. beim Spielstart)
-SoundManager.load('coin', [{ src: 'audio/3_coin/collect.wav', type: 'audio/wav' }]);
+SoundManager.load('coin', [{ src: 'assets/audio/3_coin/collect.wav', type: 'audio/wav' }]);
 
 
