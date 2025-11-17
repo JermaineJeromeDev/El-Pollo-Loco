@@ -228,7 +228,12 @@ function initOptionsTabs() {
         const btn = document.getElementById(t.btnId);
         if (!btn) return;
         btn.addEventListener('click', (e) => {
-            // Wenn Link verwendet wird: Navigation verhindern, Tab wechseln
+            // Wenn Link mit target="_blank" → normale Navigation erlauben
+            if (btn.tagName === 'A' && btn.getAttribute('target') === '_blank') {
+                // Lasse den Link normal öffnen, verhindere NICHT das Default-Verhalten
+                return;
+            }
+            // Ansonsten: Navigation verhindern, Tab wechseln
             if (e && typeof e.preventDefault === 'function') e.preventDefault();
             switchOptionsTab(t.btnId, t.paneId);
         });
