@@ -24,7 +24,12 @@ function init() {
     initOptionsCloseButton();
     initOptionsTabs();
     updateIconPositions(); // Initial positioning
-    window.addEventListener('resize', updateIconPositions); // Responsive update
+    updateRotateHint(); // NEU: Initial check
+    window.addEventListener('resize', () => {
+        updateIconPositions();
+        updateRotateHint(); // NEU: Bei Resize prüfen
+    });
+    window.addEventListener('orientationchange', updateRotateHint); // NEU: Bei Rotation prüfen
     drawStartScreen();
 }
 
@@ -800,4 +805,52 @@ function initMuteButton() {
     }
 }
 
+// NEU: Zeigt/versteckt Rotations-Hinweis basierend auf Orientation
+function updateRotateHint() {
+    const rotateHint = document.getElementById('rotate-screen-hint');
+    if (!rotateHint) return;
+
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const isSmallScreen = window.innerWidth <= 768;
+
+    if (isPortrait && isSmallScreen) {
+        // Zeige Rotations-Hinweis
+        rotateHint.style.display = 'flex';
+        
+        // Verhindere Scrollen auf allen Ebenen
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.height = '100%';
+        document.body.style.top = '0';
+        document.body.style.left = '0';
+        
+        // Scrolle zum Anfang
+        window.scrollTo(0, 0);
+        
+        // Verhindere Touch-Scroll-Events
+        document.addEventListener('touchmove', preventScroll, { passive: false });
+    } else {
+        // Verstecke Rotations-Hinweis
+        rotateHint.style.display = 'none';
+        
+        // Stelle Scrollen wieder her
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.height = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        
+        // Entferne Touch-Scroll-Prevention
+        document.removeEventListener('touchmove', preventScroll);
+    }
+}
+
+// Hilfsfunktion zum Verhindern von Scroll-Events
+function preventScroll(e) {
+    e.preventDefault();
+}
 window.addEventListener('DOMContentLoaded', init);
