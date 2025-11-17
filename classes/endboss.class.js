@@ -84,12 +84,25 @@ class Endboss extends MovableObject {
         setInterval(() => this.moveIfNeeded(), 1000 / 60);
     }
 
+    /**
+     * Aktualisiert Endboss-Zustand
+     */
     updateState() {
         if (this.isDead()) return this.handleDead();
         if (this.isHurtEndboss()) return this.handleHurt();
         if (!this.alertAnimationDone && this.isPlayerNear()) return this.handleAlert();
         if (this.alertAnimationDone || this.activated) this.handleActive();
-        if (this.statusBarEndboss) this.statusBarEndboss.setPercentage(this.energy);
+        
+        this.updateStatusBar();
+    }
+
+    /**
+     * Aktualisiert Statusbar
+     */
+    updateStatusBar() {
+        if (this.statusBarEndboss) {
+            this.statusBarEndboss.setPercentage(this.energy);
+        }
     }
 
     moveIfNeeded() {
