@@ -27,6 +27,16 @@
     <script src="./js/game.js"></script>
 </head>
 <body>
+    <!-- Rotations-Hinweis AUSSERHALB von .container -->
+    <div class="rotate-screen-hint" id="rotate-screen-hint">
+        <h2>
+            Dreh dein Gerät -<br>
+            das Abenteuer<br>
+            wartet!
+        </h2>
+        <img src="assets/img/11_screen_rotate/screen-rotate.png" alt="screen-rotate">
+    </div>
+
     <div class="container">
         <h1 id="title">El pollo loco</h1>
         <canvas id="canvas" width="720" height="480"></canvas>
@@ -82,11 +92,7 @@
         <div class="game-over-menu d-none" id="game-over-menu">
             <button id="restart-btn">Neu starten</button>
         </div>
-        <div class="rotate-screen-hint d-none" id="rotate-screen-hint">
-            <h2>Dreh dein Gerät - das Abenteuer wartet!</h2>
-            <img src="assets/img/11_screen_rotate/screen-rotate.png" alt="screen-rotate">
-        </div>
-
+        
         <!-- Optionen-Modal: Tab-Layout mit Story / Steuerung / Impressum / Datenschutz -->
         <div class="menu-options control-description d-none" id="options-modal" aria-hidden="true">
             <div class="options-tabs">
