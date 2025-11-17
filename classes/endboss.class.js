@@ -47,8 +47,8 @@ class Endboss extends MovableObject {
         'assets/img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
-    alertSound = new Audio('audio/2_chicken/chicken_single_alarm.mp3');
-    hurtSound = new Audio('audio/2_chicken/chicken_single_alarm.mp3');
+    alertSound = new Audio('assets/audio/2_chicken/chicken_single_alarm.mp3');
+    hurtSound = new Audio('assets/audio/2_chicken/chicken_single_alarm.mp3');
     audioArrayEndboss = [];
 
     alertPlayed = false;
