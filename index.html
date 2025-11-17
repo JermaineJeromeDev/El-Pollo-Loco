@@ -30,15 +30,20 @@
     <div class="container">
         <h1 id="title">El pollo loco</h1>
         <canvas id="canvas" width="720" height="480"></canvas>
-        <button id="fullscreen-btn" class="fullscreen-btn" aria-label="Toggle fullscreen">
-            <img src="assets/img/10_button_icons/fullscreen.png" alt="fullscreen-toggle">
-        </button>
-        <button id="options-top-btn" class="options-btn" aria-label="Open options">
-            <img src="assets/img/10_button_icons/options.png" alt="options-toggle">
-        </button>
-        <button id="mute-btn" class="mute-btn" aria-label="Toggle sound">
-            <img src="assets/img/10_button_icons/volume.png" alt="sound-toggle">
-        </button>
+        
+        <!-- Neuer Container für die Top-Icons -->
+        <div class="top-controls">
+            <button id="options-top-btn" class="options-btn" aria-label="Open options">
+                <img src="assets/img/10_button_icons/options.png" alt="options-toggle">
+            </button>
+            <button id="fullscreen-btn" class="fullscreen-btn" aria-label="Toggle fullscreen">
+                <img src="assets/img/10_button_icons/fullscreen.png" alt="fullscreen-toggle">
+            </button>
+            <button id="mute-btn" class="mute-btn" aria-label="Toggle sound">
+                <img src="assets/img/10_button_icons/volume.png" alt="sound-toggle">
+            </button>
+        </div>
+
         <div class="startscreen" id="startscreen"></div>
 
         <div class="ingame-options d-none" id="ingame-options">
