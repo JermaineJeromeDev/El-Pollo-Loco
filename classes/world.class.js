@@ -1,6 +1,6 @@
 class World {
     character = new Character();
-    level = level1;
+    level; // wird im Constructor initialisiert
     canvas;
     ctx;
     keyboard;
@@ -19,6 +19,7 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.level = createLevel1(); // NEU: Erstelle frisches Level
         this.draw();
         this.setWorld();
         this.run();
