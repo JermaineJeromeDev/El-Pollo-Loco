@@ -284,14 +284,14 @@ canvas.fullscreen {
     width: 100%;
     height: 100%;
     pointer-events: none; 
-    z-index: 2100; /* erhöht von 10 auf 2100, über Fullscreen-Canvas */
+    z-index: 2100;
     display: none; 
 }
 
 .mobile-btns .mobile-btns-left,
 .mobile-btns .mobile-btns-right {
     position: absolute;
-    bottom: 10vh;
+    bottom: 5%; /* 5% vom unteren Canvas-Rand */
     display: flex;
     flex-direction: row;
     gap: 2.5vw;
@@ -300,18 +300,17 @@ canvas.fullscreen {
 }
 
 .mobile-btns .mobile-btns-left {
-    left: 3vw;
+    left: 5%; /* 5% vom linken Canvas-Rand */
 }
 
 .mobile-btns .mobile-btns-right {
-    left: 74%;
-    right: auto; /* entferne right positioning */
+    right: 5%; /* 5% vom rechten Canvas-Rand */
 }
 
 .mobile-btns button {
     width: 11vh;
     height: 11vh;
-    min-width: 50px; /* Mindestgröße für sehr kleine Screens */
+    min-width: 50px;
     min-height: 50px;
     border-radius: 12px; 
     border: none;
