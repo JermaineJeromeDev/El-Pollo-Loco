@@ -410,6 +410,7 @@ function initOptionsTabs() {
     const tabs = [
         { btnId: 'tab-story', paneId: 'story-content' },
         { btnId: 'tab-controls', paneId: 'controls-content' },
+        { btnId: 'tab-back-menu', action: 'backToMenu' }, // NEU: Back to Menu Action
         { btnId: 'tab-imprint', paneId: 'imprint-content' },
         { btnId: 'tab-privacy', paneId: 'privacy-content' }
     ];
@@ -417,21 +418,60 @@ function initOptionsTabs() {
         const btn = document.getElementById(t.btnId);
         if (!btn) return;
         btn.addEventListener('click', (e) => {
-            // Wenn Link mit target="_blank" → normale Navigation erlauben, aber aktive Markierung entfernen
+            // Wenn Link mit target="_blank" → normale Navigation erlauben
             if (btn.tagName === 'A' && btn.getAttribute('target') === '_blank') {
-                // Entferne aktive Klasse von allen Tabs
                 document.querySelectorAll('.tab-btn').forEach(b => {
                     b.classList.remove('active');
                     b.setAttribute('aria-selected', 'false');
                 });
-                // Lasse den Link normal öffnen
                 return;
             }
+            
+            // NEU: Wenn "Zurück zum Menü" Button
+            if (t.action === 'backToMenu') {
+                e.preventDefault();
+                handleBackToMenu();
+                return;
+            }
+            
             // Ansonsten: Navigation verhindern, Tab wechseln
             if (e && typeof e.preventDefault === 'function') e.preventDefault();
             switchOptionsTab(t.btnId, t.paneId);
         });
     });
+}
+
+// NEU: Funktion für "Zurück zum Menü"
+function handleBackToMenu() {
+    // Schließe das Options-Modal
+    const modal = document.getElementById('options-modal');
+    if (modal) {
+        modal.classList.add('d-none');
+        modal.classList.remove('fredoka-ui');
+    }
+    
+    const containerEl = document.querySelector('.container');
+    if (containerEl) containerEl.classList.remove('modal-open');
+    
+    // Stoppe das Spiel falls es läuft
+    if (world) {
+        world.clearAllIntervals();
+        world.gameStopped = true;
+        world = null;
+    }
+    
+    // Stoppe alle Sounds
+    SoundManager.stopAll();
+    
+    // Reset game state
+    gameState = 'start';
+    optionsOrigin = null;
+    winSoundPlayed = false;
+    loseSoundPlayed = false;
+    endScreenImage = null;
+    
+    // Zeige Startscreen
+    drawStartScreen();
 }
 
 // Wechselt Tab: setzt aktive Klasse am Button und zeigt das Pane
@@ -459,17 +499,14 @@ function showOptionsModal() {
     const modal = document.getElementById('options-modal');
     if (!modal) return;
 
-    const wasHidden = modal.classList.contains('d-none'); // merken ob Modal gerade geöffnet wird
+    const wasHidden = modal.classList.contains('d-none');
 
     modal.classList.remove('d-none');
-    // remove overlay-screen to keep modal INSIDE the canvas/container
-    // modal.classList.add('overlay-screen');  // <-- entfernt
     modal.classList.add('fredoka-ui');
 
     const containerEl = document.querySelector('.container');
     if (containerEl) containerEl.classList.add('modal-open');
 
-    // Nur beim echten Öffnen das Story-Tab als Default setzen.
     if (wasHidden) {
         const anyVisible = Array.from(document.querySelectorAll('.tab-content')).some(p => !p.classList.contains('d-none'));
         if (!anyVisible) switchOptionsTab('tab-story', 'story-content');
@@ -487,20 +524,16 @@ function openOptionsFromGameplay() {
 
 // Beim Schließen Modal verbergen und Spielzustand wiederherstellen
 function closeOptions() {
-    // hide modal
     const modal = document.getElementById('options-modal');
     if (modal) {
         modal.classList.add('d-none');
-        // modal.classList.remove('overlay-screen'); // <-- entfernt (war nicht nötig)
         modal.classList.remove('fredoka-ui');
     }
 
-    // Neuer: container-Klasse entfernen
     const containerEl = document.querySelector('.container');
     if (containerEl) containerEl.classList.remove('modal-open');
 
     if (optionsOrigin === 'playing' && world) {
-        // Resume game
         world.gameStopped = false;
         if (typeof world.run === 'function') world.run();
         if (typeof world.draw === 'function') world.draw();
@@ -695,17 +728,31 @@ function drawButton(btn, idx, hoverColor, normalColor, radius) {
 }
 
 function startGame() {
-    if (world) world.clearAllIntervals(); 
+    if (world) {
+        world.clearAllIntervals();
+        world.gameStopped = true;
+        world = null;
+    }
+    
     canvas.classList.remove('fullscreen');
     canvas.width = 720; 
     canvas.height = 480;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
     world = new World(canvas, keyboard);
     world.showWinScreen = showWinScreen;
     world.showLoseScreen = showLoseScreen;
     if (world.character) world.character.loseScreenShown = false;
+    
     gameState = 'playing';
-    if (!gameIsMuted) SoundManager.playGameplay();
+    
+    // NEU: Nur Sound starten, wenn nicht gemutet (verhindert Browser-Warnung)
+    if (!gameIsMuted) {
+        // Verwende setTimeout um sicherzustellen, dass User-Interaktion erkannt wird
+        setTimeout(() => {
+            SoundManager.playGameplay();
+        }, 100);
+    }
 }
 
 // Toggle global fullscreen and update icons
