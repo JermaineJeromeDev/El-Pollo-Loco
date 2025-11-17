@@ -40,12 +40,18 @@ class World {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
-        this.ctx.translate(-this.camera_x, 0);
-        this.drawStatusBars();
-        this.drawEndbossStatusBar();
-        this.ctx.translate(this.camera_x, 0);
+        
+        // Spielobjekte (Character, Enemies, Items) zeichnen
         this.drawGameObjects();
+        
+        // Endboss-Statusbar zeichnen (bewegt sich mit der Kamera)
+        this.drawEndbossStatusBar();
+        
         this.ctx.translate(-this.camera_x, 0);
+        
+        // Character-Statusbars (fest positioniert, bewegen sich NICHT mit)
+        this.drawStatusBars();
+        
         requestAnimationFrame(() => this.draw());
     }
 
@@ -62,8 +68,9 @@ class World {
                 this.endbossActivated = true;
             }
             if (this.endbossActivated) {
-                endboss.statusBarEndboss.x = this.canvas.width - endboss.statusBarEndboss.width - 20;
-                endboss.statusBarEndboss.y = 20;
+                // Position relativ zum Endboss: weiter rechts (+80) und weiter unten (+30)
+                endboss.statusBarEndboss.x = endboss.x + 80;
+                endboss.statusBarEndboss.y = endboss.y + 30;
                 endboss.statusBarEndboss.draw(this.ctx);
             }
         }
