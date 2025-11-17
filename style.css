@@ -41,6 +41,8 @@ body {
     background: url('assets/img/5_background/self_background.png') center center/cover no-repeat;
     font-family: "Luckiest Guy", cursive;
     min-height: 100vh;
+    margin: 0; /* wichtig: entfernt Standard-Margins */
+    padding: 0; /* wichtig: entfernt Standard-Padding */
 }
 
 canvas {
@@ -640,34 +642,121 @@ canvas.fullscreen + #title,
     top: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.95);
-    display: flex;
+    background: rgba(0, 0, 0, 0.98);
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
+    z-index: 99999;
     color: #fff;
     text-align: center;
     padding: 20px;
+    box-sizing: border-box;
+    margin: 0;
+    overflow: hidden;
 }
 
 .rotate-screen-hint h2 {
     font-family: "Luckiest Guy", cursive;
-    font-size: 1.5rem;
-    margin-bottom: 20px;
+    font-size: clamp(1.2rem, 4vw, 1.8rem); /* responsive Schriftgröße */
+    margin: 0 auto 30px auto;
+    line-height: 1.3;
+    color: #FFD700;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    max-width: 85%;
+    word-wrap: break-word;
+    padding: 0 10px;
 }
 
 .rotate-screen-hint img {
-    max-width: 120px;
-    animation: rotate-icon 2s infinite ease-in-out;
+    max-width: clamp(100px, 30vw, 150px); /* responsive Bildgröße */
+    margin: 0 auto;
+    display: block;
+    filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+    animation: rotate-icon 2.5s infinite ease-in-out;
 }
 
 @keyframes rotate-icon {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(90deg); }
+    0%, 100% { 
+        transform: rotate(0deg) scale(1);
+    }
+    25% {
+        transform: rotate(22.5deg) scale(1.1);
+    }
+    50% { 
+        transform: rotate(90deg) scale(1.15);
+    }
+    75% {
+        transform: rotate(112.5deg) scale(1.1);
+    }
 }
 
-/* Mobile Landscape: kleiner Viewport (bis 667x375) */
+/* Desktop/Tablet Landscape: normal (ab 769px ODER Landscape) */
+@media (min-width: 769px), (orientation: landscape) {
+    .rotate-screen-hint {
+        display: none !important;
+    }
+}
+
+/* Controls Grid: 2 Spalten auf breitem Bildschirm, 1 Spalte mobil */
+.controls-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* IMMER 2 Spalten */
+    gap: 18px 28px;
+    align-items: start;
+    padding: 8px 12px;
+    box-sizing: border-box;
+}
+
+/* Container für Top-Control-Buttons */
+.top-controls {
+    position: absolute;
+    /* top und right werden per JavaScript gesetzt */
+    z-index: 2000;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Buttons im Top-Controls Container */
+.top-controls .mute-btn,
+.top-controls .fullscreen-btn,
+.top-controls .options-btn {
+    position: static; /* statt relative */
+    width: 48px; /* feste Größe statt Prozent */
+    height: 48px;
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 56px;
+    max-height: 56px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-controls .mute-btn img,
+.top-controls .fullscreen-btn img,
+.top-controls .options-btn img {
+    width: 40px; /* feste Größe */
+    height: 40px;
+    display: block;
+    pointer-events: none;
+}
+
+/* Fullscreen-Modus: Mobile Buttons weiterhin sichtbar auf Touch-Geräten */
+@media (max-width: 900px) and (orientation: landscape) {
+    .container.fullscreen .mobile-btns,
+    canvas.fullscreen ~ .mobile-btns {
+        display: block !important;
+        z-index: 2100 !important; /* über dem Fullscreen-Canvas (z-index: 1001) */
+    }
+}
+
+/* Mobile Landscape: Anpassungen für sehr kleine Viewports */
 @media (max-width: 667px) and (orientation: landscape) {
     body {
         margin: 0;
@@ -825,108 +914,6 @@ canvas.fullscreen + #title,
         font-size: 0.65rem;
         margin: 0;
     }
-}
-
-/* Portrait-Modus: Rotations-Hinweis anzeigen (nur auf kleinen Mobil-Geräten) */
-@media (max-width: 768px) and (orientation: portrait) {
-    .rotate-screen-hint {
-        display: flex !important;
-    }
-
-    /* Alles andere verstecken */
-    .container, #canvas, #title {
-        display: none !important;
-    }
-}
-
-/* Desktop/Tablet Landscape: normal (ab 769px ODER Landscape) */
-@media (min-width: 769px), (orientation: landscape) {
-    .rotate-screen-hint {
-        display: none !important;
-    }
-}
-
-/* Controls Grid: 2 Spalten auf breitem Bildschirm, 1 Spalte mobil */
-.controls-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* IMMER 2 Spalten */
-    gap: 18px 28px;
-    align-items: start;
-    padding: 8px 12px;
-    box-sizing: border-box;
-}
-
-/* Container für Top-Control-Buttons */
-.top-controls {
-    position: absolute;
-    /* top und right werden per JavaScript gesetzt */
-    z-index: 2000;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-/* Buttons im Top-Controls Container */
-.top-controls .mute-btn,
-.top-controls .fullscreen-btn,
-.top-controls .options-btn {
-    position: static; /* statt relative */
-    width: 48px; /* feste Größe statt Prozent */
-    height: 48px;
-    min-width: 32px;
-    min-height: 32px;
-    max-width: 56px;
-    max-height: 56px;
-    border: none;
-    background: transparent;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.top-controls .mute-btn img,
-.top-controls .fullscreen-btn img,
-.top-controls .options-btn img {
-    width: 40px; /* feste Größe */
-    height: 40px;
-    display: block;
-    pointer-events: none;
-}
-
-/* Fullscreen-Modus: Mobile Buttons weiterhin sichtbar auf Touch-Geräten */
-@media (max-width: 900px) and (orientation: landscape) {
-    .container.fullscreen .mobile-btns,
-    canvas.fullscreen ~ .mobile-btns {
-        display: block !important;
-        z-index: 2100 !important; /* über dem Fullscreen-Canvas (z-index: 1001) */
-    }
-}
-
-/* Mobile Landscape: Anpassungen für sehr kleine Viewports */
-@media (max-width: 667px) and (orientation: landscape) {
-    /* ...existing code... */
-
-    /* Mobile Buttons: kleinere Abstände auf sehr kleinen Bildschirmen */
-    .mobile-btns .mobile-btns-left,
-    .mobile-btns .mobile-btns-right {
-        bottom: 6vh; /* höher: von 2vh auf 6vh */
-        gap: 2vw;
-    }
-
-    .mobile-btns .mobile-btns-left {
-        left: 2vw;
-    }
-
-    .mobile-btns .mobile-btns-right {
-        right: 2vw;
-    }
-
-    .mobile-btns button {
-        width: 9vh; /* größer: von 7vh auf 9vh */
-        height: 9vh;
-    }
 
     /* Top-Controls Container */
     .top-controls {
@@ -934,26 +921,29 @@ canvas.fullscreen + #title,
         left: 1vw;
         right: auto;
         gap: 4px;
+        flex-wrap: nowrap; /* verhindert Umbruch */
     }
 
-    /* Top Icons: kleinere Größe */
+    /* Top Icons: kleinere Größe und feste Breite */
     .top-controls .mute-btn,
     .top-controls .options-btn,
     .top-controls .fullscreen-btn {
-        width: 32px;
-        height: 32px;
+        width: 28px !important; /* kleiner für bessere Passform */
+        height: 28px !important;
         min-width: 28px;
         min-height: 28px;
-        max-width: 32px;
-        max-height: 32px;
+        max-width: 28px;
+        max-height: 28px;
+        flex-shrink: 0; /* verhindert Schrumpfen */
     }
 
     .top-controls .mute-btn img,
     .top-controls .options-btn img,
     .top-controls .fullscreen-btn img {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
     }
-
-    /* ...existing code... */
 }
+
+/* Portrait-Modus: Zeige Rotations-Hinweis NUR wenn JavaScript ihn nicht versteckt */
+/* Die JavaScript-Logik entscheidet, wann der Hinweis angezeigt wird */
