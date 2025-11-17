@@ -60,12 +60,10 @@ const SoundManager = {
         audio.loop = true;
         audio.volume = 0.3;
         
-        // NEU: Fehlerbehandlung für blockierte Sounds
         const playPromise = audio.play();
         if (playPromise !== undefined) {
             playPromise.catch(error => {
-                console.log('Audio playback prevented by browser:', error);
-                // Optional: Zeige User-Info, dass Sound erst nach Interaktion startet
+                // Entfernt: console.log - nur noch Silent Catch
             });
         }
     },
