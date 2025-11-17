@@ -282,33 +282,35 @@ canvas.fullscreen {
     width: 100%;
     height: 100%;
     pointer-events: none; 
-    z-index: 10;
+    z-index: 2100; /* erhöht von 10 auf 2100, über Fullscreen-Canvas */
     display: none; 
 }
 
 .mobile-btns .mobile-btns-left,
 .mobile-btns .mobile-btns-right {
     position: absolute;
-    bottom: 8vh; /* höher: von 3vh auf 8vh */
+    bottom: 10vh;
     display: flex;
-    flex-direction: row;        
-    gap: 2.5vw; /* etwas mehr Abstand zwischen Buttons */
+    flex-direction: row;
+    gap: 2.5vw;
     align-items: center;
     pointer-events: auto;
 }
-
 
 .mobile-btns .mobile-btns-left {
     left: 3vw;
 }
 
 .mobile-btns .mobile-btns-right {
-    right: 3vw;
+    left: 74%;
+    right: auto; /* entferne right positioning */
 }
 
 .mobile-btns button {
-    width: 11vh; /* größer: von 8vh auf 11vh */
+    width: 11vh;
     height: 11vh;
+    min-width: 50px; /* Mindestgröße für sehr kleine Screens */
+    min-height: 50px;
     border-radius: 12px; 
     border: none;
     background: rgba(44, 62, 80, 0.8);
@@ -342,6 +344,7 @@ canvas.fullscreen {
     }
     .mobile-btns {
         display: block !important;
+        z-index: 2100 !important; /* sicherstellen dass z-index auch im Fullscreen hoch bleibt */
     }
 }
 
@@ -359,11 +362,15 @@ canvas.fullscreen {
 
 .mute-btn {
     position: absolute;
-    top: 14px;
-    right: 14px;
+    top: 2%; /* statt 14px */
+    right: 2%; /* statt 14px */
     z-index: 2000;
-    width: 48px;
-    height: 48px;
+    width: 6.67%; /* 48px von 720px = 6.67% */
+    height: 10%; /* 48px von 480px = 10% */
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 56px;
+    max-height: 56px;
     border: none;
     background: transparent;
     padding: 0;
@@ -374,19 +381,23 @@ canvas.fullscreen {
 }
 
 .mute-btn img {
-    width: 40px;
-    height: 40px;
+    width: 83.33%; /* 40px von 48px */
+    height: 83.33%;
     display: block;
     pointer-events: none;
 }
 
 .fullscreen-btn {
     position: absolute;
-    top: 14px;
-    right: 72px;
+    top: 2%;
+    right: 10%; /* statt 72px */
     z-index: 2000;
-    width: 48px;
-    height: 48px;
+    width: 6.67%;
+    height: 10%;
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 56px;
+    max-height: 56px;
     border: none;
     background: transparent;
     padding: 0;
@@ -397,19 +408,23 @@ canvas.fullscreen {
 }
 
 .fullscreen-btn img {
-    width: 40px;
-    height: 40px;
+    width: 83.33%;
+    height: 83.33%;
     display: block;
     pointer-events: none;
 }
 
 .options-btn {
     position: absolute;
-    top: 14px;
-    right: 130px; 
+    top: 2%;
+    right: 18%; /* statt 130px */
     z-index: 2000;
-    width: 48px;
-    height: 48px;
+    width: 6.67%;
+    height: 10%;
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 56px;
+    max-height: 56px;
     border: none;
     background: transparent;
     padding: 0;
@@ -420,8 +435,8 @@ canvas.fullscreen {
 }
 
 .options-btn img {
-    width: 40px;
-    height: 40px;
+    width: 83.33%;
+    height: 83.33%;
     display: block;
     pointer-events: none;
 }
@@ -678,22 +693,72 @@ canvas.fullscreen + #title,
     }
 
     #title {
-        display: none; /* Titel bei kleinem Viewport verstecken */
+        display: none;
     }
 
-    /* Icons kleiner und näher zusammen */
-    .mute-btn, .options-btn {
-        top: 8px;
-        width: 36px;
-        height: 36px;
+    /* Top Icons: weiter nach LINKS verschoben */
+    .mute-btn, .options-btn, .fullscreen-btn {
+        top: 1vh;
+        width: 32px;
+        height: 32px;
+        min-width: 28px;
+        min-height: 28px;
+        max-width: 32px;
+        max-height: 32px;
     }
 
-    .mute-btn { right: 8px; }
-    .options-btn { right: 50px; } /* rückt nach rechts, wo vorher Fullscreen war */
+    .mute-btn img, .options-btn img, .fullscreen-btn img {
+        width: 24px;
+        height: 24px;
+    }
 
-    /* Mobile Buttons anzeigen - AUCH im Fullscreen */
+    /* Ändere von right zu left Positionierung */
+    .mute-btn { 
+        left: 1vw !important;
+        right: auto !important;
+    }
+    .fullscreen-btn { 
+        left: calc(32px + 2vw) !important;
+        right: auto !important;
+    }
+    .options-btn { 
+        left: calc(64px + 3vw) !important;
+        right: auto !important;
+    }
+
+    /* Mobile Control Buttons: höher und Jump/Throw weiter links */
+    .mobile-btns .mobile-btns-left,
+    .mobile-btns .mobile-btns-right {
+        bottom: 15vh !important; /* weiter nach oben: von 10vh auf 15vh */
+        gap: 1.5vw;
+    }
+
+    .mobile-btns .mobile-btns-left {
+        left: 1vw;
+    }
+
+    .mobile-btns .mobile-btns-right {
+        right: 15vw !important; /* weiter nach links: von 8vw auf 15vw */
+    }
+
+    .mobile-btns button {
+        width: 50px;
+        height: 50px;
+        min-width: 45px;
+        min-height: 45px;
+        max-width: 50px;
+        max-height: 50px;
+    }
+
+    .mobile-btns button img {
+        width: 55%;
+        height: 55%;
+    }
+
+    /* Mobile Buttons anzeigen */
     .mobile-btns {
         display: block !important;
+        z-index: 2100 !important; /* sicherstellen dass z-index auch im Fullscreen hoch bleibt */
     }
 
     /* Options Modal kleiner */
@@ -719,15 +784,15 @@ canvas.fullscreen + #title,
         font-size: 0.85rem;
     }
 
-    /* Controls im Modal: kompakter, ABER 2 Spalten beibehalten */
+    /* Controls im Modal: kompakter, 2 Spalten */
     .controls-grid {
-        grid-template-columns: repeat(2, 1fr); /* BLEIBT bei 2 Spalten */
+        grid-template-columns: repeat(2, 1fr);
         gap: 6px;
         padding: 4px;
     }
 
     .control-item {
-        flex-direction: column; /* vertikal: Icon oben, Text unten */
+        flex-direction: column;
         min-height: 70px;
         padding: 6px;
         max-width: 100%;
@@ -791,115 +856,43 @@ canvas.fullscreen + #title,
     box-sizing: border-box;
 }
 
-/* Einzelnes Steuerungs-Item — hellerer Hintergrund, mehr Padding, begrenzte Breite */
-.control-item {
+/* Container für Top-Control-Buttons */
+.top-controls {
+    position: absolute;
+    /* top und right werden per JavaScript gesetzt */
+    z-index: 2000;
     display: flex;
-    flex-direction: column;
+    gap: 8px;
     align-items: center;
-    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06));
-    padding: 18px;
-    border-radius: 12px;
-    min-height: 150px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.45);
-    border: 1px solid rgba(255,255,255,0.04);
-    overflow: hidden;
-    box-sizing: border-box;
-    max-width: 340px;
 }
 
-/* Größerer, deutlich abgesetzter Icon-Container */
-.control-icon {
-    width: 96px;
-    height: 96px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
-    border-radius: 14px;
-    margin-bottom: 14px;
-    border: 1px solid rgba(255,255,255,0.06);
-    flex-shrink: 0;
-}
-
-.control-icon img {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
-}
-
-/* Text unter dem Icon */
-.control-text {
-    text-align: center;
-    color: #f3f3f3;
-    max-width: 260px;
-    padding: 0 6px;
-}
-
-/* Controls Grid: 2 Spalten IMMER */
-.controls-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px 16px;
-    align-items: start;
-    padding: 6px 8px;
-    box-sizing: border-box;
-}
-
-/* Einzelnes Steuerungs-Item — kompakter */
-.control-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.04));
-    padding: 10px;
-    border-radius: 10px;
-    min-height: 100px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
-    border: 1px solid rgba(255,255,255,0.03);
-    overflow: hidden;
-    box-sizing: border-box;
-    max-width: 280px;
-}
-
-/* Icon-Container — kleiner */
-.control-icon {
-    width: 50px;
-    height: 50px;
+/* Buttons im Top-Controls Container */
+.top-controls .mute-btn,
+.top-controls .fullscreen-btn,
+.top-controls .options-btn {
+    position: static; /* statt relative */
+    width: 48px; /* feste Größe statt Prozent */
+    height: 48px;
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 56px;
+    max-height: 56px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-    border-radius: 10px;
-    margin-bottom: 8px;
-    border: 1px solid rgba(255,255,255,0.04);
-    flex-shrink: 0;
 }
 
-.control-icon img {
-    width: 34px;
-    height: 34px;
-    object-fit: contain;
-    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
-}
-
-/* Text unter dem Icon — kompakter */
-.control-text {
-    text-align: center;
-    color: #f3f3f3;
-    max-width: 200px;
-    padding: 0 4px;
-}
-
-.control-text h3 {
-    font-size: 0.95rem;
-    margin: 0 0 4px 0;
-}
-
-.control-text p {
-    font-size: 0.85rem;
-    margin: 0;
-    line-height: 1.3;
+.top-controls .mute-btn img,
+.top-controls .fullscreen-btn img,
+.top-controls .options-btn img {
+    width: 40px; /* feste Größe */
+    height: 40px;
+    display: block;
+    pointer-events: none;
 }
 
 /* Fullscreen-Modus: Mobile Buttons weiterhin sichtbar auf Touch-Geräten */
@@ -907,6 +900,7 @@ canvas.fullscreen + #title,
     .container.fullscreen .mobile-btns,
     canvas.fullscreen ~ .mobile-btns {
         display: block !important;
+        z-index: 2100 !important; /* über dem Fullscreen-Canvas (z-index: 1001) */
     }
 }
 
@@ -932,6 +926,33 @@ canvas.fullscreen + #title,
     .mobile-btns button {
         width: 9vh; /* größer: von 7vh auf 9vh */
         height: 9vh;
+    }
+
+    /* Top-Controls Container */
+    .top-controls {
+        top: 1vh;
+        left: 1vw;
+        right: auto;
+        gap: 4px;
+    }
+
+    /* Top Icons: kleinere Größe */
+    .top-controls .mute-btn,
+    .top-controls .options-btn,
+    .top-controls .fullscreen-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 28px;
+        min-height: 28px;
+        max-width: 32px;
+        max-height: 32px;
+    }
+
+    .top-controls .mute-btn img,
+    .top-controls .options-btn img,
+    .top-controls .fullscreen-btn img {
+        width: 24px;
+        height: 24px;
     }
 
     /* ...existing code... */
