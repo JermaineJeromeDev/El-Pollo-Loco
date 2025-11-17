@@ -564,6 +564,19 @@ canvas.fullscreen + #title,
     box-shadow: 0 6px 18px rgba(0,0,0,0.45);
 }
 
+/* NEU: Spezieller Style für "Zurück zum Menü" Button */
+#tab-back-menu {
+    background: rgba(244, 67, 54, 0.15); /* leicht rötlich */
+}
+
+#tab-back-menu:hover {
+    background: rgba(244, 67, 54, 0.25);
+}
+
+#tab-back-menu.active {
+    background: linear-gradient(90deg, #f44336, #d32f2f); /* rot statt grün/blau */
+}
+
 /* Inhalte der Tabs */
 .tab-contents {
     display: block;
@@ -599,7 +612,7 @@ canvas.fullscreen + #title,
 .options-close-btn {
     position: absolute;
     top: 10px;
-    left: 10px;
+    left: 0px; /* korrigiert: von -10px auf 0px (direkt am Rand) */
     width: 40px;
     height: 40px;
     border: none;
@@ -860,7 +873,7 @@ canvas.fullscreen + #title,
         width: 32px;
         height: 32px;
         top: 6px;
-        left: 6px;
+        left: 0px; /* korrigiert: von -8px auf 0px */
     }
 
     .tab-buttons {
