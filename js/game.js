@@ -35,14 +35,14 @@ function updateMobileBtnsVisibility() {
 }
 
 function loadAllSounds() {
-    SoundManager.load('jump', [{ src: 'audio/1_character/jump.mp3', type: 'audio/mpeg' }]);
-    SoundManager.load('throw', [{ src: 'audio/4_bottle/throw.mp3', type: 'audio/mpeg' }]);
-    SoundManager.load('break', [{ src: 'audio/4_bottle/break.mp3', type: 'audio/mpeg' }]);
-    SoundManager.load('hurt', [{ src: 'audio/1_character/hurt.mp3', type: 'audio/mpeg' }]);
-    SoundManager.load('lose', [{ src: 'audio/5_win_lose/lose.wav', type: 'audio/wav' }]);
-    SoundManager.load('win', [{ src: 'audio/5_win_lose/win.wav', type: 'audio/wav' }]);
-    SoundManager.load('gameplay', [{ src: 'audio/0_gameplay/gamesound.wav', type: 'audio/mpeg' }]);
-    SoundManager.load('coin', [{ src: 'audio/3_coin/collect.wav', type: 'audio/wav' }]);
+    SoundManager.load('jump', [{ src: 'assets/audio/1_character/jump.mp3', type: 'audio/mpeg' }]);
+    SoundManager.load('throw', [{ src: 'assets/audio/4_bottle/throw.mp3', type: 'audio/mpeg' }]);
+    SoundManager.load('break', [{ src: 'assets/audio/4_bottle/break.mp3', type: 'audio/mpeg' }]);
+    SoundManager.load('hurt', [{ src: 'assets/audio/1_character/hurt.mp3', type: 'audio/mpeg' }]);
+    SoundManager.load('lose', [{ src: 'assets/audio/5_win_lose/lose.wav', type: 'audio/wav' }]);
+    SoundManager.load('win', [{ src: 'assets/audio/5_win_lose/win.wav', type: 'audio/wav' }]);
+    SoundManager.load('gameplay', [{ src: 'assets/audio/0_gameplay/gamesound.wav', type: 'audio/mpeg' }]);
+    SoundManager.load('coin', [{ src: 'assets/audio/3_coin/collect.wav', type: 'audio/wav' }]);
 }
 
 function setupCanvasListeners() {
