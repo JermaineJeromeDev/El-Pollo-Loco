@@ -440,15 +440,20 @@ function drawEndScreenFrame(img, x, y, w, h, opacity, scale) {
 }
 
 function setupWinLoseButtons(type) {
-    let w = 250, h = 60, gap = 20;
-    let totalW = w * 2 + gap;
-    let x = (canvas.width - totalW) / 2;
-    let y = canvas.height - 140;
+    let w = 200, h = 60;
+    let totalButtons = 2;
+    let totalButtonWidth = w * totalButtons;
+    let availableSpace = canvas.width - totalButtonWidth;
+    let spacing = availableSpace / (totalButtons + 1); // space-around: gleiche Abstände links, rechts und zwischen Buttons
+    
+    let x1 = spacing;
+    let x2 = spacing + w + spacing;
+    let y = 75;
     
     menuButtons = [
         { 
             text: 'Restart', 
-            x, 
+            x: x1, 
             y, 
             w, 
             h, 
@@ -461,7 +466,7 @@ function setupWinLoseButtons(type) {
         },
         { 
             text: 'Back to Menu', 
-            x: x + w + gap, 
+            x: x2, 
             y, 
             w, 
             h, 
@@ -480,7 +485,7 @@ function drawMenuButtons() {
 }
 
 function drawWinLoseButtons() {
-    menuButtons.forEach((btn, idx) => drawButton(btn, idx, "#00D9FF", "#0099CC", 0)); // Cyan/Türkis für Win/Lose
+    menuButtons.forEach((btn, idx) => drawButton(btn, idx, "#FFD700", "#FFA500", 0)); // gleiche Farben wie Start-Button
 }
 
 function drawButton(btn, idx, hoverColor, normalColor, radius) {
@@ -488,11 +493,8 @@ function drawButton(btn, idx, hoverColor, normalColor, radius) {
     
     // Buttons für Start UND Win/Lose: nur Text, kein Hintergrund
     if (gameState === 'start' || gameState === 'win' || gameState === 'lose') {
-        // Verschiedene Farben für Start vs Win/Lose
-        let baseColor = gameState === 'start' ? "#FFA500" : "#0099CC";
-        let hColor = gameState === 'start' ? "#FFD700" : "#00D9FF";
-        
-        ctx.fillStyle = (idx === hoveredButtonIndex) ? hColor : baseColor;
+        // Einheitliche Farben für alle Buttons: Orange normal, Gold beim Hover
+        ctx.fillStyle = (idx === hoveredButtonIndex) ? "#FFD700" : "#FFA500";
         ctx.font = "bold 38px 'Luckiest Guy', cursive";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
