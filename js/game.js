@@ -10,6 +10,7 @@ let hoveredButtonIndex = -1;
 let winSoundPlayed = false;
 let loseSoundPlayed = false;
 let optionsOrigin = null; // 'playing' | 'start' | null
+let endScreenImage = null; // NEU: Speichert das End-Screen-Bild
 
 function init() {
     canvas = document.getElementById('canvas');
@@ -21,17 +22,21 @@ function init() {
     initFullscreenButton();
     initOptionsTopButton();
     initOptionsCloseButton();
-    initOptionsTabs(); // <-- neu: Tab-Eventbinding
+    initOptionsTabs();
     drawStartScreen();
 }
 
 // -> Definiere updateMobileBtnsVisibility früh, damit setupMobileEvents() es verwenden kann
 function isMobileLandscape() {
-    return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) && window.innerWidth > window.innerHeight;
+    const isSmallViewport = window.innerWidth <= 667 && window.innerHeight <= 375;
+    const isLandscape = window.innerWidth > window.innerHeight;
+    return isSmallViewport && isLandscape;
 }
 function updateMobileBtnsVisibility() {
     const mobileBtns = document.getElementById('mobile-btns');
-    if (mobileBtns) mobileBtns.style.display = isMobileLandscape() ? 'block' : 'none';
+    if (mobileBtns) {
+        mobileBtns.style.display = isMobileLandscape() ? 'block' : 'none';
+    }
 }
 
 function loadAllSounds() {
@@ -45,10 +50,98 @@ function loadAllSounds() {
     SoundManager.load('coin', [{ src: 'assets/audio/3_coin/collect.wav', type: 'audio/wav' }]);
 }
 
+function handleMenuClick(event) {
+    let { x, y } = getMousePos(event);
+    menuButtons.forEach(btn => {
+        if (isPointInButton(x, y, btn)) btn.onClick();
+    });
+}
+
+function handleMenuHover(event) {
+    if (!['start', 'win', 'lose', 'options'].includes(gameState)) return;
+    let { x, y } = getMousePos(event);
+    hoveredButtonIndex = -1;
+    menuButtons.forEach((btn, idx) => {
+        if (isPointInButton(x, y, btn)) hoveredButtonIndex = idx;
+    });
+    redrawMenuScreen();
+}
+
+function handleMenuTouch(event) {
+    event.preventDefault();
+    let touch = event.touches[0];
+    if (!touch) return;
+    
+    let rect = canvas.getBoundingClientRect();
+    let x = touch.clientX - rect.left;
+    let y = touch.clientY - rect.top;
+    
+    menuButtons.forEach(btn => {
+        if (isPointInButton(x, y, btn)) {
+            btn.onClick();
+        }
+    });
+}
+
+function getMousePos(event) {
+    let rect = canvas.getBoundingClientRect();
+    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+}
+
+function isPointInButton(mx, my, btn) {
+    return mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h;
+}
+
+function redrawMenuScreen() {
+    if (gameState === 'start') drawStartScreen();
+    if (gameState === 'options') drawOptionsScreen();
+    // NEU: Win/Lose-Screens komplett neu zeichnen
+    if (gameState === 'win' || gameState === 'lose') {
+        redrawEndScreen();
+    }
+}
+
+// NEU: Zeichnet End-Screen mit gespeichertem Bild neu
+function redrawEndScreen() {
+    if (!endScreenImage) return;
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Kein schwarzer Hintergrund - nur transparentes Canvas
+    
+    let w = endScreenImage.width * 0.6;
+    let h = endScreenImage.height * 0.6;
+    let x = (canvas.width - w) / 2;
+    let y = (canvas.height - h) / 2;
+    
+    ctx.drawImage(endScreenImage, x, y, w, h);
+    drawWinLoseButtons();
+}
+
 function setupCanvasListeners() {
     if (!canvas._listenersAdded) {
         canvas.addEventListener('click', handleMenuClick);
+        canvas.addEventListener('touchstart', handleMenuTouch, { passive: false });
         canvas.addEventListener('mousemove', handleMenuHover);
+        
+        canvas.addEventListener('touchmove', function handleTouchMove(event) {
+            if (!['start', 'win', 'lose'].includes(gameState)) return;
+            event.preventDefault();
+            let touch = event.touches[0];
+            if (!touch) return;
+            
+            let rect = canvas.getBoundingClientRect();
+            let x = touch.clientX - rect.left;
+            let y = touch.clientY - rect.top;
+            
+            hoveredButtonIndex = -1;
+            menuButtons.forEach((btn, idx) => {
+                if (isPointInButton(x, y, btn)) hoveredButtonIndex = idx;
+            });
+            
+            // NEU: Verwende redrawMenuScreen statt direkt drawWinLoseButtons
+            redrawMenuScreen();
+        }, { passive: false });
+        
         canvas._listenersAdded = true;
     }
     window.addEventListener('keydown', handleKeyDown);
@@ -104,37 +197,6 @@ function setupMobileEvents() {
     });
 }
 
-function handleMenuClick(event) {
-    let { x, y } = getMousePos(event);
-    menuButtons.forEach(btn => {
-        if (isPointInButton(x, y, btn)) btn.onClick();
-    });
-}
-
-function handleMenuHover(event) {
-    if (!['start', 'options'].includes(gameState)) return;
-    let { x, y } = getMousePos(event);
-    hoveredButtonIndex = -1;
-    menuButtons.forEach((btn, idx) => {
-        if (isPointInButton(x, y, btn)) hoveredButtonIndex = idx;
-    });
-    redrawMenuScreen();
-}
-
-function getMousePos(event) {
-    let rect = canvas.getBoundingClientRect();
-    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
-}
-
-function isPointInButton(mx, my, btn) {
-    return mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h;
-}
-
-function redrawMenuScreen() {
-    if (gameState === 'start') drawStartScreen();
-    if (gameState === 'options') drawOptionsScreen();
-}
-
 function handleKeyDown(event) {
     if (event.key === 'Escape') toggleFullscreen();
     if (gameState !== 'playing') return;
@@ -168,13 +230,13 @@ function drawStartScreen() {
 }
 
 function setupStartMenuButtons() {
-    let w = 160, h = 50, gap = 30;
-    let totalW = w; // nur ein Button (Start)
+    let w = 200, h = 60, gap = 30;
+    let totalW = w;
     let x = (canvas.width - totalW) / 2;
-    let y = canvas.height - 120;
+    let y = 60; // Position unterhalb der Icons (Icons sind bei top: 14px, etwa 60-70px hoch)
     menuButtons = [
         { 
-            text: 'Start', 
+            text: 'Start Game', 
             x, 
             y, 
             w, 
@@ -185,7 +247,6 @@ function setupStartMenuButtons() {
                 startGame(); 
             } 
         }
-        // Optionen über #options-top-btn (persistentes Icon)
     ];
 }
 
@@ -336,7 +397,7 @@ function showWinScreen() {
     SoundManager.stopGameplay();
     if (!gameIsMuted && !winSoundPlayed) { SoundManager.playWin(); winSoundPlayed = true; }
     let img = new Image();
-    img.src = 'assets/img/You won, you lost/You Win A.png';
+    img.src = 'assets/img/You won, you lost/You win B.png'; // Geändert
     img.onload = () => { drawEndScreen(img, 'win'); };
 }
 
@@ -346,11 +407,12 @@ function showLoseScreen() {
     SoundManager.stopGameplay();
     if (!gameIsMuted && !loseSoundPlayed) { SoundManager.playLose(); loseSoundPlayed = true; }
     let img = new Image();
-    img.src = 'assets/img/9_intro_outro_screens/game_over/oh no you lost!.png';
+    img.src = 'assets/img/You won, you lost/You lost.png'; // Geändert
     img.onload = () => { drawEndScreen(img, 'lose'); };
 }
 
 function drawEndScreen(img, type) {
+    endScreenImage = img;
     let opacity = 0, scale = 1.2;
     let w = img.width * 0.6, h = img.height * 0.6;
     let x = (canvas.width - w) / 2, y = (canvas.height - h) / 2;
@@ -360,17 +422,17 @@ function drawEndScreen(img, type) {
         if (scale > 1) scale -= 0.02;
         if (opacity >= 1 && scale <= 1) {
             clearInterval(fadeInterval);
-            setupWinLoseButtons(type);
-            drawWinLoseButtons();
+            setupWinLoseButtons(type); // Buttons erstellen
+            drawWinLoseButtons(); // Buttons zeichnen
+            gameState = type; // 'win' oder 'lose'
         }
     }, 50);
 }
 
 function drawEndScreenFrame(img, x, y, w, h, opacity, scale) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Kein schwarzer Hintergrund mehr - nur opacity für Fade-In
     ctx.globalAlpha = opacity;
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
     let drawW = w * scale, drawH = h * scale;
     let drawX = x - (drawW - w) / 2, drawY = y - (drawH - h) / 2;
     ctx.drawImage(img, drawX, drawY, drawW, drawH);
@@ -378,39 +440,71 @@ function drawEndScreenFrame(img, x, y, w, h, opacity, scale) {
 }
 
 function setupWinLoseButtons(type) {
-    let w = 200, h = 55, gap = 25;
-    let totalW = w * 3 + gap * 2;
+    let w = 250, h = 60, gap = 20;
+    let totalW = w * 2 + gap;
     let x = (canvas.width - totalW) / 2;
-    let y = canvas.height - 120;
+    let y = canvas.height - 140;
+    
     menuButtons = [
-        { text: type === 'win' ? 'Nochmal spielen' : 'Nochmal versuchen', x, y, w, h, onClick: () => { winSoundPlayed = false; loseSoundPlayed = false; drawStartScreen(); } },
-        { text: 'Zurück zum Menü', x: x + w + gap, y, w, h, onClick: drawStartScreen },
-        { text: isFullscreen ? 'Kleiner Screen' : 'Fullscreen', x: x + 2 * (w + gap), y, w, h, onClick: toggleFullscreen }
+        { 
+            text: 'Restart', 
+            x, 
+            y, 
+            w, 
+            h, 
+            onClick: () => { 
+                winSoundPlayed = false; 
+                loseSoundPlayed = false; 
+                endScreenImage = null;
+                startGame(); 
+            } 
+        },
+        { 
+            text: 'Back to Menu', 
+            x: x + w + gap, 
+            y, 
+            w, 
+            h, 
+            onClick: () => {
+                winSoundPlayed = false;
+                loseSoundPlayed = false;
+                endScreenImage = null;
+                drawStartScreen();
+            }
+        }
     ];
 }
 
 function drawMenuButtons() {
-    menuButtons.forEach((btn, idx) => drawButton(btn, idx, "#388e3c", "#43cea2", 14));
+    menuButtons.forEach((btn, idx) => drawButton(btn, idx, "#FFD700", "#FFA500", 0));
 }
 
 function drawWinLoseButtons() {
-    menuButtons.forEach(btn => drawButton(btn, -1, "#4caf50", "#4caf50", 12));
+    menuButtons.forEach((btn, idx) => drawButton(btn, idx, "#00D9FF", "#0099CC", 0)); // Cyan/Türkis für Win/Lose
 }
 
 function drawButton(btn, idx, hoverColor, normalColor, radius) {
     ctx.save();
-    ctx.fillStyle = (idx === hoveredButtonIndex) ? hoverColor : normalColor;
-    ctx.strokeStyle = "#fff";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.roundRect ? ctx.roundRect(btn.x, btn.y, btn.w, btn.h, radius) : ctx.rect(btn.x, btn.y, btn.w, btn.h);
-    ctx.fill();
-    ctx.stroke();
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 24px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(btn.text, btn.x + btn.w / 2, btn.y + btn.h / 2);
+    
+    // Buttons für Start UND Win/Lose: nur Text, kein Hintergrund
+    if (gameState === 'start' || gameState === 'win' || gameState === 'lose') {
+        // Verschiedene Farben für Start vs Win/Lose
+        let baseColor = gameState === 'start' ? "#FFA500" : "#0099CC";
+        let hColor = gameState === 'start' ? "#FFD700" : "#00D9FF";
+        
+        ctx.fillStyle = (idx === hoveredButtonIndex) ? hColor : baseColor;
+        ctx.font = "bold 38px 'Luckiest Guy', cursive";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        
+        ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
+        ctx.shadowBlur = 8;
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+        
+        ctx.fillText(btn.text, btn.x + btn.w / 2, btn.y + btn.h / 2);
+    }
+    
     ctx.restore();
 }
 
@@ -432,36 +526,48 @@ function startGame() {
 function toggleFullscreen() {
     isFullscreen = !isFullscreen;
     const containerEl = document.querySelector('.container');
+    
     if (isFullscreen) {
-        // container als fullscreen markieren (verhindert Verschiebung durch vorherige Zentrierung)
+        // container als fullscreen markieren
         if (containerEl) containerEl.classList.add('fullscreen');
 
-        // Canvas als fixed full-viewport darstellen
+        // Canvas-Dimensionen an Viewport anpassen
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        
         canvas.classList.add('fullscreen');
-        canvas.style.width = window.innerWidth + 'px';
-        canvas.style.height = window.innerHeight + 'px';
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = vw;
+        canvas.height = vh;
+        canvas.style.width = vw + 'px';
+        canvas.style.height = vh + 'px';
+
+        // Falls World existiert: neu zeichnen mit neuer Canvas-Größe
+        if (world && world.draw) {
+            requestAnimationFrame(() => world.draw());
+        }
     } else {
-        // zurücksetzen
+        // zurücksetzen auf Standard-Größe
         if (containerEl) containerEl.classList.remove('fullscreen');
 
         canvas.classList.remove('fullscreen');
-        canvas.style.width = '720px';
-        canvas.style.height = '480px';
         canvas.width = 720;
         canvas.height = 480;
+        canvas.style.width = '720px';
+        canvas.style.height = '480px';
 
-        // Stelle sicher, dass Container wieder zentriert bleibt (CSS übernimmt)
+        // Falls World existiert: neu zeichnen
+        if (world && world.draw) {
+            requestAnimationFrame(() => world.draw());
+        }
     }
 
-    // optional: update fullscreen-button icon (keine Änderung am src in dieser Version)
+    // Fullscreen-Icon aktualisieren (optional)
     const fsImg = document.querySelector('#fullscreen-btn img');
     if (fsImg) {
         fsImg.src = 'assets/img/10_button_icons/fullscreen.png';
     }
 
-    // redraw menus falls nötig
+    // Menüs neu zeichnen falls im Menü-Zustand
     if (gameState === 'start') drawStartScreen();
     if (gameState === 'win') showWinScreen();
     if (gameState === 'lose') showLoseScreen();
@@ -513,6 +619,5 @@ function initMuteButton() {
         if (inImg) inImg.src = gameIsMuted ? 'assets/img/10_button_icons/mute.png' : 'assets/img/10_button_icons/volume.png';
     }
 }
-
 
 window.addEventListener('DOMContentLoaded', init);
