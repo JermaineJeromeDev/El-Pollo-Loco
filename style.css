@@ -476,7 +476,7 @@ canvas.fullscreen + #title,
     line-height: 1.65;
     font-size: 1.05rem;
     color: #f7f7f7;
-    filter: drop-shadow(2px 4px 6px black);
+    filter: drop-shadow(2px 4px 6px black);/
 }
 
 /* Close-Button innerhalb des Modal deutlicher machen */
