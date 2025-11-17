@@ -23,20 +23,26 @@ function init() {
     initOptionsTopButton();
     initOptionsCloseButton();
     initOptionsTabs();
+    updateIconPositions(); // Initial positioning
+    window.addEventListener('resize', updateIconPositions); // Responsive update
     drawStartScreen();
 }
 
-// -> Definiere updateMobileBtnsVisibility früh, damit setupMobileEvents() es verwenden kann
-function isMobileLandscape() {
-    const isSmallViewport = window.innerWidth <= 667 && window.innerHeight <= 375;
-    const isLandscape = window.innerWidth > window.innerHeight;
-    return isSmallViewport && isLandscape;
-}
-function updateMobileBtnsVisibility() {
-    const mobileBtns = document.getElementById('mobile-btns');
-    if (mobileBtns) {
-        mobileBtns.style.display = isMobileLandscape() ? 'block' : 'none';
-    }
+// Neue Funktion: Aktualisiert Icon-Positionen basierend auf Canvas-Größe
+function updateIconPositions() {
+    const containerEl = document.querySelector('.container');
+    const topControls = document.querySelector('.top-controls');
+    if (!containerEl || !topControls) return;
+
+    const canvasRect = canvas.getBoundingClientRect();
+    const containerRect = containerEl.getBoundingClientRect();
+
+    // Positioniere top-controls relativ zum Canvas
+    const topOffset = canvasRect.top - containerRect.top + 8; // 8px vom Canvas-Rand
+    const rightOffset = containerRect.right - canvasRect.right + 8; // 8px vom Canvas-Rand rechts
+    
+    topControls.style.top = `${topOffset}px`;
+    topControls.style.right = `${rightOffset}px`;
 }
 
 function loadAllSounds() {
@@ -108,8 +114,20 @@ function redrawEndScreen() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Kein schwarzer Hintergrund - nur transparentes Canvas
     
-    let w = endScreenImage.width * 0.6;
-    let h = endScreenImage.height * 0.6;
+    // Dynamische Bildgröße basierend auf Canvas
+    let maxWidth = canvas.width * 0.6;
+    let maxHeight = canvas.height * 0.6;
+    let imgAspect = endScreenImage.width / endScreenImage.height;
+    
+    let w, h;
+    if (maxWidth / imgAspect <= maxHeight) {
+        w = maxWidth;
+        h = maxWidth / imgAspect;
+    } else {
+        h = maxHeight;
+        w = maxHeight * imgAspect;
+    }
+    
     let x = (canvas.width - w) / 2;
     let y = (canvas.height - h) / 2;
     
@@ -197,6 +215,20 @@ function setupMobileEvents() {
     });
 }
 
+// -> Definiere updateMobileBtnsVisibility früh, damit setupMobileEvents() es verwenden kann
+function isMobileLandscape() {
+    const isSmallViewport = window.innerWidth <= 667 && window.innerHeight <= 375;
+    const isLandscape = window.innerWidth > window.innerHeight;
+    return isSmallViewport && isLandscape;
+}
+
+function updateMobileBtnsVisibility() {
+    const mobileBtns = document.getElementById('mobile-btns');
+    if (mobileBtns) {
+        mobileBtns.style.display = isMobileLandscape() ? 'block' : 'none';
+    }
+}
+
 function handleKeyDown(event) {
     if (event.key === 'Escape') toggleFullscreen();
     if (gameState !== 'playing') return;
@@ -223,17 +255,108 @@ function drawStartScreen() {
     bg.src = 'assets/img/9_intro_outro_screens/start/startscreen_2.png';
     bg.onload = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+        // Bild skaliert und horizontal zentriert zeichnen
+        drawScaledBackground(bg);
         setupStartMenuButtons();
         drawMenuButtons();
     };
 }
 
+function drawScaledBackground(img) {
+    // Bild im "cover"-Modus: füllt Canvas komplett aus, behält Aspect Ratio
+    let imgAspect = img.width / img.height;
+    let canvasAspect = canvas.width / canvas.height;
+    
+    let drawWidth, drawHeight, offsetX, offsetY;
+    
+    // Cover-Modus: Bild füllt Canvas komplett, ohne transparente Bereiche
+    if (canvasAspect > imgAspect) {
+        // Canvas ist breiter → Bild auf Canvas-Breite skalieren
+        drawWidth = canvas.width;
+        drawHeight = drawWidth / imgAspect;
+        offsetX = 0;
+        offsetY = (canvas.height - drawHeight) / 2;
+    } else {
+        // Canvas ist höher → Bild auf Canvas-Höhe skalieren
+        drawHeight = canvas.height;
+        drawWidth = drawHeight * imgAspect;
+        offsetX = (canvas.width - drawWidth) / 2;
+        offsetY = 0;
+    }
+    
+    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+}
+
+function showWinScreen() {
+    gameState = 'win';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    SoundManager.stopGameplay();
+    if (!gameIsMuted && !winSoundPlayed) { SoundManager.playWin(); winSoundPlayed = true; }
+    let img = new Image();
+    img.src = 'assets/img/You won, you lost/You win B.png';
+    img.onload = () => { drawEndScreen(img, 'win'); };
+}
+
+function showLoseScreen() {
+    gameState = 'lose';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    SoundManager.stopGameplay();
+    if (!gameIsMuted && !loseSoundPlayed) { SoundManager.playLose(); loseSoundPlayed = true; }
+    let img = new Image();
+    img.src = 'assets/img/You won, you lost/You lost.png';
+    img.onload = () => { drawEndScreen(img, 'lose'); };
+}
+
+function drawEndScreen(img, type) {
+    endScreenImage = img;
+    let opacity = 0, scale = 1.2;
+    
+    // Dynamische Bildgröße basierend auf Canvas
+    let maxWidth = canvas.width * 0.6;
+    let maxHeight = canvas.height * 0.6;
+    let imgAspect = img.width / img.height;
+    
+    let w, h;
+    if (maxWidth / imgAspect <= maxHeight) {
+        w = maxWidth;
+        h = maxWidth / imgAspect;
+    } else {
+        h = maxHeight;
+        w = maxHeight * imgAspect;
+    }
+    
+    let x = (canvas.width - w) / 2;
+    let y = (canvas.height - h) / 2;
+    
+    let fadeInterval = setInterval(() => {
+        drawEndScreenFrame(img, x, y, w, h, opacity, scale);
+        if (opacity < 1) opacity += 0.04;
+        if (scale > 1) scale -= 0.02;
+        if (opacity >= 1 && scale <= 1) {
+            clearInterval(fadeInterval);
+            setupWinLoseButtons(type);
+            drawWinLoseButtons();
+            gameState = type;
+        }
+    }, 50);
+}
+
+function drawEndScreenFrame(img, x, y, w, h, opacity, scale) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Kein schwarzer Hintergrund mehr - nur opacity für Fade-In
+    ctx.globalAlpha = opacity;
+    let drawW = w * scale, drawH = h * scale;
+    let drawX = x - (drawW - w) / 2, drawY = y - (drawH - h) / 2;
+    ctx.drawImage(img, drawX, drawY, drawW, drawH);
+    ctx.globalAlpha = 1;
+}
+
 function setupStartMenuButtons() {
-    let w = 200, h = 60, gap = 30;
-    let totalW = w;
-    let x = (canvas.width - totalW) / 2;
-    let y = 60; // Position unterhalb der Icons (Icons sind bei top: 14px, etwa 60-70px hoch)
+    let w = Math.min(200, canvas.width * 0.3); // max 200px oder 30% der Canvas-Breite
+    let h = 60;
+    let x = (canvas.width - w) / 2;
+    let y = Math.max(60, canvas.height * 0.125); // min 60px oder 12.5% der Canvas-Höhe
+    
     menuButtons = [
         { 
             text: 'Start Game', 
@@ -397,7 +520,7 @@ function showWinScreen() {
     SoundManager.stopGameplay();
     if (!gameIsMuted && !winSoundPlayed) { SoundManager.playWin(); winSoundPlayed = true; }
     let img = new Image();
-    img.src = 'assets/img/You won, you lost/You win B.png'; // Geändert
+    img.src = 'assets/img/You won, you lost/You win B.png';
     img.onload = () => { drawEndScreen(img, 'win'); };
 }
 
@@ -407,48 +530,103 @@ function showLoseScreen() {
     SoundManager.stopGameplay();
     if (!gameIsMuted && !loseSoundPlayed) { SoundManager.playLose(); loseSoundPlayed = true; }
     let img = new Image();
-    img.src = 'assets/img/You won, you lost/You lost.png'; // Geändert
+    img.src = 'assets/img/You won, you lost/You lost.png';
     img.onload = () => { drawEndScreen(img, 'lose'); };
 }
 
 function drawEndScreen(img, type) {
     endScreenImage = img;
     let opacity = 0, scale = 1.2;
-    let w = img.width * 0.6, h = img.height * 0.6;
-    let x = (canvas.width - w) / 2, y = (canvas.height - h) / 2;
+    
+    // Dynamische Bildgröße basierend auf Canvas
+    let maxWidth = canvas.width * 0.6;
+    let maxHeight = canvas.height * 0.6;
+    let imgAspect = img.width / img.height;
+    
+    let w, h;
+    if (maxWidth / imgAspect <= maxHeight) {
+        w = maxWidth;
+        h = maxWidth / imgAspect;
+    } else {
+        h = maxHeight;
+        w = maxHeight * imgAspect;
+    }
+    
+    let x = (canvas.width - w) / 2;
+    let y = (canvas.height - h) / 2;
+    
     let fadeInterval = setInterval(() => {
         drawEndScreenFrame(img, x, y, w, h, opacity, scale);
         if (opacity < 1) opacity += 0.04;
         if (scale > 1) scale -= 0.02;
         if (opacity >= 1 && scale <= 1) {
             clearInterval(fadeInterval);
-            setupWinLoseButtons(type); // Buttons erstellen
-            drawWinLoseButtons(); // Buttons zeichnen
-            gameState = type; // 'win' oder 'lose'
+            setupWinLoseButtons(type);
+            drawWinLoseButtons();
+            gameState = type;
         }
     }, 50);
 }
 
-function drawEndScreenFrame(img, x, y, w, h, opacity, scale) {
+function redrawEndScreen() {
+    if (!endScreenImage) return;
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // Kein schwarzer Hintergrund mehr - nur opacity für Fade-In
-    ctx.globalAlpha = opacity;
-    let drawW = w * scale, drawH = h * scale;
-    let drawX = x - (drawW - w) / 2, drawY = y - (drawH - h) / 2;
-    ctx.drawImage(img, drawX, drawY, drawW, drawH);
-    ctx.globalAlpha = 1;
+    
+    // Dynamische Bildgröße basierend auf Canvas
+    let maxWidth = canvas.width * 0.6;
+    let maxHeight = canvas.height * 0.6;
+    let imgAspect = endScreenImage.width / endScreenImage.height;
+    
+    let w, h;
+    if (maxWidth / imgAspect <= maxHeight) {
+        w = maxWidth;
+        h = maxWidth / imgAspect;
+    } else {
+        h = maxHeight;
+        w = maxHeight * imgAspect;
+    }
+    
+    let x = (canvas.width - w) / 2;
+    let y = (canvas.height - h) / 2;
+    
+    ctx.drawImage(endScreenImage, x, y, w, h);
+    drawWinLoseButtons();
+}
+
+function setupStartMenuButtons() {
+    let w = Math.min(200, canvas.width * 0.3); // max 200px oder 30% der Canvas-Breite
+    let h = 60;
+    let x = (canvas.width - w) / 2;
+    let y = Math.max(60, canvas.height * 0.125); // min 60px oder 12.5% der Canvas-Höhe
+    
+    menuButtons = [
+        { 
+            text: 'Start Game', 
+            x, 
+            y, 
+            w, 
+            h, 
+            onClick: () => { 
+                gameState = 'playing'; 
+                menuButtons = []; 
+                startGame(); 
+            } 
+        }
+    ];
 }
 
 function setupWinLoseButtons(type) {
-    let w = 200, h = 60;
+    let w = Math.min(200, canvas.width * 0.25); // Button-Breite anpassbar
+    let h = 60;
     let totalButtons = 2;
     let totalButtonWidth = w * totalButtons;
     let availableSpace = canvas.width - totalButtonWidth;
-    let spacing = availableSpace / (totalButtons + 1); // space-around: gleiche Abstände links, rechts und zwischen Buttons
+    let spacing = availableSpace / (totalButtons + 1);
     
     let x1 = spacing;
     let x2 = spacing + w + spacing;
-    let y = 75;
+    let y = Math.max(75, canvas.height * 0.15); // min 75px oder 15% der Canvas-Höhe
     
     menuButtons = [
         { 
@@ -485,17 +663,18 @@ function drawMenuButtons() {
 }
 
 function drawWinLoseButtons() {
-    menuButtons.forEach((btn, idx) => drawButton(btn, idx, "#FFD700", "#FFA500", 0)); // gleiche Farben wie Start-Button
+    menuButtons.forEach((btn, idx) => drawButton(btn, idx, "#FFD700", "#FFA500", 0));
 }
 
 function drawButton(btn, idx, hoverColor, normalColor, radius) {
     ctx.save();
     
-    // Buttons für Start UND Win/Lose: nur Text, kein Hintergrund
     if (gameState === 'start' || gameState === 'win' || gameState === 'lose') {
-        // Einheitliche Farben für alle Buttons: Orange normal, Gold beim Hover
         ctx.fillStyle = (idx === hoveredButtonIndex) ? "#FFD700" : "#FFA500";
-        ctx.font = "bold 38px 'Luckiest Guy', cursive";
+        
+        // Schriftgröße dynamisch anpassen (max 38px, mindestens 24px)
+        let fontSize = Math.min(38, Math.max(24, canvas.width / 20));
+        ctx.font = `bold ${fontSize}px 'Luckiest Guy', cursive`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         
@@ -530,10 +709,8 @@ function toggleFullscreen() {
     const containerEl = document.querySelector('.container');
     
     if (isFullscreen) {
-        // container als fullscreen markieren
         if (containerEl) containerEl.classList.add('fullscreen');
 
-        // Canvas-Dimensionen an Viewport anpassen
         const vw = window.innerWidth;
         const vh = window.innerHeight;
         
@@ -543,12 +720,12 @@ function toggleFullscreen() {
         canvas.style.width = vw + 'px';
         canvas.style.height = vh + 'px';
 
-        // Falls World existiert: neu zeichnen mit neuer Canvas-Größe
         if (world && world.draw) {
             requestAnimationFrame(() => world.draw());
         }
+        
+        updateIconPositions(); // Icons nach Fullscreen-Wechsel aktualisieren
     } else {
-        // zurücksetzen auf Standard-Größe
         if (containerEl) containerEl.classList.remove('fullscreen');
 
         canvas.classList.remove('fullscreen');
@@ -557,10 +734,11 @@ function toggleFullscreen() {
         canvas.style.width = '720px';
         canvas.style.height = '480px';
 
-        // Falls World existiert: neu zeichnen
         if (world && world.draw) {
             requestAnimationFrame(() => world.draw());
         }
+        
+        updateIconPositions(); // Icons nach Fullscreen-Exit aktualisieren
     }
 
     // Fullscreen-Icon aktualisieren (optional)
