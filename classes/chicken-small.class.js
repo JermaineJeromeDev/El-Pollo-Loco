@@ -57,9 +57,7 @@ class ChickenSmall extends MovableObject {
         if (this.isDeadHandled) return;
         this.isDeadHandled = true;
         this.loadImage(this.IMAGE_DEAD);
-        clearInterval(this.moveInterval);
-        clearInterval(this.animationInterval);
-        clearInterval(this.deathCheckInterval);
+        this.cleanup(); // NEU: Cleanup-Methode aufrufen
         setTimeout(() => {
             let fallSpeed = 2; 
             let groundLevel = 365;
@@ -71,5 +69,12 @@ class ChickenSmall extends MovableObject {
                 }
             }, 40);
         }, 300);
+    }
+    
+    // NEU: Cleanup-Methode
+    cleanup() {
+        if (this.moveInterval) clearInterval(this.moveInterval);
+        if (this.animationInterval) clearInterval(this.animationInterval);
+        if (this.deathCheckInterval) clearInterval(this.deathCheckInterval);
     }
 }
