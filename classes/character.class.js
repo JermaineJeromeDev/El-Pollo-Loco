@@ -144,13 +144,23 @@ class Character extends MovableObject {
         }, 200);
     }
 
+    /**
+     * Behandelt Hurt-Animation
+     */
     handleHurtAnimation() {
         this.playAnimation(this.IMAGES_HURT);
-        if (!this._hurtSoundPlaying && !this.world.gameIsMuted) {
-            this._hurtSoundPlaying = true;
-            SoundManager.play('hurt', 0.3, false);
-            setTimeout(() => { this._hurtSoundPlaying = false; }, 500);
-        }
+        this.playHurtSound();
+    }
+
+    /**
+     * Spielt Hurt-Sound ab
+     */
+    playHurtSound() {
+        if (this._hurtSoundPlaying || this.world.gameIsMuted) return;
+        
+        this._hurtSoundPlaying = true;
+        SoundManager.play('hurt', 0.3, false);
+        setTimeout(() => { this._hurtSoundPlaying = false; }, 500);
     }
 
     handleJumpingAnimation() {
