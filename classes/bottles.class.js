@@ -1,3 +1,8 @@
+/**
+ * Repräsentiert eine Flasche zum Einsammeln
+ * @class Bottle
+ * @extends MovableObject
+ */
 class Bottle extends MovableObject {
     height = 100;
     width = 100;
@@ -12,20 +17,24 @@ class Bottle extends MovableObject {
         bottom: 60
     };
 
-
+    /**
+     * Erstellt eine neue Flasche
+     */
     constructor() {
         super()
         this.loadImage(this.IMAGES_BOTTLES[0]);
         this.loadImages(this.IMAGES_BOTTLES);
-        this.x = 400 + Math.random() * 1800; // start ab x=400
+        this.x = 400 + Math.random() * 1800;
         this.y = 350;
         this.animate();
     }
 
-
+    /**
+     * Startet Animation
+     */
     animate() {
         setInterval(() => {
-        this.playAnimation(this.IMAGES_BOTTLES);
+            this.playAnimation(this.IMAGES_BOTTLES);
         }, 300);
     }
 }

@@ -1,10 +1,14 @@
+/**
+ * Sound-Manager für alle Audio-Dateien
+ * @namespace SoundManager
+ */
 const SoundManager = {
     sounds: {},
 
     /**
-     * Lädt einen Sound unter einem bestimmten Namen
-     * @param {string} name 
-     * @param {Array} sources [{src: 'path', type: 'audio/mpeg'}]
+     * Lädt einen Sound
+     * @param {string} name - Name des Sounds
+     * @param {Array<{src: string, type: string}>} sources - Audio-Quellen
      */
     load(name, sources) {
         if (this.sounds[name]) return;
@@ -20,10 +24,10 @@ const SoundManager = {
     },
 
     /**
-     * Allgemeines Abspielen eines Sounds
-     * @param {string} name 
-     * @param {number} volume 0-1
-     * @param {boolean} allowOverlap ob mehrere Instanzen gleichzeitig laufen dürfen
+     * Spielt einen Sound ab
+     * @param {string} name - Name des Sounds
+     * @param {number} volume - Lautstärke (0-1)
+     * @param {boolean} allowOverlap - Erlaube mehrere Instanzen
      */
     play(name, volume = 1, allowOverlap = true) {
         if (gameIsMuted) return;
@@ -36,7 +40,6 @@ const SoundManager = {
             audio.volume = volume;
             audio.play();
         } else {
-            // clone inkl. Kinder (deep clone), lade Quellen und spiele
             let clone = audio.cloneNode(true);
             clone.volume = volume;
             if (typeof clone.load === 'function') clone.load();
@@ -44,15 +47,30 @@ const SoundManager = {
         }
     },
 
+    /** Spielt Jump-Sound */
     playJump() { this.play('jump', 0.5, true); },
+    
+    /** Spielt Throw-Sound */
     playThrow() { this.play('throw', 0.6, true); },
+    
+    /** Spielt Break-Sound */
     playBreak() { this.play('break', 0.7, true); },
+    
+    /** Spielt Hurt-Sound */
     playHurt() { this.play('hurt', 0.3, false); },
+    
+    /** Spielt Win-Sound */
     playWin() { this.play('win', 0.5, false); },
+    
+    /** Spielt Lose-Sound */
     playLose() { this.play('lose', 0.5, false); },
+    
+    /** Spielt Coin-Sound */
     playCoin() { this.play('coin', 0.5, true); },
 
-    // Gameplay-Loop Sound
+    /**
+     * Startet Gameplay-Loop-Sound
+     */
     playGameplay() {
         if (gameIsMuted) return;
         let audio = this.sounds['gameplay'];
@@ -62,12 +80,13 @@ const SoundManager = {
         
         const playPromise = audio.play();
         if (playPromise !== undefined) {
-            playPromise.catch(error => {
-                // Entfernt: console.log - nur noch Silent Catch
-            });
+            playPromise.catch(() => {});
         }
     },
 
+    /**
+     * Stoppt Gameplay-Sound
+     */
     stopGameplay() {
         let audio = this.sounds['gameplay'];
         if (!audio) return;
@@ -75,6 +94,9 @@ const SoundManager = {
         audio.currentTime = 0;
     },
 
+    /**
+     * Stoppt alle Sounds
+     */
     stopAll() {
         Object.values(this.sounds).forEach(audio => {
             audio.pause();
@@ -83,7 +105,6 @@ const SoundManager = {
     }
 };
 
-// Sound laden (z.B. beim Spielstart)
 SoundManager.load('coin', [{ src: 'assets/audio/3_coin/collect.wav', type: 'audio/wav' }]);
 
 

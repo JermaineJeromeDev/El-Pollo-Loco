@@ -1,3 +1,8 @@
+/**
+ * Repräsentiert eine geworfene Flasche
+ * @class ThrowableObject
+ * @extends MovableObject
+ */
 class ThrowableObject extends MovableObject {
     throwBottleAir = false;
     bottleSplash = false;
@@ -26,6 +31,12 @@ class ThrowableObject extends MovableObject {
         'assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'
     ];
 
+    /**
+     * Erstellt ein werfbares Objekt
+     * @param {number} x - X-Position
+     * @param {number} y - Y-Position
+     * @param {boolean} direction - Wurfrichtung (true = links)
+     */
     constructor(x, y, direction) {
         super();
         this.otherDirection = direction;
@@ -40,18 +51,23 @@ class ThrowableObject extends MovableObject {
         this.animate();
     }
     
+    /**
+     * Wirft die Flasche
+     */
     throw() {
         this.throwBottleAir = true;
         this.speedY = 20;
         if (this.otherDirection == true) {
-        this.speedX = -10;  
+            this.speedX = -10;  
         } else {
-        this.speedX = 10;  
-    }
-
+            this.speedX = 10;  
+        }
         this.applyGravityAndMove();
     }
 
+    /**
+     * Wendet Schwerkraft an und bewegt Flasche
+     */
     applyGravityAndMove() {
         this.intervalId = setInterval(() => {
             this.y -= this.speedY;
@@ -65,6 +81,9 @@ class ThrowableObject extends MovableObject {
         }, 1000 / 60);
     }
 
+    /**
+     * Lässt Flasche zerbrechen
+     */
     breakAndSplash() {
         if (!this.isBreaking) {
             this.throwBottleAir = false;
@@ -82,6 +101,9 @@ class ThrowableObject extends MovableObject {
         });
     }
 
+    /**
+     * Startet Rotations-Animation
+     */
     animate() {
         setInterval(() => {
             if (this.throwBottleAir) {

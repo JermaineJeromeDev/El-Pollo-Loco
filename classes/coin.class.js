@@ -1,3 +1,8 @@
+/**
+ * Repräsentiert eine Münze
+ * @class Coin
+ * @extends MovableObject
+ */
 class Coin extends MovableObject {
     height = 100;
     width = 100;
@@ -12,20 +17,24 @@ class Coin extends MovableObject {
         bottom: 60
     };
 
-
+    /**
+     * Erstellt eine neue Münze
+     */
     constructor() {
         super()
         this.loadImage(this.COIN_IMAGES[0]);
         this.loadImages(this.COIN_IMAGES);
-        this.x = 400 + Math.random() * 1800; // start ab x=400
+        this.x = 400 + Math.random() * 1800;
         this.y = 55 + Math.random() * 150;
         this.animate();
     }
 
-
+    /**
+     * Startet Animation
+     */
     animate() {
         setInterval(() => {
-        this.playAnimation(this.COIN_IMAGES);
+            this.playAnimation(this.COIN_IMAGES);
         }, 300);
     }
 }
