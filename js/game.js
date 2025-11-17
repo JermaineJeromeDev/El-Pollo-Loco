@@ -228,9 +228,14 @@ function initOptionsTabs() {
         const btn = document.getElementById(t.btnId);
         if (!btn) return;
         btn.addEventListener('click', (e) => {
-            // Wenn Link mit target="_blank" → normale Navigation erlauben
+            // Wenn Link mit target="_blank" → normale Navigation erlauben, aber aktive Markierung entfernen
             if (btn.tagName === 'A' && btn.getAttribute('target') === '_blank') {
-                // Lasse den Link normal öffnen, verhindere NICHT das Default-Verhalten
+                // Entferne aktive Klasse von allen Tabs
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                });
+                // Lasse den Link normal öffnen
                 return;
             }
             // Ansonsten: Navigation verhindern, Tab wechseln
