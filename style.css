@@ -51,192 +51,8 @@ canvas {
     margin: 0 auto;
     width: 720px;
     height: 480px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Stärkerer Schatten */
-    border-radius: 8px; /* Leicht abgerundete Ecken */
-    transition: all 0.3s ease;
-}
-
-canvas:hover {
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
-}
-
-canvas.fullscreen {
-    position: fixed !important;
-    left: 0 !important;
-    top: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: 100vw !important;
-    max-height: 100vh !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    z-index: 1001;
-    object-fit: fill; /* streckt Canvas auf volle Größe */
-}
-
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.overlay-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.d-none {
-    display: none !important;
-}
-
-.start-bg {
-    position: absolute;
-    width: 720px;
-    height: 480px;
-    object-fit: cover;
-    z-index: 1;
-}
-
-.start-menu {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    width: 80%;
-    justify-content: space-between;
-    margin-top: 320px;
-}
-
-/* ========== ENHANCED BUTTON STYLES ========== */
-
-/* Start Menu Buttons: Gelber Gradient mit Hover-Effekt */
-.start-menu button,
-.end-menu button,
-.win-menu button {
-    padding: 18px 32px;
-    font-size: 1.2em;
-    border: none;
-    border-radius: 12px; /* runder */
-    background: linear-gradient(135deg, #FFD700, #FFA500); /* Gelber Gradient */
-    color: #fff;
-    cursor: pointer;
-    margin: 0 10px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.4); /* Leuchten */
-    font-family: "Luckiest Guy", cursive;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    transform: translateY(0);
-}
-
-.start-menu button:hover,
-.end-menu button:hover,
-.win-menu button:hover {
-    background: linear-gradient(135deg, #FFA500, #FF8C00);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.6);
-}
-
-.start-menu button:active,
-.end-menu button:active,
-.win-menu button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.4);
-}
-
-.start-menu button,
-.end-menu button,
-.win-menu button {
-    padding: 18px 32px;
-    font-size: 1.2em;
-    border: none;
-    border-radius: 12px; /* runder */
-    background: linear-gradient(135deg, #FFD700, #FFA500); /* Gelber Gradient */
-    color: #fff;
-    cursor: pointer;
-    margin: 0 10px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.4); /* Leuchten */
-    font-family: "Luckiest Guy", cursive;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    transform: translateY(0);
-}
-
-.start-menu button:hover,
-.end-menu button:hover,
-.win-menu button:hover {
-    background: linear-gradient(135deg, #FFA500, #FF8C00);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.6);
-}
-
-.start-menu button:active,
-.end-menu button:active,
-.win-menu button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.4);
-}
-
-.start-menu button,
-.end-menu button,
-.win-menu button {
-    padding: 18px 32px;
-    font-size: 1.2em;
-    border: none;
-    border-radius: 12px; /* runder */
-    background: linear-gradient(135deg, #FFD700, #FFA500); /* Gelber Gradient */
-    color: #fff;
-    cursor: pointer;
-    margin: 0 10px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.4); /* Leuchten */
-    font-family: "Luckiest Guy", cursive;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    transform: translateY(0);
-}
-
-.start-menu button:hover,
-.end-menu button:hover,
-.win-menu button:hover {
-    background: linear-gradient(135deg, #FFA500, #FF8C00);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.6);
-}
-
-.start-menu button:active,
-.end-menu button:active,
-.win-menu button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.4);
-}
-
-canvas {
-    background-color: transparent; /* war schwarz, jetzt transparent */
-    display: block;
-    margin: 0 auto;
-    width: 720px;
-    height: 480px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Stärkerer Schatten */
-    border-radius: 8px; /* Leicht abgerundete Ecken */
-    transition: all 0.3s ease;
-}
-
-canvas:hover {
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 20px #000;
+    transition: width 0.3s, height 0.3s;
 }
 
 canvas.fullscreen {
@@ -307,31 +123,18 @@ canvas.fullscreen {
     padding: 18px 32px;
     font-size: 1.2em;
     border: none;
-    border-radius: 12px; /* runder */
-    background: linear-gradient(135deg, #FFD700, #FFA500); /* Gelber Gradient */
+    border-radius: 8px;
+    background: #4caf50;
     color: #fff;
     cursor: pointer;
     margin: 0 10px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.4); /* Leuchten */
-    font-family: "Luckiest Guy", cursive;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    transform: translateY(0);
+    transition: background 0.2s;
 }
 
 .start-menu button:hover,
 .end-menu button:hover,
 .win-menu button:hover {
-    background: linear-gradient(135deg, #FFA500, #FF8C00);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.6);
-}
-
-.start-menu button:active,
-.end-menu button:active,
-.win-menu button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.4);
+    background: #388e3c;
 }
 
 .mute-img {
@@ -432,11 +235,9 @@ canvas.fullscreen {
     overflow: hidden;
     box-sizing: border-box;
     padding: 46px 18px 18px;
-    background: rgba(8, 12, 18, 0.85); /* Dunkler */
-    backdrop-filter: blur(15px); /* Glasmorphism */
-    border-radius: 16px; /* Runder */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Leichter Rand */
-    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    background: rgba(8, 12, 18, 0.65);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     color: #ffffff;
     margin: 0 auto;
     transition: opacity 0.18s ease;
@@ -511,25 +312,22 @@ canvas.fullscreen {
     height: 11vh;
     min-width: 50px;
     min-height: 50px;
-    border-radius: 16px; /* runder */
-    border: 2px solid rgba(255, 255, 255, 0.2); /* Leichter Rand */
-    background: rgba(67, 206, 162, 0.3); /* Grünlicher Gradient */
-    backdrop-filter: blur(10px); /* Glasmorphism */
+    border-radius: 12px; 
+    border: none;
+    background: rgba(44, 62, 80, 0.8);
     color: #fff;
     font-size: 2em;
     display: flex;
     align-items: center;
     justify-content: center;
     pointer-events: auto;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: background 0.2s;
 }
 
-.mobile-btns button:active {
-    background: rgba(67, 206, 162, 0.6);
-    transform: scale(0.95);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+.mobile-btns button img {
+    width: 60%;
+    height: 60%;
 }
 
 @media (max-width: 900px) and (orientation: landscape) {
@@ -651,32 +449,12 @@ canvas.fullscreen {
     left: 50%;
     transform: translateX(-50%);
     margin: 0;
-    color: #FFD700;
-    font-size: 2.8rem; /* Größer */
+    color: #fff;
+    font-size: 2.2rem;
     text-align: center;
-    text-shadow: 
-        0 0 20px rgba(255, 215, 0, 0.8),
-        3px 3px 6px rgba(0, 0, 0, 0.8),
-        -2px -2px 4px rgba(255, 165, 0, 0.4); /* Leuchten */
-    z-index: 2010;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.7);
+    z-index: 2010;            /* über den Icon-Buttons */
     pointer-events: none;
-    font-family: "Luckiest Guy", cursive;
-    letter-spacing: 2px;
-    animation: titleGlow 2s ease-in-out infinite alternate;
-}
-
-@keyframes titleGlow {
-    from {
-        text-shadow: 
-            0 0 20px rgba(255, 215, 0, 0.6),
-            3px 3px 6px rgba(0, 0, 0, 0.8);
-    }
-    to {
-        text-shadow: 
-            0 0 30px rgba(255, 215, 0, 1),
-            3px 3px 8px rgba(0, 0, 0, 0.9),
-            -2px -2px 6px rgba(255, 165, 0, 0.6);
-    }
 }
 
 /* Wenn das Canvas in den Fullscreen-Modus wechselt, verstecken wir den Titel */
@@ -768,26 +546,22 @@ canvas.fullscreen + #title,
     background: rgba(255,255,255,0.06);
     color: #fff;
     border: 0;
-    padding: 10px 16px; /* etwas größer */
-    border-radius: 10px; /* runder */
+    padding: 8px 14px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: 700;
-    font-family: "Fredoka", sans-serif;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: background 150ms ease, transform 120ms ease;
 }
 
 .tab-btn:hover {
-    background: rgba(255,255,255,0.12);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: rgba(255,255,255,0.10);
 }
 
 .tab-btn.active {
-    background: linear-gradient(135deg, #43cea2, #185a9d); /* Diagonaler Gradient */
+    background: linear-gradient(90deg,#43cea2,#185a9d);
     color: #fff;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(67, 206, 162, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
 }
 
 /* NEU: Spezieller Style für "Zurück zum Menü" Button */
@@ -838,30 +612,30 @@ canvas.fullscreen + #title,
 .options-close-btn {
     position: absolute;
     top: 10px;
-    left: 0px;
+    left: 0px; /* korrigiert: von -10px auf 0px (direkt am Rand) */
     width: 40px;
     height: 40px;
     border: none;
-    background: rgba(244, 67, 54, 0.2); /* Leicht rötlich */
-    backdrop-filter: blur(10px);
+    background: transparent;
     padding: 4px;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2030;
-    transition: all 0.2s ease;
+    transition: background 0.12s ease, transform 0.08s ease;
 }
-
+.options-close-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: none;
+}
 .options-close-btn:hover {
-    background: rgba(244, 67, 54, 0.4);
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
-}
-
-.options-close-btn:active {
-    transform: scale(0.95);
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-1px);
 }
 
 /* Kleinere responsive Anpassung */
@@ -939,58 +713,65 @@ canvas.fullscreen + #title,
 /* Controls Grid: 2 Spalten auf breitem Bildschirm, 1 Spalte mobil */
 .controls-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* IMMER 2 Spalten */
+    grid-template-columns: repeat(2, 1fr);
     gap: 18px 28px;
     align-items: start;
     padding: 8px 12px;
     box-sizing: border-box;
 }
 
-/* Container für Top-Control-Buttons */
-.top-controls {
-    position: absolute;
-    /* top und right werden per JavaScript gesetzt */
-    z-index: 2000;
+/* NEU: Control-Item Styling */
+.control-item {
     display: flex;
-    gap: 8px;
+    flex-direction: row;
     align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: background 0.2s ease;
 }
 
-/* Buttons im Top-Controls Container */
-.top-controls .mute-btn,
-.top-controls .fullscreen-btn,
-.top-controls .options-btn {
-    position: static;
+.control-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.control-icon {
     width: 48px;
     height: 48px;
-    min-width: 32px;
-    min-height: 32px;
-    max-width: 56px;
-    max-height: 56px;
-    border: none;
-    background: rgba(255, 255, 255, 0.1); /* Leichter Hintergrund */
-    backdrop-filter: blur(10px); /* Glasmorphism */
-    padding: 0;
-    cursor: pointer;
+    min-width: 48px;
+    min-height: 48px;
+    background: rgba(67, 206, 162, 0.2);
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px; /* Runde Ecken */
-    transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
-.top-controls .mute-btn:hover,
-.top-controls .fullscreen-btn:hover,
-.top-controls .options-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.control-icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
 }
 
-.top-controls .mute-btn:active,
-.top-controls .fullscreen-btn:active,
-.top-controls .options-btn:active {
-    transform: scale(0.95);
+.control-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.control-text h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    color: #FFD700;
+}
+
+.control-text p {
+    font-size: 0.85rem;
+    margin: 0;
+    color: #f7f7f7;
+    line-height: 1.4;
 }
 
 /* Fullscreen-Modus: Mobile Buttons weiterhin sichtbar auf Touch-Geräten */
