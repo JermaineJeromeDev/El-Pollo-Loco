@@ -122,6 +122,16 @@ class World {
     clearAllIntervals() {
         this.intervals.forEach(i => clearInterval(i));
         this.intervals = [];
+        
+        // NEU: Stoppe auch alle Gegner-Intervalle
+        if (this.level && this.level.enemies) {
+            this.level.enemies.forEach(enemy => {
+                if (enemy.moveInterval) clearInterval(enemy.moveInterval);
+                if (enemy.animationInterval) clearInterval(enemy.animationInterval);
+                if (enemy.deathCheckInterval) clearInterval(enemy.deathCheckInterval);
+                if (enemy.deadAnimationInterval) clearInterval(enemy.deadAnimationInterval);
+            });
+        }
     }
 
     // ----------------- Flaschen werfen -----------------
