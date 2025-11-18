@@ -1,5 +1,5 @@
 /**
- * Repräsentiert eine Flasche zum Einsammeln
+ * Represents a collectible bottle
  * @class Bottle
  * @extends MovableObject
  */
@@ -18,7 +18,7 @@ class Bottle extends MovableObject {
     };
 
     /**
-     * Erstellt eine neue Flasche
+     * Creates a new bottle
      */
     constructor() {
         super()
@@ -30,7 +30,7 @@ class Bottle extends MovableObject {
     }
 
     /**
-     * Startet Animation
+     * Starts animation
      */
     animate() {
         setInterval(() => {
