@@ -145,6 +145,24 @@ const SoundManager = {
                 delete audio._wasPausedBySystem;
             }
         });
+    },
+
+    /**
+     * Mutes all sounds
+     */
+    muteAll() {
+        Object.values(this.sounds).forEach(audio => {
+            audio.muted = true;
+        });
+    },
+
+    /**
+     * Unmutes all sounds
+     */
+    unmuteAll() {
+        Object.values(this.sounds).forEach(audio => {
+            audio.muted = false;
+        });
     }
 };
 
