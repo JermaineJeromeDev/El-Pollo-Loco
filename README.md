@@ -249,7 +249,258 @@ Dieses Projekt ist ein Lernprojekt und steht unter der MIT-Lizenz.
 
 ### 🙏 Credits
 
-- **Grafiken & Assets** - Developer Akademie GmbH
+- **Grafiken & Assets** - Developer Akademie
+- **Sounds** - Freesound.org
+- **Fonts** - Luckiest Guy, Fredoka (Google Fonts)
+
+---
+
+## English
+
+A classic jump'n'run game developed with **HTML5 Canvas** and **Vanilla JavaScript**.
+
+### 📖 Game Description
+
+In a world full of feathers and chaos, a true hero rises against the chicken army! Pepe must fight through dangerous enemies, collect coins, and defeat the mighty endboss.
+
+#### Story
+Three enemy types stand in your way:
+- **Small Chicks** - Fast and agile
+- **Normal Chickens** - Sturdy and dangerous
+- **The Endboss** - A mighty enemy with enormous strength
+
+Trample the small and normal enemies with precise jumps from above. But the endboss is different – only targeted bottle throws can break his power!
+
+⚠️ **Important:** Use your resources wisely – those who waste everything will have no chance in the final battle.
+
+---
+
+### 🎮 Game Mechanics
+
+#### Desktop Controls
+- **← →** - Move left/right
+- **Spacebar** - Jump
+- **D** - Throw bottle
+
+#### Mobile Controls
+- **Touch Buttons** - Left, Right, Jump, Throw
+- **Auto-Fullscreen** on mobile devices
+
+#### Game Objective
+1. Collect **coins** and **bottles**
+2. Defeat enemies by **jumping from above**
+3. Defeat the **endboss** with **bottle throws**
+4. Survive until the end!
+
+---
+
+### 🏗️ Technical Details
+
+#### Architecture
+
+**Class Hierarchy:**
+```
+DrawableObject (Base for drawable objects)
+└── MovableObject (Base for movable objects)
+    ├── Character (Player)
+    ├── Chicken (Normal Chicken)
+    ├── ChickenSmall (Small Chicken)
+    ├── Endboss (Boss Enemy)
+    ├── ThrowableObject (Thrown Bottle)
+    ├── Cloud (Clouds)
+    ├── Coin (Coins)
+    └── Bottle (Collectible Bottles)
+
+StatusBar Variants:
+├── StatusBarHealth (Health Energy)
+├── StatusBarCoins (Coins)
+├── StatusBarBottles (Bottles)
+└── StatusBarEndboss (Endboss Health)
+```
+
+#### Technology Stack
+- **HTML5 Canvas** - Rendering
+- **Vanilla JavaScript (ES6)** - Game Logic
+- **CSS3** - Responsive Design
+- **JSDoc** - Code Documentation
+
+#### Features
+✅ **Object-Oriented Programming** - Clean Code with Classes  
+✅ **Responsive Design** - Optimized for Desktop & Mobile  
+✅ **Sound System** - SoundManager with Mute Function  
+✅ **Pause Function** - Pause game via Options Modal  
+✅ **Fullscreen Mode** - Immersive Gaming Experience  
+✅ **Collision Detection** - Precise Hitboxes with Offsets  
+✅ **Animation System** - Frame-based Animations  
+✅ **Status Bars** - Real-time Display of Health, Coins, Bottles  
+
+---
+
+### 📂 Project Structure
+
+```
+El Pollo Loco/
+├── assets/               # Images, Sounds, Fonts
+│   ├── img/
+│   ├── audio/
+│   └── fonts/
+├── classes/              # JavaScript Classes
+│   ├── character.class.js
+│   ├── chicken.class.js
+│   ├── endboss.class.js
+│   ├── world.class.js
+│   └── ...
+├── js/                   # JavaScript Modules
+│   ├── game.js          # Main Game Logic
+│   ├── sounds.js        # Sound Manager
+│   ├── game-menu.js     # Menu System
+│   └── game-ui.js       # UI Functions
+├── levels/               # Level Definitions
+│   └── level1.js
+├── styles/               # CSS Modules
+│   ├── base.css
+│   ├── ui-components.css
+│   └── ...
+├── index.html            # Main HTML
+├── style.css             # CSS Import
+├── jsdoc.json            # JSDoc Configuration
+└── README.md             # This File
+```
+
+---
+
+### 🚀 Installation & Execution
+
+#### 1. Clone Repository
+```bash
+git clone <repository-url>
+cd "El Pollo Loco"
+```
+
+#### 2. Start Live Server
+
+**Option A - VS Code Live Server:**
+1. Right-click on `index.html`
+2. Select "Open with Live Server"
+
+**Option B - Python HTTP Server:**
+```bash
+python -m http.server 8000
+# Open: http://localhost:8000
+```
+
+#### 3. Open Game in Browser
+```
+http://127.0.0.1:5500/index.html
+```
+
+---
+
+### 📚 Generate Documentation
+
+#### Install JSDoc
+```bash
+npm install -g jsdoc
+```
+
+#### Create Documentation
+```bash
+jsdoc -c jsdoc.json
+```
+
+#### Open Documentation
+```bash
+# Windows
+start docs/index.html
+
+# Mac/Linux
+open docs/index.html
+```
+
+The generated documentation contains:
+- All classes with descriptions
+- Methods with parameters and return values
+- Class hierarchy
+- Code examples
+
+---
+
+### 🎨 Features in Detail
+
+#### Sound System
+```javascript
+SoundManager.load('jump', [{ src: 'path/to/jump.mp3', type: 'audio/mpeg' }]);
+SoundManager.play('jump', 0.5, true); // name, volume, allowOverlap
+SoundManager.pauseAll(); // Pauses all sounds
+```
+
+#### Collision Detection
+```javascript
+character.isColliding(enemy); // Checks collision with offset
+```
+
+#### Animation System
+```javascript
+character.playAnimation(IMAGES_WALKING); // Frame-based
+```
+
+---
+
+### 🐛 Known Issues & Solutions
+
+#### Issue: Sounds not working
+**Solution:** Browser autoplay policy - user must interact once
+
+#### Issue: Mobile buttons not visible
+**Solution:** Only in landscape mode on devices ≤ 1200px
+
+#### Issue: Fullscreen not working
+**Solution:** User interaction required (button click)
+
+---
+
+### 📝 Code Guidelines
+
+#### Clean Code Principles
+✅ Each function max. **14 lines**  
+✅ One function = **one task**  
+✅ **Meaningful names** for variables & functions  
+✅ **JSDoc comments** for all public methods  
+✅ **DRY principle** - Don't Repeat Yourself  
+
+#### Example
+```javascript
+/**
+ * Handles chicken hit by bottle
+ * @param {Chicken} enemy - Chicken enemy
+ * @param {number} enemyIndex - Index in enemies array
+ */
+handleChickenHitByBottle(enemy, enemyIndex) {
+    enemy.energy = 0;
+    enemy.die && enemy.die();
+    setTimeout(() => {
+        this.level.enemies.splice(enemyIndex, 1);
+    }, 1000);
+}
+```
+
+---
+
+### 👨‍💻 Autor
+
+Entwickelt mit ❤️ als Lernprojekt für objektorientiertes JavaScript und Game Development.
+
+---
+
+### 📄 Lizenz
+
+Dieses Projekt ist ein Lernprojekt und steht unter der MIT-Lizenz.
+
+---
+
+### 🙏 Credits
+
+- **Grafiken & Assets** - Developer Akademie
 - **Sounds** - Freesound.org
 - **Fonts** - Luckiest Guy, Fredoka (Google Fonts)
 
@@ -494,21 +745,21 @@ handleChickenHitByBottle(enemy, enemyIndex) {
 
 ---
 
-### 👨‍💻 Author
+### 👨‍💻 Autor
 
-Developed with ❤️ as a learning project for object-oriented JavaScript and game development.
+Entwickelt mit ❤️ als Lernprojekt für objektorientiertes JavaScript und Game Development.
 
 ---
 
-### 📄 License
+### 📄 Lizenz
 
-This project is a learning project and is under the MIT License.
+Dieses Projekt ist ein Lernprojekt und steht unter der MIT-Lizenz.
 
 ---
 
 ### 🙏 Credits
 
-- **Graphics & Assets** - Developer Akademie
+- **Grafiken & Assets** - Developer Akademie
 - **Sounds** - Freesound.org
 - **Fonts** - Luckiest Guy, Fredoka (Google Fonts)
 
@@ -516,6 +767,8 @@ This project is a learning project and is under the MIT License.
 
 ### 🔗 Links
 
-- [Imprint](impressum.html)
-- [Privacy Policy](datenschutz.html)
-- [JSDoc Documentation](docs/index.html)
+- [Impressum](impressum.html)
+- [Datenschutz](datenschutz.html)
+- [JSDoc Dokumentation](docs/index.html)
+
+---
