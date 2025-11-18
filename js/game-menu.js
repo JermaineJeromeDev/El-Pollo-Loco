@@ -63,10 +63,14 @@ function hideOptionsModal() {
     modal.style.display = 'none';
     modal.style.visibility = 'hidden';
     modal.style.opacity = '0';
-    // ENTFERNT: aria-hidden wird nicht mehr gesetzt
     
     if (container) {
         container.classList.remove('modal-open');
+    }
+    
+    // NEU: Resume Game wenn Modal geschlossen wird
+    if (typeof resumeGame === 'function') {
+        resumeGame();
     }
 }
 
