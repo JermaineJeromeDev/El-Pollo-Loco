@@ -87,12 +87,63 @@ const SoundManager = {
     },
 
     /**
+     * Pauses gameplay sound (without reset)
+     */
+    pauseGameplay() {
+        let audio = this.sounds['gameplay'];
+        if (!audio) return;
+        audio.pause();
+    },
+
+    /**
+     * Resumes gameplay sound
+     */
+    resumeGameplay() {
+        if (gameIsMuted) return;
+        let audio = this.sounds['gameplay'];
+        if (!audio) return;
+        
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {});
+        }
+    },
+
+    /**
      * Stops all sounds
      */
     stopAll() {
         Object.values(this.sounds).forEach(audio => {
             audio.pause();
             audio.currentTime = 0;
+        });
+    },
+
+    /**
+     * Pauses all sounds (without reset)
+     */
+    pauseAll() {
+        Object.values(this.sounds).forEach(audio => {
+            if (!audio.paused) {
+                audio.pause();
+                audio._wasPausedBySystem = true;
+            }
+        });
+    },
+
+    /**
+     * Resumes all previously paused sounds
+     */
+    resumeAll() {
+        if (gameIsMuted) return;
+        Object.values(this.sounds).forEach(audio => {
+            if (audio._wasPausedBySystem) {
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {});
+                }
+                delete audio._wasPausedBySystem;
+            }
         });
     }
 };
