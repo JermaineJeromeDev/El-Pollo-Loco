@@ -77,6 +77,14 @@
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
+/* ENTFERNT: :not(.d-none) Regel - verursacht Auto-Open Bug */
+
+/* Modal schließen Animation */
+#options-modal.modal-closing {
+    opacity: 0;
+    visibility: hidden;
+}
+
 .tab-contents {
     max-height: calc(100% - 92px);
     overflow-y: auto;
