@@ -191,3 +191,78 @@ function initMuteButton() {
         }
     });
 }
+
+/**
+ * Sets up win/lose buttons
+ */
+function setupWinLoseButtons(type) {
+    const { w, h, spacing } = calculateButtonDimensions();
+    menuButtons = [
+        createRestartButton(w, h, spacing),
+        createBackToMenuButton(w, h, spacing)
+    ];
+}
+
+/**
+ * Draws win/lose buttons
+ */
+function drawWinLoseButtons() {
+    menuButtons.forEach((btn, idx) => drawButton(btn, idx));
+}
+
+/**
+ * Creates back to menu button configuration
+ * @param {number} w - Button width
+ * @param {number} h - Button height
+ * @param {number} spacing - Button spacing
+ * @returns {Object} Button configuration
+ */
+function createBackToMenuButton(w, h, spacing) {
+    return { 
+        text: 'Back to Menu', 
+        x: spacing + w + spacing, 
+        y: Math.max(75, canvas.height * 0.15), 
+        w, 
+        h, 
+        onClick: () => {
+            winSoundPlayed = false;
+            loseSoundPlayed = false;
+            endScreenImage = null;
+            drawStartScreen();
+        }
+    };
+}
+
+/**
+ * Creates restart button configuration
+ * @param {number} w - Button width
+ * @param {number} h - Button height
+ * @param {number} spacing - Button spacing
+ * @returns {Object} Button configuration
+ */
+function createRestartButton(w, h, spacing) {
+    return { 
+        text: 'Restart', 
+        x: spacing, 
+        y: Math.max(75, canvas.height * 0.15), 
+        w, 
+        h, 
+        onClick: () => { 
+            winSoundPlayed = false; 
+            loseSoundPlayed = false; 
+            endScreenImage = null;
+            startGame(); 
+        } 
+    };
+}
+
+/**
+ * Calculates button dimensions
+ * @returns {Object} Button dimensions {w, h, spacing}
+ */
+function calculateButtonDimensions() {
+    const w = Math.min(200, canvas.width * 0.25);
+    const h = 60;
+    const spacing = (canvas.width - (w * 2)) / 3;
+    return { w, h, spacing };
+}
