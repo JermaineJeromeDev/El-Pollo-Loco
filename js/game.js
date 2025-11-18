@@ -9,10 +9,6 @@ let isFullscreen = false;
 let hoveredButtonIndex = -1;
 let winSoundPlayed = false;
 let loseSoundPlayed = false;
-let optionsOrigin = null;
-let endScreenImage = null;
-let canvasSnapshot = null;
-let snapshotImage = null;
 
 /**
  * Initializes the game
@@ -172,19 +168,14 @@ function calculateBackgroundDimensions(imgAspect, canvasAspect) {
  */
 function showWinScreen() {
     gameState = 'win';
-    saveCanvasSnapshot();
     SoundManager.stopGameplay();
     if (!gameIsMuted && !winSoundPlayed) { 
         SoundManager.playWin(); 
         winSoundPlayed = true; 
     }
     
-    // Snapshot als CSS Background setzen
+    // Einfach das Overlay einblenden - kein Snapshot nötig!
     const winOverlay = document.getElementById('win-overlay');
-    const snapshotDiv = document.getElementById('win-snapshot');
-    snapshotDiv.style.backgroundImage = `url(${canvasSnapshot})`;
-    
-    // Overlay einblenden
     winOverlay.classList.remove('d-none');
 }
 
@@ -193,17 +184,14 @@ function showWinScreen() {
  */
 function showLoseScreen() {
     gameState = 'lose';
-    saveCanvasSnapshot();
     SoundManager.stopGameplay();
     if (!gameIsMuted && !loseSoundPlayed) { 
         SoundManager.playLose(); 
         loseSoundPlayed = true; 
     }
     
+    // Einfach das Overlay einblenden - kein Snapshot nötig!
     const loseOverlay = document.getElementById('lose-overlay');
-    const snapshotDiv = document.getElementById('lose-snapshot');
-    snapshotDiv.style.backgroundImage = `url(${canvasSnapshot})`;
-    
     loseOverlay.classList.remove('d-none');
 }
 
@@ -221,40 +209,6 @@ function backToMenu() {
     winSoundPlayed = false;
     loseSoundPlayed = false;
     drawStartScreen();
-}
-
-/**
- * Saves current canvas content as snapshot
- */
-function saveCanvasSnapshot() {
-    if (!canvas) return;
-    
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    const tempCtx = tempCanvas.getContext('2d');
-    
-    tempCtx.drawImage(canvas, 0, 0); // Kopiert aktuellen Canvas-Inhalt
-    canvasSnapshot = tempCanvas.toDataURL(); // Konvertiert zu Base64-String
-}
-
-/**
- * Draws saved snapshot as background (synchronous)
- */
-function drawSnapshotBackground() {
-    if (!canvasSnapshot || !snapshotImage) {
-        if (canvasSnapshot && !snapshotImage) {
-            snapshotImage = new Image();
-            snapshotImage.src = canvasSnapshot;
-        }
-        return;
-    }
-    
-    ctx.drawImage(snapshotImage, 0, 0, canvas.width, canvas.height);
-    
-    // Dunkler Overlay über dem Snapshot
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 /**
@@ -750,7 +704,6 @@ function finishEndScreen(type) {
  */
 function drawEndScreenFrame(img, dimensions, opacity, scale) {
     drawSnapshotBackground();
-    
     ctx.globalAlpha = opacity;
     const drawW = dimensions.w * scale;
     const drawH = dimensions.h * scale;
@@ -801,12 +754,9 @@ function initFullscreenButton() {
 function toggleFullscreen() {
     isFullscreen = !isFullscreen;
     const containerEl = document.querySelector('.container');
-    
     if (isFullscreen) {
         if (containerEl) containerEl.classList.add('fullscreen');
-        canvas.classList.add('fullscreen');
-        
-        // Canvas-Auflösung bleibt 720x480 (wichtig für Button-Koordinaten!)
+        canvas.classList.add('fullscreen')
         canvas.width = 720;
         canvas.height = 480;
     } else {
@@ -815,10 +765,7 @@ function toggleFullscreen() {
         canvas.width = 720;
         canvas.height = 480;
     }
-    
     updateIconPositions();
-    
-    // Redraw screen
     if (gameState === 'start') {
         setTimeout(() => drawStartScreen(), 100);
     } else if (world && world.draw) {
