@@ -137,7 +137,17 @@ function drawStartScreen() {
 function drawScaledBackground(img) {
     const imgAspect = img.width / img.height;
     const canvasAspect = canvas.width / canvas.height;
-    
+    const dimensions = calculateBackgroundDimensions(imgAspect, canvasAspect);
+    ctx.drawImage(img, dimensions.offsetX, dimensions.offsetY, dimensions.drawWidth, dimensions.drawHeight);
+}
+
+/**
+ * Calculates background dimensions
+ * @param {number} imgAspect - Image aspect ratio
+ * @param {number} canvasAspect - Canvas aspect ratio
+ * @returns {Object} Dimensions
+ */
+function calculateBackgroundDimensions(imgAspect, canvasAspect) {
     let drawWidth, drawHeight, offsetX, offsetY;
     
     if (canvasAspect > imgAspect) {
@@ -152,7 +162,7 @@ function drawScaledBackground(img) {
         offsetY = 0;
     }
     
-    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+    return { drawWidth, drawHeight, offsetX, offsetY };
 }
 
 /**
@@ -221,6 +231,10 @@ function drawSnapshotBackground() {
     }
     
     ctx.drawImage(snapshotImage, 0, 0, canvas.width, canvas.height);
+    
+    // Dunkler Overlay über dem Snapshot
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 /**
@@ -253,8 +267,8 @@ function drawEndScreen(img, type) {
  * @returns {Object} Dimensions {x, y, w, h}
  */
 function calculateImageDimensions(img) {
-    const maxWidth = canvas.width * 0.6;
-    const maxHeight = canvas.height * 0.6;
+    const maxWidth = canvas.width * 0.75;
+    const maxHeight = canvas.height * 0.75;
     const imgAspect = img.width / img.height;
     
     let w, h;
@@ -286,10 +300,10 @@ function startFadeInAnimation(img, dimensions, type) {
     
     const fadeInterval = setInterval(() => {
         drawEndScreenFrame(img, dimensions, opacity, scale);
-        opacity = Math.min(1, opacity + 0.04);
-        scale = Math.max(1, scale - 0.02);
+        opacity = updateOpacity(opacity);
+        scale = updateScale(scale);
         
-        if (opacity >= 1 && scale <= 1) {
+        if (shouldFinishAnimation(opacity, scale)) {
             clearInterval(fadeInterval);
             finishEndScreen(type);
         }
@@ -297,91 +311,133 @@ function startFadeInAnimation(img, dimensions, type) {
 }
 
 /**
- * Finishes end screen animation
- * @param {string} type - 'win' or 'lose'
+ * Updates opacity value
+ * @param {number} opacity - Current opacity
+ * @returns {number} New opacity
  */
-function finishEndScreen(type) {
-    setupWinLoseButtons(type);
-    drawWinLoseButtons();
-    gameState = type;
+function updateOpacity(opacity) {
+    return Math.min(1, opacity + 0.04);
 }
 
 /**
- * Draws a frame of the end screen
- * @param {Image} img - The image
- * @param {Object} dimensions - {x, y, w, h}
- * @param {number} opacity - Opacity
- * @param {number} scale - Scale
+ * Updates scale value
+ * @param {number} scale - Current scale
+ * @returns {number} New scale
  */
-function drawEndScreenFrame(img, dimensions, opacity, scale) {
-    drawSnapshotBackground();
-    
-    ctx.globalAlpha = opacity;
-    const drawW = dimensions.w * scale;
-    const drawH = dimensions.h * scale;
-    const drawX = dimensions.x - (drawW - dimensions.w) / 2;
-    const drawY = dimensions.y - (drawH - dimensions.h) / 2;
-    
-    ctx.drawImage(img, drawX, drawY, drawW, drawH);
-    ctx.globalAlpha = 1;
+function updateScale(scale) {
+    return Math.max(1, scale - 0.02);
 }
 
 /**
- * Sets up start menu buttons
+ * Checks if animation should finish
+ * @param {number} opacity - Current opacity
+ * @param {number} scale - Current scale
+ * @returns {boolean}
  */
-function setupStartMenuButtons() {
-    const w = Math.min(200, canvas.width * 0.3);
-    const h = 60;
-    const x = (canvas.width - w) / 2;
-    const y = Math.max(60, canvas.height * 0.125);
-    
-    menuButtons = [{
-        text: 'Start Game',
-        x, y, w, h,
-        onClick: () => {
-            gameState = 'playing';
-            menuButtons = [];
-            startGame();
-        }
-    }];
+function shouldFinishAnimation(opacity, scale) {
+    return opacity >= 1 && scale <= 1;
 }
 
 /**
- * Initializes fullscreen button
+ * Initializes mobile button visibility
  */
-function initFullscreenButton() {
-    const fsBtn = document.getElementById('fullscreen-btn');
-    if (!fsBtn) return;
-    fsBtn.addEventListener('click', () => {
-        toggleFullscreen();
-        if (document.activeElement) {
-            document.activeElement.blur();
-        }
+function setupMobileEvents() {
+    initMobileBtnsVisibility();
+    setupMobileControls();
+}
+
+/**
+ * Initializes mobile button visibility listeners
+ */
+function initMobileBtnsVisibility() {
+    updateMobileBtnsVisibility();
+    window.addEventListener('resize', updateMobileBtnsVisibility);
+    window.addEventListener('orientationchange', updateMobileBtnsVisibility);
+}
+
+/**
+ * Sets up mobile control buttons
+ */
+function setupMobileControls() {
+    const controls = [
+        { id: 'walk-left', key: 'LEFT' },
+        { id: 'walk-right', key: 'RIGHT' },
+        { id: 'jump', key: 'SPACE' },
+        { id: 'throw', key: 'D' }
+    ];
+
+    controls.forEach(control => addMobileControlListener(control));
+}
+
+/**
+ * Adds listener to mobile control
+ * @param {Object} control - Control configuration
+ */
+function addMobileControlListener(control) {
+    const btn = document.getElementById(control.id);
+    if (!btn) return;
+    
+    btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        keyboard[control.key] = true;
+    }, { passive: false });
+    
+    btn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        keyboard[control.key] = false;
     });
 }
 
 /**
- * Toggles fullscreen mode
+ * Checks if mobile landscape
  */
-function toggleFullscreen() {
-    isFullscreen = !isFullscreen;
-    const containerEl = document.querySelector('.container');
-    
-    if (isFullscreen) {
-        if (containerEl) containerEl.classList.add('fullscreen');
-        canvas.classList.add('fullscreen');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    } else {
-        if (containerEl) containerEl.classList.remove('fullscreen');
-        canvas.classList.remove('fullscreen');
-        canvas.width = 720;
-        canvas.height = 480;
+function isMobileLandscape() {
+    return window.innerWidth <= 667 && window.innerHeight <= 375 && window.innerWidth > window.innerHeight;
+}
+
+/**
+ * Updates mobile button visibility
+ */
+function updateMobileBtnsVisibility() {
+    const mobileBtns = document.getElementById('mobile-btns');
+    if (mobileBtns) {
+        mobileBtns.style.display = isMobileLandscape() ? 'block' : 'none';
     }
-    
-    updateIconPositions();
-    if (gameState === 'start') drawStartScreen();
-    if (world && world.draw) requestAnimationFrame(() => world.draw());
+}
+
+/**
+ * Handles keydown events
+ */
+function handleKeyDown(event) {
+    if (event.key === 'Escape') toggleFullscreen();
+    if (gameState !== 'playing') return;
+    setKeyState(event.keyCode, true);
+}
+
+/**
+ * Handles keyup events
+ */
+function handleKeyUp(event) {
+    if (gameState !== 'playing') return;
+    setKeyState(event.keyCode, false);
+}
+
+/**
+ * Sets keyboard state
+ */
+function setKeyState(keyCode, state) {
+    if (keyCode === 37) keyboard.LEFT = state;
+    if (keyCode === 39) keyboard.RIGHT = state;
+    if (keyCode === 32) keyboard.SPACE = state;
+    if (keyCode === 68) keyboard.D = state;
+}
+
+/**
+ * Displays the options/settings screen by showing the options modal.
+ * This function is called to present configuration options to the user.
+ */
+function drawOptionsScreen() {
+    showOptionsModal();
 }
 
 /**
@@ -568,86 +624,91 @@ function drawButton(btn, idx) {
 }
 
 /**
- * Initializes mobile button visibility
+ * Finishes end screen animation
+ * @param {string} type - 'win' or 'lose'
  */
-function setupMobileEvents() {
-    updateMobileBtnsVisibility();
-    window.addEventListener('resize', updateMobileBtnsVisibility);
-    window.addEventListener('orientationchange', updateMobileBtnsVisibility);
+function finishEndScreen(type) {
+    setupWinLoseButtons(type);
+    drawWinLoseButtons();
+    gameState = type;
+}
 
-    const controls = [
-        { id: 'walk-left', key: 'LEFT' },
-        { id: 'walk-right', key: 'RIGHT' },
-        { id: 'jump', key: 'SPACE' },
-        { id: 'throw', key: 'D' }
-    ];
+/**
+ * Draws a frame of the end screen
+ * @param {Image} img - The image
+ * @param {Object} dimensions - {x, y, w, h}
+ * @param {number} opacity - Opacity
+ * @param {number} scale - Scale
+ */
+function drawEndScreenFrame(img, dimensions, opacity, scale) {
+    drawSnapshotBackground();
+    
+    ctx.globalAlpha = opacity;
+    const drawW = dimensions.w * scale;
+    const drawH = dimensions.h * scale;
+    const drawX = dimensions.x - (drawW - dimensions.w) / 2;
+    const drawY = dimensions.y - (drawH - dimensions.h) / 2;
+    
+    ctx.drawImage(img, drawX, drawY, drawW, drawH);
+    ctx.globalAlpha = 1;
+}
 
-    controls.forEach(control => {
-        const btn = document.getElementById(control.id);
-        if (!btn) return;
-        
-        btn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            keyboard[control.key] = true;
-        }, { passive: false });
-        
-        btn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            keyboard[control.key] = false;
-        });
+/**
+ * Sets up start menu buttons
+ */
+function setupStartMenuButtons() {
+    const w = Math.min(200, canvas.width * 0.3);
+    const h = 60;
+    const x = (canvas.width - w) / 2;
+    const y = Math.max(60, canvas.height * 0.125);
+    
+    menuButtons = [{
+        text: 'Start Game',
+        x, y, w, h,
+        onClick: () => {
+            gameState = 'playing';
+            menuButtons = [];
+            startGame();
+        }
+    }];
+}
+
+/**
+ * Initializes fullscreen button
+ */
+function initFullscreenButton() {
+    const fsBtn = document.getElementById('fullscreen-btn');
+    if (!fsBtn) return;
+    fsBtn.addEventListener('click', () => {
+        toggleFullscreen();
+        if (document.activeElement) {
+            document.activeElement.blur();
+        }
     });
 }
 
 /**
- * Checks if mobile landscape
+ * Toggles fullscreen mode
  */
-function isMobileLandscape() {
-    return window.innerWidth <= 667 && window.innerHeight <= 375 && window.innerWidth > window.innerHeight;
-}
-
-/**
- * Updates mobile button visibility
- */
-function updateMobileBtnsVisibility() {
-    const mobileBtns = document.getElementById('mobile-btns');
-    if (mobileBtns) {
-        mobileBtns.style.display = isMobileLandscape() ? 'block' : 'none';
+function toggleFullscreen() {
+    isFullscreen = !isFullscreen;
+    const containerEl = document.querySelector('.container');
+    
+    if (isFullscreen) {
+        if (containerEl) containerEl.classList.add('fullscreen');
+        canvas.classList.add('fullscreen');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    } else {
+        if (containerEl) containerEl.classList.remove('fullscreen');
+        canvas.classList.remove('fullscreen');
+        canvas.width = 720;
+        canvas.height = 480;
     }
-}
-
-/**
- * Handles keydown events
- */
-function handleKeyDown(event) {
-    if (event.key === 'Escape') toggleFullscreen();
-    if (gameState !== 'playing') return;
-    setKeyState(event.keyCode, true);
-}
-
-/**
- * Handles keyup events
- */
-function handleKeyUp(event) {
-    if (gameState !== 'playing') return;
-    setKeyState(event.keyCode, false);
-}
-
-/**
- * Sets keyboard state
- */
-function setKeyState(keyCode, state) {
-    if (keyCode === 37) keyboard.LEFT = state;
-    if (keyCode === 39) keyboard.RIGHT = state;
-    if (keyCode === 32) keyboard.SPACE = state;
-    if (keyCode === 68) keyboard.D = state;
-}
-
-/**
- * Displays the options/settings screen by showing the options modal.
- * This function is called to present configuration options to the user.
- */
-function drawOptionsScreen() {
-    showOptionsModal();
+    
+    updateIconPositions();
+    if (gameState === 'start') drawStartScreen();
+    if (world && world.draw) requestAnimationFrame(() => world.draw());
 }
 
 window.addEventListener('DOMContentLoaded', init);

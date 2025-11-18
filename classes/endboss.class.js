@@ -52,9 +52,9 @@ class Endboss extends MovableObject {
         'assets/img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
-    alertSound = new Audio('assets/audio/2_chicken/chicken_single_alarm.mp3');
-    hurtSound = new Audio('assets/audio/2_chicken/chicken_single_alarm.mp3');
-    audioArrayEndboss = [];
+    alertSound;
+    hurtSound;
+    audioArrayEndboss = []; // WICHTIG: Initialisierung HIER, nicht später
 
     alertPlayed = false;
     alertAnimationDone = false;
@@ -73,13 +73,28 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_ATTACK);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-        this.audioArrayEndboss.push(this.alertSound, this.hurtSound);
+        this.initSounds();
         this.height = 450;
         this.width = 300;
         this.y = 0;
         this.x = 2550;
         this.speed = 0.8;
         this.animate();
+    }
+
+    /**
+     * Initializes audio files
+     */
+    initSounds() {
+        try {
+            this.alertSound = new Audio('assets/audio/2_chicken/chicken_single_alarm.mp3');
+            this.hurtSound = new Audio('assets/audio/2_chicken/chicken_single_alarm.mp3');
+            this.alertSound.load();
+            this.hurtSound.load();
+            this.audioArrayEndboss.push(this.alertSound, this.hurtSound);
+        } catch (error) {
+            console.warn('Endboss sounds could not be loaded:', error);
+        }
     }
 
     /**
@@ -124,7 +139,7 @@ class Endboss extends MovableObject {
      * Moves the endboss if conditions are met
      */
     moveIfNeeded() {
-        if (!this.isDead() && !this.isHurtEndboss() && (this.alertAnimationDone || this.activated)) {
+        if (!this.isDead() && !this.isHurt() && (this.alertAnimationDone || this.activated)) {
             this.handleMovement();
         }
     }
@@ -194,28 +209,8 @@ class Endboss extends MovableObject {
      */
     playDeadAnimationLooped(loopCount = 3) {
         this.deadAnimationPlayed = true;
-        let frames = this.IMAGES_DEAD.length;
-        let frameDuration = 120;
-        let frame = 0;
-        let loops = 0;
-        this.deadAnimationInterval = setInterval(() => {
-            let path = this.IMAGES_DEAD[frame];
-            this.img = this.imageCache[path];
-            frame++;
-            if (frame >= frames) {
-                frame = 0;
-                loops++;
-            }
-            if (loops >= loopCount) {
-                clearInterval(this.deadAnimationInterval);
-                if (this.world) {
-                    setTimeout(() => {
-                        this.world.showWinScreen();
-                        if (this.world.stopGame) this.world.stopGame();
-                    }, 300);
-                }
-            }
-        }, frameDuration);
+        const config = { frames: this.IMAGES_DEAD.length, frameDuration: 120 };
+        playDeadLoop(this, config, loopCount);
     }
 
     /**
@@ -224,6 +219,14 @@ class Endboss extends MovableObject {
      */
     isPlayerNear() {
         return this.world && this.world.character.x > this.x - 300 && this.world.character.x < this.x + 1000;
+    }
+
+    /**
+     * Checks if endboss is hurt
+     * @returns {boolean}
+     */
+    isHurtEndboss() {
+        return this.isHurt();
     }
 
     /**
@@ -279,14 +282,6 @@ class Endboss extends MovableObject {
     }
 
     /**
-     * Checks if endboss is hurt
-     * @returns {boolean} True if recently hit
-     */
-    isHurtEndboss() {
-        return this.isHurt();
-    }
-
-    /**
      * Reduces endboss energy and updates status bar
      */
     hit() {
@@ -297,4 +292,37 @@ class Endboss extends MovableObject {
             this.statusBarEndboss.setPercentage(this.energy);
         }
     }
+}
+
+// Helper functions AUSSERHALB der Class
+/**
+ * Plays dead animation loop
+ * @param {Endboss} endboss - Endboss instance
+ * @param {Object} config - Animation config
+ * @param {number} loopCount - Loop count
+ */
+function playDeadLoop(endboss, config, loopCount) {
+    let frame = 0;
+    let loops = 0;
+    
+    endboss.deadAnimationInterval = setInterval(() => {
+        let path = endboss.IMAGES_DEAD[frame];
+        endboss.img = endboss.imageCache[path];
+        frame++;
+        
+        if (frame >= config.frames) {
+            frame = 0;
+            loops++;
+        }
+        
+        if (loops >= loopCount) {
+            clearInterval(endboss.deadAnimationInterval);
+            if (endboss.world) {
+                setTimeout(() => {
+                    endboss.world.showWinScreen();
+                    if (endboss.world.stopGame) endboss.world.stopGame();
+                }, 300);
+            }
+        }
+    }, config.frameDuration);
 }

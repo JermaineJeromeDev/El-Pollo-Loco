@@ -181,7 +181,7 @@ class World {
      * Throws a bottle
      */
     throwBottle() {
-        let direction = this.character.otherDirection; // true = nach links
+        let direction = this.character.otherDirection;
         let offsetX = direction ? -100 : 100;
         let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, direction);
         bottle.world = this;
@@ -224,18 +224,19 @@ class World {
      * @param {Object} enemy - Chicken enemy
      */
     handleChickenCollision(enemy) {
-        if (this.character.isColliding(enemy)) {
-            const characterBottom = this.character.y + this.character.height - this.character.offset.bottom;
-            const enemyTop = enemy.y + enemy.offset.top;
-            const hitsFromAbove = this.character.speedY < 0 && characterBottom <= enemyTop + enemy.height * 0.3;
-            if (hitsFromAbove) {
-                enemy.energy = 0;
-                enemy.die && enemy.die();
-                this.character.speedY = 20;
-            } else if (!this.character.isHurt()) {
-                this.character.hit();
-                this.statusBarHealth.setPercentage(this.character.energy);
-            }
+        if (!this.character.isColliding(enemy)) return;
+        
+        const characterBottom = this.character.y + this.character.height - this.character.offset.bottom;
+        const enemyTop = enemy.y + enemy.offset.top;
+        const hitsFromAbove = this.character.speedY < 0 && characterBottom <= enemyTop + enemy.height * 0.3;
+        
+        if (hitsFromAbove) {
+            enemy.energy = 0;
+            enemy.die && enemy.die();
+            this.character.speedY = 20;
+        } else if (!this.character.isHurt()) {
+            this.character.hit();
+            this.statusBarHealth.setPercentage(this.character.energy);
         }
     }
 
@@ -249,7 +250,6 @@ class World {
             this.statusBarHealth.setPercentage(this.character.energy);
         }
     }
-
 
     /**
      * Checks if bottle hits enemy

@@ -215,140 +215,23 @@ canvas.fullscreen {
     position: fixed;
     left: 0;
     top: 0;
-    transform: none;      /* entferne die Zentrier-Translate im Fullscreen */
+    transform: none;
     width: 100vw;
     height: 100vh;
     margin: 0;
     z-index: 1000;
 }
 
-/* Sichtbarkeit und Stil des Modals — jetzt INSIDE .container, zentriert absolut, maximale Höhe auf Canvas-Größe */
-#options-modal {
-    /* innerhalb .container positionieren (einzelne, konsolidierte Definition) */
+/* Top-Controls Container für die Icon-Buttons */
+.top-controls {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 680px;
-    width: calc(100% - 48px);
-    max-height: 440px;
-    overflow: hidden;
-    box-sizing: border-box;
-    padding: 46px 18px 18px;
-    background: rgba(8, 12, 18, 0.65);
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    color: #ffffff;
-    margin: 0 auto;
-    transition: opacity 0.18s ease;
-    z-index: 2020;
-}
-
-/* Gesamt-Inhalt innen ggf. scrollfrei und kompakt; sorgt dafür, dass Inhalte sich anpassen */
-.tab-contents {
-    max-height: calc(100% - 92px);   /* Platz für Tabs + Close-Icon */
-    overflow-y: auto;
-    padding-right: 8px;              /* verhindert, dass Inhalt vom Scrollbar überlappt wird */
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Container-Backdrop wenn Modal offen: halbtransparenter dunkler Layer */
-.container.modal-open::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.45);
-    z-index: 1000;
-    pointer-events: none;
-}
-
-/* Blur-Effekt für Canvas und Startscreen, wenn Modal offen */
-.container.modal-open canvas,
-.container.modal-open .startscreen {
-    filter: blur(6px);
-    transition: filter 200ms ease;
-}
-
-#canvas {
-    display: block;
-    margin: 0 auto;
-}
-
-.mobile-btns {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; 
-    z-index: 2100;
-    display: none; 
-}
-
-.mobile-btns .mobile-btns-left,
-.mobile-btns .mobile-btns-right {
-    position: absolute;
-    bottom: 5%; /* 5% vom unteren Canvas-Rand */
+    top: 2%;
+    right: 2%;
     display: flex;
-    flex-direction: row;
-    gap: 2.5vw;
+    gap: 8px;
+    z-index: 2000;
     align-items: center;
-    pointer-events: auto;
 }
-
-.mobile-btns .mobile-btns-left {
-    left: 5%; /* 5% vom linken Canvas-Rand */
-}
-
-.mobile-btns .mobile-btns-right {
-    right: 5%; /* 5% vom rechten Canvas-Rand */
-}
-
-.mobile-btns button {
-    width: 11vh;
-    height: 11vh;
-    min-width: 50px;
-    min-height: 50px;
-    border-radius: 12px; 
-    border: none;
-    background: rgba(44, 62, 80, 0.8);
-    color: #fff;
-    font-size: 2em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: auto;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: background 0.2s;
-}
-
-.mobile-btns button img {
-    width: 60%;
-    height: 60%;
-}
-
-@media (max-width: 900px) and (orientation: landscape) {
-    .container {
-        width: 100vw;
-        height: 100vh;
-        max-width: 100vw;
-        max-height: 100vh;
-    }
-    #canvas {
-        width: 100vw !important;
-        height: 100vh !important;
-        max-width: 100vw;
-        max-height: 100vh;
-    }
-    .mobile-btns {
-        display: block !important;
-        z-index: 2100 !important; /* sicherstellen dass z-index auch im Fullscreen hoch bleibt */
-    }
-}
-
 
 .canvas-btn {
     background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
@@ -362,12 +245,10 @@ canvas.fullscreen {
 }
 
 .mute-btn {
-    position: absolute;
-    top: 2%; /* statt 14px */
-    right: 2%; /* statt 14px */
+    position: relative; /* von absolute auf relative geändert */
     z-index: 2000;
-    width: 6.67%; /* 48px von 720px = 6.67% */
-    height: 10%; /* 48px von 480px = 10% */
+    width: 48px;
+    height: 48px;
     min-width: 32px;
     min-height: 32px;
     max-width: 56px;
@@ -376,25 +257,23 @@ canvas.fullscreen {
     background: transparent;
     padding: 0;
     cursor: pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .mute-btn img {
-    width: 83.33%; /* 40px von 48px */
+    width: 83.33%;
     height: 83.33%;
     display: block;
     pointer-events: none;
 }
 
 .fullscreen-btn {
-    position: absolute;
-    top: 2%;
-    right: 10%; /* statt 72px */
+    position: relative; /* von absolute auf relative geändert */
     z-index: 2000;
-    width: 6.67%;
-    height: 10%;
+    width: 48px;
+    height: 48px;
     min-width: 32px;
     min-height: 32px;
     max-width: 56px;
@@ -403,9 +282,9 @@ canvas.fullscreen {
     background: transparent;
     padding: 0;
     cursor: pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .fullscreen-btn img {
@@ -416,12 +295,10 @@ canvas.fullscreen {
 }
 
 .options-btn {
-    position: absolute;
-    top: 2%;
-    right: 18%; /* statt 130px */
+    position: relative; /* von absolute auf relative geändert */
     z-index: 2000;
-    width: 6.67%;
-    height: 10%;
+    width: 48px;
+    height: 48px;
     min-width: 32px;
     min-height: 32px;
     max-width: 56px;
@@ -430,9 +307,9 @@ canvas.fullscreen {
     background: transparent;
     padding: 0;
     cursor: pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .options-btn img {
@@ -442,7 +319,88 @@ canvas.fullscreen {
     pointer-events: none;
 }
 
-/* Titel über dem Canvas positionieren (relativ zur .container) */
+/* EINZIGE Definition für #options-modal - alle anderen entfernt */
+#options-modal {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 680px;
+    width: calc(100% - 48px);
+    max-height: 440px;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 46px 18px 18px;
+    background: rgba(8, 12, 18, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    color: #ffffff;
+    margin: 0 auto;
+    transition: opacity 0.18s ease, visibility 0.18s ease;
+    z-index: 2020;
+}
+
+#options-modal[style*="display: block"] {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tab-contents {
+    max-height: calc(100% - 92px);
+    overflow-y: auto;
+    padding-right: 8px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tab-content {
+    display: block;
+    max-width: 760px;
+    margin: 0 auto;
+    color: #f7f7f7;
+}
+
+.tab-content.d-none { 
+    display: none !important; 
+}
+
+/* Tab-Buttons */
+.tab-btn {
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    border: 0;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background 150ms ease, transform 120ms ease;
+    text-decoration: none; /* für Links */
+    display: inline-block; /* für Links */
+}
+
+.tab-btn:hover {
+    background: rgba(255,255,255,0.10);
+}
+
+.tab-btn.active {
+    background: linear-gradient(90deg,#43cea2,#185a9d);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+/* Links (Impressum/Datenschutz) immer weiß */
+a.tab-btn {
+    color: #ffffff !important; /* weiße Schrift für Links */
+}
+
+a.tab-btn:hover {
+    color: #ffffff !important;
+}
+
 #title {
     position: absolute;
     top: -64px;               /* Abstand oberhalb des Canvas; bei Bedarf anpassen */
@@ -551,6 +509,8 @@ canvas.fullscreen + #title,
     cursor: pointer;
     font-weight: 700;
     transition: background 150ms ease, transform 120ms ease;
+    text-decoration: none; /* für Links */
+    display: inline-block; /* für Links */
 }
 
 .tab-btn:hover {
@@ -764,7 +724,7 @@ canvas.fullscreen + #title,
     font-size: 0.95rem;
     font-weight: 700;
     margin: 0 0 4px 0;
-    color: #FFD700;
+    color: #FFD700; /* zurück zu Gold */
 }
 
 .control-text p {

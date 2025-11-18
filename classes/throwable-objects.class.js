@@ -85,18 +85,11 @@ class ThrowableObject extends MovableObject {
      */
     breakAndSplash() {
         if (!this.isBreaking) {
-            this.throwBottleAir = false;
-            this.isBreaking = true;
-            this.speedX = 0;
-            this.speedY = 0;
-            clearInterval(this.intervalId);
+            initBreaking(this);
         }
         this.playAnimation(this.IMAGES_BOTTLE_SPLASH, () => {
             this.fadeOut();
-            let muted = (this.world && this.world.gameIsMuted) ? true : (typeof gameIsMuted !== 'undefined' ? gameIsMuted : false);
-            if (!muted) {
-                SoundManager.play('break', 0.7, true);
-            }
+            playBreakSound(this.world);
         });
     }
 
@@ -110,4 +103,25 @@ class ThrowableObject extends MovableObject {
             }
         }, 2000 / 60);
     }
+}
+
+/**
+ * Initializes breaking state
+ * @param {ThrowableObject} bottle - Bottle instance
+ */
+function initBreaking(bottle) {
+    bottle.throwBottleAir = false;
+    bottle.isBreaking = true;
+    bottle.speedX = 0;
+    bottle.speedY = 0;
+    clearInterval(bottle.intervalId);
+}
+
+/**
+ * Plays break sound
+ * @param {World} world - World instance
+ */
+function playBreakSound(world) {
+    let muted = (world && world.gameIsMuted) || (typeof gameIsMuted !== 'undefined' && gameIsMuted);
+    if (!muted) SoundManager.play('break', 0.7, true);
 }

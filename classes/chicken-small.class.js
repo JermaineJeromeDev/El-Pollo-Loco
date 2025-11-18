@@ -77,16 +77,7 @@ class ChickenSmall extends MovableObject {
         this.isDeadHandled = true;
         this.loadImage(this.IMAGE_DEAD);
         this.cleanup();
-        setTimeout(() => {
-            let fallSpeed = 2; 
-            let groundLevel = 365;
-            let fallInterval = setInterval(() => {
-                this.y += fallSpeed;
-                if (this.y >= groundLevel) {
-                    clearInterval(fallInterval);
-                }
-            }, 40);
-        }, 300);
+        setTimeout(() => startSmallChickenFalling(this), 300);
     }
     
     /**
@@ -97,4 +88,20 @@ class ChickenSmall extends MovableObject {
         if (this.animationInterval) clearInterval(this.animationInterval);
         if (this.deathCheckInterval) clearInterval(this.deathCheckInterval);
     }
+}
+
+/**
+ * Starts falling animation for small chicken
+ * @param {ChickenSmall} chicken - Small chicken instance
+ */
+function startSmallChickenFalling(chicken) {
+    const fallSpeed = 2;
+    const groundLevel = 365;
+    
+    let fallInterval = setInterval(() => {
+        chicken.y += fallSpeed;
+        if (chicken.y >= groundLevel) {
+            clearInterval(fallInterval);
+        }
+    }, 40);
 }
