@@ -52,9 +52,14 @@ class Chicken extends MovableObject {
      */
     moveChicken() {
         this.moveInterval = setInterval(() => {
+            // NEU: Prüfe ob Spiel pausiert ist
+            if (this.world && this.world.gamePaused) return;
             this.moveLeft();
         }, 1000 / 60);
+        
         this.animationInterval = setInterval(() => {
+            // NEU: Prüfe ob Spiel pausiert ist
+            if (this.world && this.world.gamePaused) return;
             this.playAnimation(this.IMAGES_WALKING);
         }, 200);
     }
