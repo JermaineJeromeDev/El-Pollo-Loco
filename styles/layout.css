@@ -34,13 +34,26 @@
 
 .container.fullscreen {
     position: fixed;
-    left: 0;
-    top: 0;
-    transform: none;
-    width: 100vw;
-    height: 100vh;
+    left: 0 !important;
+    top: 0 !important;
+    transform: none !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
     margin: 0;
+    padding: 0;
     z-index: 1000;
+}
+
+/* Top-Controls bleiben IMMER sichtbar im Fullscreen */
+.container.fullscreen .top-controls,
+.container .top-controls {
+    position: fixed !important;
+    top: 10px !important;
+    right: 10px !important;
+    z-index: 2000 !important;
+    display: flex !important;
 }
 
 .container.modal-open::before {
@@ -190,8 +203,8 @@
     text-justify: inter-word;
     line-height: 1.65;
     font-size: 1.05rem;
-    color: #f7f7f7;
-    filter: drop-shadow(2px 4px 6px black);
+    color: ghostwhite;
+    filter: drop-shadow(4px 8px 0px black);
 }
 
 /* Mobile Control Buttons */
