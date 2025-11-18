@@ -1,14 +1,14 @@
 /**
- * Sound-Manager für alle Audio-Dateien
+ * Sound manager for all audio files
  * @namespace SoundManager
  */
 const SoundManager = {
     sounds: {},
 
     /**
-     * Lädt einen Sound
-     * @param {string} name - Name des Sounds
-     * @param {Array<{src: string, type: string}>} sources - Audio-Quellen
+     * Loads a sound
+     * @param {string} name - Name of the sound
+     * @param {Array<{src: string, type: string}>} sources - Audio sources
      */
     load(name, sources) {
         if (this.sounds[name]) return;
@@ -24,10 +24,10 @@ const SoundManager = {
     },
 
     /**
-     * Spielt einen Sound ab
-     * @param {string} name - Name des Sounds
-     * @param {number} volume - Lautstärke (0-1)
-     * @param {boolean} allowOverlap - Erlaube mehrere Instanzen
+     * Plays a sound
+     * @param {string} name - Name of the sound
+     * @param {number} volume - Volume (0-1)
+     * @param {boolean} allowOverlap - Allow multiple instances
      */
     play(name, volume = 1, allowOverlap = true) {
         if (gameIsMuted) return;
@@ -47,29 +47,21 @@ const SoundManager = {
         }
     },
 
-    /** Spielt Jump-Sound */
+    /**
+     * Plays a predefined sound with preset volume and overlap settings.
+     * This is a convenience method that calls the main play() function with specific       parameters.
+     * Available sounds: jump, throw, break, hurt, win, lose, coin
+     */
     playJump() { this.play('jump', 0.5, true); },
-    
-    /** Spielt Throw-Sound */
     playThrow() { this.play('throw', 0.6, true); },
-    
-    /** Spielt Break-Sound */
     playBreak() { this.play('break', 0.7, true); },
-    
-    /** Spielt Hurt-Sound */
     playHurt() { this.play('hurt', 0.3, false); },
-    
-    /** Spielt Win-Sound */
     playWin() { this.play('win', 0.5, false); },
-    
-    /** Spielt Lose-Sound */
     playLose() { this.play('lose', 0.5, false); },
-    
-    /** Spielt Coin-Sound */
     playCoin() { this.play('coin', 0.5, true); },
 
     /**
-     * Startet Gameplay-Loop-Sound
+     * Starts gameplay loop sound
      */
     playGameplay() {
         if (gameIsMuted) return;
@@ -85,7 +77,7 @@ const SoundManager = {
     },
 
     /**
-     * Stoppt Gameplay-Sound
+     * Stops gameplay sound
      */
     stopGameplay() {
         let audio = this.sounds['gameplay'];
@@ -95,7 +87,7 @@ const SoundManager = {
     },
 
     /**
-     * Stoppt alle Sounds
+     * Stops all sounds
      */
     stopAll() {
         Object.values(this.sounds).forEach(audio => {
@@ -105,6 +97,8 @@ const SoundManager = {
     }
 };
 
+/**
+ * Loads the coin collection sound effect.
+ * The sound is loaded from a WAV file and can be played when the player collects a coin.
+ */
 SoundManager.load('coin', [{ src: 'assets/audio/3_coin/collect.wav', type: 'audio/wav' }]);
-
-
