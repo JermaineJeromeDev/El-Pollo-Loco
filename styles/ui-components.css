@@ -286,19 +286,8 @@ a.tab-btn.active {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background: rgba(0, 0, 0, 0.85); /* NEU: Fester schwarzer Hintergrund statt Snapshot */
     animation: fadeIn 0.5s ease-in-out;
-}
-
-.endscreen-snapshot {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    filter: blur(4px) brightness(0.6);
-    z-index: -1;
 }
 
 .endscreen-content {
