@@ -5,9 +5,11 @@
     top: 2%;
     right: 2%;
     display: flex;
-    gap: 8px;
+    gap: clamp(4px, 1vw, 8px);
     z-index: 2000;
     align-items: center;
+    pointer-events: auto;
+    flex-direction: row; /* NEU: Explizite Richtung */
 }
 
 .canvas-btn {
@@ -24,14 +26,14 @@
 .mute-btn,
 .fullscreen-btn,
 .options-btn {
-    position: relative;
+    position: relative; /* NEU: Relativ innerhalb von .top-controls */
     z-index: 2000;
-    width: 48px;
-    height: 48px;
+    width: clamp(32px, 6vw, 48px); /* NEU: Dynamische Größe */
+    height: clamp(32px, 6vw, 48px);
     min-width: 32px;
     min-height: 32px;
-    max-width: 56px;
-    max-height: 56px;
+    max-width: 48px;
+    max-height: 48px;
     border: none;
     background: transparent;
     padding: 0;
@@ -39,6 +41,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0; /* NEU: Verhindert Schrumpfen */
 }
 
 .mute-btn img,
