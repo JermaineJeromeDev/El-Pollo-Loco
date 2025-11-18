@@ -1,0 +1,18 @@
+/* Custom Styling for JSDoc - h4.name dark blue background */
+
+h4.name {
+    background: linear-gradient(90deg, #1a3a52, #2d5a7b) !important;
+    color: #ffffff !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    border-left: 4px solid #43cea2 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    margin: 16px 0 !important;
+}
+
+h4.name code {
+    color: #ffa500 !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+}
