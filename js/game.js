@@ -96,6 +96,8 @@ function cleanupOldWorld() {
  */
 function resetCanvas() {
     canvas.classList.remove('fullscreen');
+    // NEU: Canvas-Größe wird durch CSS gesteuert (aspect-ratio)
+    // Interne Auflösung bleibt 720x480 für Spiel-Logik
     canvas.width = 720; 
     canvas.height = 480;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -393,17 +395,32 @@ function setupMobileControls() {
  */
 function addMobileControlListener(control) {
     const btn = document.getElementById(control.id);
-    if (!btn) return;
+    if (!btn) {
+        console.warn(`Mobile button #${control.id} not found`);
+        return;
+    }
     
+    // Touchstart Event
     btn.addEventListener('touchstart', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         keyboard[control.key] = true;
+        console.log(`Touch START: ${control.key} = true`);
     }, { passive: false });
     
+    // Touchend Event
     btn.addEventListener('touchend', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         keyboard[control.key] = false;
-    });
+        console.log(`Touch END: ${control.key} = false`);
+    }, { passive: false });
+
+    // Touchcancel Event (falls Touch unterbrochen wird)
+    btn.addEventListener('touchcancel', (e) => {
+        e.preventDefault();
+        keyboard[control.key] = false;
+    }, { passive: false });
 }
 
 /**
@@ -413,9 +430,10 @@ function isMobileLandscape() {
     const width = window.innerWidth;
     const height = window.innerHeight;
     const isLandscape = width > height;
-    const isSmallScreen = width <= 1200; // ERWEITERT: von 900 auf 1200
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     
-    return isLandscape && isSmallScreen;
+    // Nur bei echten Touch-Geräten UND Landscape UND kleiner als 900px
+    return isTouchDevice && isLandscape && width <= 900;
 }
 
 /**
@@ -435,7 +453,8 @@ function updateMobileBtnsVisibility() {
         shouldShow,
         width: window.innerWidth,
         height: window.innerHeight,
-        isLandscape: window.innerWidth > window.innerHeight
+        isLandscape: window.innerWidth > window.innerHeight,
+        isTouchDevice: 'ontouchstart' in window || navigator.maxTouchPoints > 0
     });
 }
 
@@ -471,7 +490,28 @@ function setKeyState(keyCode, state) {
  * This function is called to present configuration options to the user.
  */
 function drawOptionsScreen() {
+    pauseGame(); // NEU: Pausiere Spiel
     showOptionsModal();
+}
+
+/**
+ * Pauses the game
+ */
+function pauseGame() {
+    if (world) {
+        world.gamePaused = true;
+        console.log('Game paused');
+    }
+}
+
+/**
+ * Resumes the game
+ */
+function resumeGame() {
+    if (world) {
+        world.gamePaused = false;
+        console.log('Game resumed');
+    }
 }
 
 /**
@@ -731,8 +771,15 @@ function toggleFullscreen() {
     if (isFullscreen) {
         if (containerEl) containerEl.classList.add('fullscreen');
         canvas.classList.add('fullscreen');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // NEU: Behält aspect-ratio bei
+        const aspectRatio = 3 / 2;
+        if (window.innerWidth / window.innerHeight > aspectRatio) {
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerHeight * aspectRatio;
+        } else {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerWidth / aspectRatio;
+        }
     } else {
         if (containerEl) containerEl.classList.remove('fullscreen');
         canvas.classList.remove('fullscreen');
