@@ -9,7 +9,29 @@
     z-index: 2000;
     align-items: center;
     pointer-events: auto;
-    flex-direction: row; /* NEU: Explizite Richtung */
+    flex-direction: row;
+}
+
+/* Wichtig: Buttons IMMER sichtbar */
+.mute-btn,
+.fullscreen-btn,
+.options-btn {
+    position: relative;
+    z-index: 2001 !important;
+    width: clamp(32px, 6vw, 48px);
+    height: clamp(32px, 6vw, 48px);
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 48px;
+    max-height: 48px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .canvas-btn {
@@ -23,27 +45,6 @@
     transition: background 0.2s, color 0.2s;
 }
 
-.mute-btn,
-.fullscreen-btn,
-.options-btn {
-    position: relative; /* NEU: Relativ innerhalb von .top-controls */
-    z-index: 2000;
-    width: clamp(32px, 6vw, 48px); /* NEU: Dynamische Größe */
-    height: clamp(32px, 6vw, 48px);
-    min-width: 32px;
-    min-height: 32px;
-    max-width: 48px;
-    max-height: 48px;
-    border: none;
-    background: transparent;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0; /* NEU: Verhindert Schrumpfen */
-}
-
 .mute-btn img,
 .fullscreen-btn img,
 .options-btn img {
@@ -53,32 +54,27 @@
     pointer-events: none;
 }
 
+/* Options Modal - NUR EINE Deklaration */
 #options-modal {
     display: none;
     visibility: hidden;
     opacity: 0;
-    position: absolute;
+    position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    max-width: 680px;
-    width: calc(100% - 48px);
-    max-height: 440px;
-    overflow: hidden;
-    box-sizing: border-box;
-    padding: 46px 18px 18px;
-    background: rgba(8, 12, 18, 0.95);
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    color: #ffffff;
-    margin: 0 auto;
-    transition: opacity 0.18s ease, visibility 0.18s ease;
-    z-index: 2020;
-}
-
-#options-modal[style*="display: block"] {
-    visibility: visible;
-    opacity: 1;
+    width: min(90%, 600px);
+    max-width: 600px;
+    max-height: 80vh;
+    background: #00000085;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 48px 24px 24px;
+    z-index: 2500;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .tab-contents {
@@ -111,7 +107,7 @@
     transition: background 150ms ease, transform 120ms ease;
     text-decoration: none;
     display: inline-block;
-    filter: drop-shadow(2px 4px 6px black);
+    filter: drop-shadow(4px 8px 0px black);
 }
 
 .tab-btn:hover {
@@ -120,10 +116,10 @@
 
 .tab-btn.active {
     background: linear-gradient(90deg,#43cea2,#185a9d);
-    color: #fff;
+    color: ghostwhite;
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.45);
-    filter: drop-shadow(2px 4px 6px black);
+    filter: drop-shadow(4px 8px 4px black);
 }
 
 a.tab-btn {
@@ -200,6 +196,7 @@ a.tab-btn.active {
     justify-content: center;
     z-index: 2030;
     transition: background 0.12s ease, transform 0.08s ease;
+    filter: invert(1);
 }
 
 .options-close-btn img {
