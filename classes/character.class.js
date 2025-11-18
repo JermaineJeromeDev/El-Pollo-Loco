@@ -114,6 +114,9 @@ class Character extends MovableObject {
      */
     controlCharacter() {
         setInterval(() => {
+            // NEU: Pausiere wenn Spiel pausiert ist
+            if (this.world && this.world.gamePaused) return;
+            
             if (this.isDead()) return;
             this.handleMovement();
             this.handleJump();
@@ -151,6 +154,9 @@ class Character extends MovableObject {
      */
     animateCharacter() {
         setInterval(() => {
+            // NEU: Pausiere wenn Spiel pausiert ist
+            if (this.world && this.world.gamePaused) return;
+            
             if (this.isDead() && !this.deadAnimationPlayed) {
                 this.playDeadAnimationAndLose();
             } else if (this.isHurt() && !this.loseScreenShown) {
