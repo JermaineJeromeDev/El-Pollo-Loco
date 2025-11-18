@@ -258,26 +258,6 @@ function initOptionsModal() {
 }
 
 /**
- * Handles tab click event
- * @param {MouseEvent} clickEvent - Click event
- * @param {HTMLElement} button - Button element
- * @param {NodeList} allTabButtons - All tab buttons
- */
-function handleTabClick(clickEvent, button, allTabButtons) {
-    clickEvent.preventDefault();
-    clickEvent.stopPropagation();
-    const tabId = button.id;
-    if (tabId === 'tab-back-menu') {
-        handleBackToMenuTab();
-        return;
-    }
-    deactivateAllTabs(allTabButtons);
-    button.classList.add('active');
-    hideAllTabContents();
-    showTabContent(tabId);
-}
-
-/**
  * Initializes tab system for options modal
  */
 function initTabSystem() {
@@ -298,9 +278,37 @@ function initTabSystem() {
                 return;
             }
             
-            handleTabClick(tab);
+            handleTabClick(tab); // KORRIGIERT: tab statt e übergeben
         });
     });
+}
+
+/**
+ * Handles tab click
+ * @param {HTMLElement} clickedTab - Clicked tab element
+ */
+function handleTabClick(clickedTab) {
+    // ENTFERNT: clickEvent.preventDefault() - nicht mehr nötig
+    
+    const allTabs = document.querySelectorAll('.tab-btn');
+    const allContents = document.querySelectorAll('.tab-content');
+    
+    allTabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+    });
+    
+    allContents.forEach(c => c.classList.add('d-none'));
+    
+    clickedTab.classList.add('active');
+    clickedTab.setAttribute('aria-selected', 'true');
+    
+    const targetId = clickedTab.id.replace('tab-', '') + '-content';
+    const targetContent = document.getElementById(targetId);
+    
+    if (targetContent) {
+        targetContent.classList.remove('d-none');
+    }
 }
 
 /**

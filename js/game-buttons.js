@@ -64,6 +64,9 @@ function isPointInButton(mx, my, btn) {
 
 /**
  * Gets touch coordinates
+ * @param {Touch} touch - Touch object
+ * @param {DOMRect} rect - Canvas bounding rect
+ * @returns {Object} Coordinates {x, y}
  */
 function getTouchCoordinates(touch, rect) {
     let x = touch.clientX - rect.left;
@@ -74,7 +77,9 @@ function getTouchCoordinates(touch, rect) {
 }
 
 /**
- * Handles button touch
+ * Handles button click from touch
+ * @param {number} x - X coordinate
+ * @param {number} y - Y coordinate
  */
 function handleButtonTouch(x, y) {
     menuButtons.forEach(btn => {
@@ -96,7 +101,7 @@ function handleMenuTouch(event) {
 }
 
 /**
- * Handles touch move
+ * Handles touch move events
  */
 function handleTouchMove(event) {
     if (!['start', 'win', 'lose'].includes(gameState)) return;
