@@ -42,6 +42,7 @@ class World {
     setWorld() {
         this.character.world = this;
         this.level.enemies.forEach(enemy => {
+            enemy.world = this; // NEU: Setze world für ALLE Gegner
             if (enemy instanceof Endboss) {
                 enemy.setWorld(this);
             }
@@ -54,7 +55,8 @@ class World {
     draw() {
         if (this.gameStopped) return; 
         
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // NEU: Clear canvas
+        // ENTFERNT: clearRect() - verursacht schwarzen Screen
+        
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.drawGameObjects();
@@ -148,7 +150,10 @@ class World {
      */
     run() {
         let id = setInterval(() => {
-            if (this.gamePaused) return; // NEU: Skip wenn pausiert
+            if (this.gamePaused) {
+                console.log('⏸️ Game loop skipped - paused'); // DEBUG
+                return;
+            }
             
             this.checkCollisions();
             this.checkThrowObjects();
