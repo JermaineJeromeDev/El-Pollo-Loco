@@ -56,10 +56,6 @@
         max-height: 100vh;
     }
 
-    #title {
-        display: none;
-    }
-
     .mute-btn, .options-btn, .fullscreen-btn {
         top: 1vh;
         width: 32px;
