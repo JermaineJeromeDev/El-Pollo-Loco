@@ -4,7 +4,7 @@
  */
 class World {
     character = new Character();
-    level; // wird im Constructor initialisiert
+    level; 
     canvas;
     ctx;
     keyboard;
@@ -17,7 +17,7 @@ class World {
     canThrow = true; 
     endbossActivated = false;
     gameStopped = false;
-    gamePaused = false; // NEU: Pause-Flag
+    gamePaused = false; 
     intervals = [];
 
     /**
@@ -29,7 +29,7 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-        this.level = createLevel1(); // NEU: Erstelle frisches Level
+        this.level = createLevel1(); 
         this.draw();
         this.setWorld();
         this.run();
@@ -42,7 +42,7 @@ class World {
     setWorld() {
         this.character.world = this;
         this.level.enemies.forEach(enemy => {
-            enemy.world = this; // NEU: Setze world für ALLE Gegner
+            enemy.world = this; 
             if (enemy instanceof Endboss) {
                 enemy.setWorld(this);
             }
@@ -54,16 +54,12 @@ class World {
      */
     draw() {
         if (this.gameStopped) return; 
-        
-        // ENTFERNT: clearRect() - verursacht schwarzen Screen
-        
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.drawGameObjects();
         this.drawEndbossStatusBar();
         this.ctx.translate(-this.camera_x, 0);
         this.drawStatusBars();
-        
         requestAnimationFrame(() => this.draw());
     }
 
@@ -86,7 +82,6 @@ class World {
                 this.endbossActivated = true;
             }
             if (this.endbossActivated) {
-                // Position relativ zum Endboss: weiter rechts (+80) und weiter unten (+30)
                 endboss.statusBarEndboss.x = endboss.x + 80;
                 endboss.statusBarEndboss.y = endboss.y + 30;
                 endboss.statusBarEndboss.draw(this.ctx);
@@ -154,7 +149,6 @@ class World {
                 console.log('⏸️ Game loop skipped - paused'); // DEBUG
                 return;
             }
-            
             this.checkCollisions();
             this.checkThrowObjects();
             this.checkCoinCollision();
@@ -236,11 +230,9 @@ class World {
      */
     handleChickenCollision(enemy) {
         if (!this.character.isColliding(enemy)) return;
-        
         const characterBottom = this.character.y + this.character.height - this.character.offset.bottom;
         const enemyTop = enemy.y + enemy.offset.top;
         const hitsFromAbove = this.character.speedY < 0 && characterBottom <= enemyTop + enemy.height * 0.3;
-        
         if (hitsFromAbove) {
             enemy.energy = 0;
             enemy.die && enemy.die();
@@ -263,22 +255,49 @@ class World {
     }
 
     /**
+     * Handles chicken hit by bottle
+     * @param {Chicken|ChickenSmall} enemy - Chicken enemy
+     * @param {number} enemyIndex - Index in enemies array
+     */
+    handleChickenHitByBottle(enemy, enemyIndex) {
+        enemy.energy = 0;
+        enemy.die && enemy.die();
+        setTimeout(() => {
+            this.level.enemies.splice(enemyIndex, 1);
+        }, 1000);
+    }
+
+    /**
+     * Handles endboss hit by bottle
+     * @param {Endboss} enemy - Endboss enemy
+     */
+    handleEndbossHitByBottle(enemy) {
+        enemy.hit();
+    }
+
+    /**
+     * Processes bottle collision with enemy
+     * @param {MovableObject} enemy - Enemy object
+     * @param {number} enemyIndex - Enemy index
+     * @param {number} bottleIndex - Bottle index
+     */
+    processBottleHit(enemy, enemyIndex, bottleIndex) {
+        if (enemy instanceof Chicken || enemy instanceof ChickenSmall) {
+            this.handleChickenHitByBottle(enemy, enemyIndex);
+        } else if (enemy instanceof Endboss) {
+            this.handleEndbossHitByBottle(enemy);
+        }
+        this.throwableObjects.splice(bottleIndex, 1);
+    }
+
+    /**
      * Checks if bottle hits enemy
      */
     hitEnemyWithBottle() {
         this.level.enemies.forEach((enemy, enemyIndex) => {
             this.throwableObjects.forEach((bottle, bottleIndex) => {
                 if (bottle.isColliding(enemy) && !enemy.isDead()) {
-                    if (enemy instanceof Chicken || enemy instanceof ChickenSmall) {
-                        enemy.energy = 0;
-                        enemy.die && enemy.die();
-                        setTimeout(() => {
-                            this.level.enemies.splice(enemyIndex, 1);
-                        }, 1000);
-                    } else if (enemy instanceof Endboss) {
-                        enemy.hit();
-                    }
-                    this.throwableObjects.splice(bottleIndex, 1);
+                    this.processBottleHit(enemy, enemyIndex, bottleIndex);
                 }
             });
         });
