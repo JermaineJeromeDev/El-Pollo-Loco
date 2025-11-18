@@ -370,15 +370,17 @@ canvas.fullscreen {
 /* Tab-Buttons */
 .tab-btn {
     background: rgba(255,255,255,0.06);
-    color: #fff;
+    color: #FFA500; /* Orange statt Gold - besser lesbar */
     border: 0;
     padding: 8px 14px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 700;
+    font-family: "Luckiest Guy", cursive;
     transition: background 150ms ease, transform 120ms ease;
-    text-decoration: none; /* für Links */
-    display: inline-block; /* für Links */
+    text-decoration: none;
+    display: inline-block;
+    filter: drop-shadow(2px 4px 6px black);
 }
 
 .tab-btn:hover {
@@ -387,18 +389,29 @@ canvas.fullscreen {
 
 .tab-btn.active {
     background: linear-gradient(90deg,#43cea2,#185a9d);
-    color: #fff;
+    color: #fff; /* Weiß wenn aktiv */
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    filter: drop-shadow(2px 4px 6px black);
 }
 
-/* Links (Impressum/Datenschutz) immer weiß */
+/* Links (Impressum/Datenschutz) - gleiche Regeln */
 a.tab-btn {
-    color: #ffffff !important; /* weiße Schrift für Links */
+    color: #FFA500 !important; /* Orange statt Gold */
+    font-family: "Luckiest Guy", cursive;
+    filter: drop-shadow(2px 4px 6px black);
 }
 
 a.tab-btn:hover {
-    color: #ffffff !important;
+    color: #FFA500 !important;
+}
+
+a.tab-btn:visited {
+    color: #FFA500 !important;
+}
+
+a.tab-btn.active {
+    color: #fff !important;
 }
 
 #title {
@@ -502,15 +515,17 @@ canvas.fullscreen + #title,
 
 .tab-btn {
     background: rgba(255,255,255,0.06);
-    color: #fff;
+    color: #FFA500; /* Orange statt Gold - besser lesbar */
     border: 0;
     padding: 8px 14px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 700;
+    font-family: "Luckiest Guy", cursive;
     transition: background 150ms ease, transform 120ms ease;
-    text-decoration: none; /* für Links */
-    display: inline-block; /* für Links */
+    text-decoration: none;
+    display: inline-block;
+    filter: drop-shadow(2px 4px 6px black);
 }
 
 .tab-btn:hover {
@@ -519,14 +534,15 @@ canvas.fullscreen + #title,
 
 .tab-btn.active {
     background: linear-gradient(90deg,#43cea2,#185a9d);
-    color: #fff;
+    color: #fff; /* Weiß wenn aktiv */
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    filter: drop-shadow(2px 4px 6px black);
 }
 
-/* NEU: Spezieller Style für "Zurück zum Menü" Button */
+
 #tab-back-menu {
-    background: rgba(244, 67, 54, 0.15); /* leicht rötlich */
+    background: rgba(244, 67, 54, 0.15); 
 }
 
 #tab-back-menu:hover {
@@ -534,10 +550,10 @@ canvas.fullscreen + #title,
 }
 
 #tab-back-menu.active {
-    background: linear-gradient(90deg, #f44336, #d32f2f); /* rot statt grün/blau */
+    background: linear-gradient(90deg, #f44336, #d32f2f); 
 }
 
-/* Inhalte der Tabs */
+
 .tab-contents {
     display: block;
 }
@@ -549,10 +565,10 @@ canvas.fullscreen + #title,
     color: #f7f7f7;
 }
 
-/* ensure d-none hides content */
+
 .tab-content.d-none { display: none !important; }
 
-/* Modal actions */
+
 .modal-actions {
     text-align: center;
     margin-top: 18px;
@@ -568,11 +584,11 @@ canvas.fullscreen + #title,
     font-weight: 600;
 }
 
-/* Close-Icon oben links im Options-Modal */
+
 .options-close-btn {
     position: absolute;
     top: 10px;
-    left: 0px; /* korrigiert: von -10px auf 0px (direkt am Rand) */
+    left: 0px; 
     width: 40px;
     height: 40px;
     border: none;
@@ -607,7 +623,6 @@ canvas.fullscreen + #title,
     #options-modal { padding: 16px; width: calc(100% - 32px); }
 }
 
-/* Rotate-Screen-Hint: standardmäßig versteckt */
 .rotate-screen-hint {
     position: fixed;
     left: 0;
@@ -641,7 +656,7 @@ canvas.fullscreen + #title,
 }
 
 .rotate-screen-hint img {
-    max-width: clamp(100px, 30vw, 150px); /* responsive Bildgröße */
+    max-width: clamp(100px, 30vw, 150px); 
     margin: 0 auto;
     display: block;
     filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
@@ -663,14 +678,14 @@ canvas.fullscreen + #title,
     }
 }
 
-/* Desktop/Tablet Landscape: normal (ab 769px ODER Landscape) */
+
 @media (min-width: 769px), (orientation: landscape) {
     .rotate-screen-hint {
         display: none !important;
     }
 }
 
-/* Controls Grid: 2 Spalten auf breitem Bildschirm, 1 Spalte mobil */
+
 .controls-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -680,7 +695,7 @@ canvas.fullscreen + #title,
     box-sizing: border-box;
 }
 
-/* NEU: Control-Item Styling */
+
 .control-item {
     display: flex;
     flex-direction: row;
@@ -721,10 +736,11 @@ canvas.fullscreen + #title,
 }
 
 .control-text h3 {
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 700;
     margin: 0 0 4px 0;
-    color: #FFD700; /* zurück zu Gold */
+    color: #FFA500; /* Orange statt Gold - konsistent */
+    filter: drop-shadow(2px 4px 6px black);
 }
 
 .control-text p {
@@ -734,16 +750,16 @@ canvas.fullscreen + #title,
     line-height: 1.4;
 }
 
-/* Fullscreen-Modus: Mobile Buttons weiterhin sichtbar auf Touch-Geräten */
+
 @media (max-width: 900px) and (orientation: landscape) {
     .container.fullscreen .mobile-btns,
     canvas.fullscreen ~ .mobile-btns {
         display: block !important;
-        z-index: 2100 !important; /* über dem Fullscreen-Canvas (z-index: 1001) */
+        z-index: 2100 !important; 
     }
 }
 
-/* Mobile Landscape: Anpassungen für sehr kleine Viewports */
+
 @media (max-width: 667px) and (orientation: landscape) {
     body {
         margin: 0;
@@ -772,7 +788,7 @@ canvas.fullscreen + #title,
         display: none;
     }
 
-    /* Top Icons: weiter nach LINKS verschoben */
+    
     .mute-btn, .options-btn, .fullscreen-btn {
         top: 1vh;
         width: 32px;
@@ -788,7 +804,7 @@ canvas.fullscreen + #title,
         height: 24px;
     }
 
-    /* Ändere von right zu left Positionierung */
+    
     .mute-btn { 
         left: 1vw !important;
         right: auto !important;
@@ -802,10 +818,10 @@ canvas.fullscreen + #title,
         right: auto !important;
     }
 
-    /* Mobile Control Buttons: höher und Jump/Throw weiter links */
+    
     .mobile-btns .mobile-btns-left,
     .mobile-btns .mobile-btns-right {
-        bottom: 15vh !important; /* weiter nach oben: von 10vh auf 15vh */
+        bottom: 15vh !important; 
         gap: 1.5vw;
     }
 
@@ -814,7 +830,7 @@ canvas.fullscreen + #title,
     }
 
     .mobile-btns .mobile-btns-right {
-        right: 15vw !important; /* weiter nach links: von 8vw auf 15vw */
+        right: 15vw !important; 
     }
 
     .mobile-btns button {
@@ -831,13 +847,13 @@ canvas.fullscreen + #title,
         height: 55%;
     }
 
-    /* Mobile Buttons anzeigen */
+
     .mobile-btns {
         display: block !important;
-        z-index: 2100 !important; /* sicherstellen dass z-index auch im Fullscreen hoch bleibt */
+        z-index: 2100 !important; 
     }
 
-    /* Options Modal kleiner */
+
     #options-modal {
         max-width: 90%;
         max-height: 80%;
@@ -848,7 +864,7 @@ canvas.fullscreen + #title,
         width: 32px;
         height: 32px;
         top: 6px;
-        left: 0px; /* korrigiert: von -8px auf 0px */
+        left: 0px; 
     }
 
     .tab-buttons {
@@ -860,7 +876,7 @@ canvas.fullscreen + #title,
         font-size: 0.85rem;
     }
 
-    /* Controls im Modal: kompakter, 2 Spalten */
+
     .controls-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 6px;
@@ -931,6 +947,3 @@ canvas.fullscreen + #title,
         height: 22px;
     }
 }
-
-/* Portrait-Modus: Zeige Rotations-Hinweis NUR wenn JavaScript ihn nicht versteckt */
-/* Die JavaScript-Logik entscheidet, wann der Hinweis angezeigt wird */
