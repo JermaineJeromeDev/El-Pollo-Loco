@@ -17,6 +17,7 @@ class World {
     canThrow = true; 
     endbossActivated = false;
     gameStopped = false;
+    gamePaused = false; // NEU: Pause-Flag
     intervals = [];
 
     /**
@@ -52,12 +53,15 @@ class World {
      */
     draw() {
         if (this.gameStopped) return; 
+        
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // NEU: Clear canvas
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.drawGameObjects();
         this.drawEndbossStatusBar();
         this.ctx.translate(-this.camera_x, 0);
         this.drawStatusBars();
+        
         requestAnimationFrame(() => this.draw());
     }
 
@@ -144,6 +148,8 @@ class World {
      */
     run() {
         let id = setInterval(() => {
+            if (this.gamePaused) return; // NEU: Skip wenn pausiert
+            
             this.checkCollisions();
             this.checkThrowObjects();
             this.checkCoinCollision();
