@@ -73,7 +73,6 @@ class ThrowableObject extends MovableObject {
             this.y -= this.speedY;
             this.speedY -= this.acceleration;
             this.x += this.speedX;
-
             if (this.y >= 380) {
                 this.y = 380;
                 this.breakAndSplash();
