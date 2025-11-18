@@ -1,3 +1,8 @@
+/**
+ * Represents a normal chicken enemy
+ * @class Chicken
+ * @extends MovableObject
+ */
 class Chicken extends MovableObject {
     y = 360;
     speedY = 15;
@@ -21,21 +26,30 @@ class Chicken extends MovableObject {
         'assets/img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
     ]
 
+    /**
+     * Creates a new chicken instance
+     */
     constructor(){
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
         this.loadImage(this.IMAGE_DEAD);
-        this.x = 500 + Math.random() * 1800; // start ab x=500 statt x=200
+        this.x = 500 + Math.random() * 1800; 
         this.y = 365;
         this.speed = 0.15 + Math.random() * 0.5;
         this.animate();
     }
 
+    /**
+     * Initializes chicken movement and death check
+     */
     animate() {
-    this.moveChicken();
-    this.checkIfDead(); 
+        this.moveChicken();
+        this.checkIfDead(); 
     }
 
+    /**
+     * Starts chicken movement and animation intervals
+     */
     moveChicken() {
         this.moveInterval = setInterval(() => {
             this.moveLeft();
@@ -46,6 +60,9 @@ class Chicken extends MovableObject {
         }, 200);
     }
 
+    /**
+     * Checks periodically if chicken is dead
+     */
     checkIfDead() {
         this.deathCheckInterval = setInterval(() => {
             if (this.isDead()) {
@@ -54,11 +71,14 @@ class Chicken extends MovableObject {
         }, 100);
     }
 
+    /**
+     * Handles chicken death animation and falling
+     */
     handleDeath() {
         if (this.isDeadHandled) return;
         this.isDeadHandled = true;
         this.loadImage(this.IMAGE_DEAD);
-        this.cleanup(); // NEU: Cleanup-Methode aufrufen
+        this.cleanup();
         setTimeout(() => {
             let fallSpeed = 2; 
             let groundLevel = 365;
@@ -72,7 +92,9 @@ class Chicken extends MovableObject {
         }, 300);
     }
     
-    // NEU: Cleanup-Methode
+    /**
+     * Clears all active intervals
+     */
     cleanup() {
         if (this.moveInterval) clearInterval(this.moveInterval);
         if (this.animationInterval) clearInterval(this.animationInterval);
