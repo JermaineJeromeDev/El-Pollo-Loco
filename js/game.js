@@ -430,10 +430,9 @@ function isMobileLandscape() {
     const width = window.innerWidth;
     const height = window.innerHeight;
     const isLandscape = width > height;
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = width <= 1200; // ERWEITERT: von 900 auf 1200
     
-    // Nur bei echten Touch-Geräten UND Landscape UND kleiner als 900px
-    return isTouchDevice && isLandscape && width <= 900;
+    return isLandscape && isSmallScreen;
 }
 
 /**
@@ -453,8 +452,7 @@ function updateMobileBtnsVisibility() {
         shouldShow,
         width: window.innerWidth,
         height: window.innerHeight,
-        isLandscape: window.innerWidth > window.innerHeight,
-        isTouchDevice: 'ontouchstart' in window || navigator.maxTouchPoints > 0
+        isLandscape: window.innerWidth > window.innerHeight
     });
 }
 
@@ -498,20 +496,26 @@ function drawOptionsScreen() {
  * Pauses the game
  */
 function pauseGame() {
-    if (world) {
-        world.gamePaused = true;
-        console.log('Game paused');
+    if (!world) {
+        console.warn('Cannot pause: world does not exist');
+        return;
     }
+    
+    world.gamePaused = true;
+    console.log('✅ Game paused - gamePaused:', world.gamePaused);
 }
 
 /**
  * Resumes the game
  */
 function resumeGame() {
-    if (world) {
-        world.gamePaused = false;
-        console.log('Game resumed');
+    if (!world) {
+        console.warn('Cannot resume: world does not exist');
+        return;
     }
+    
+    world.gamePaused = false;
+    console.log('▶️ Game resumed - gamePaused:', world.gamePaused);
 }
 
 /**
@@ -533,9 +537,26 @@ function setupCanvasListeners() {
  * Handles menu clicks
  */
 function handleMenuClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
     let { x, y } = getMousePos(event);
-    menuButtons.forEach(btn => {
-        if (isPointInButton(x, y, btn)) btn.onClick();
+    
+    // NEU: Skalierung für Fullscreen berücksichtigen
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    x = x * scaleX;
+    y = y * scaleY;
+    
+    console.log('Click at:', { x, y, scaleX, scaleY, isFullscreen }); // DEBUG
+    
+    menuButtons.forEach((btn, index) => {
+        console.log(`Button ${index}:`, { x: btn.x, y: btn.y, w: btn.w, h: btn.h }); // DEBUG
+        if (isPointInButton(x, y, btn)) {
+            console.log('Button clicked!', btn.text); // DEBUG
+            btn.onClick();
+        }
     });
 }
 
@@ -557,6 +578,8 @@ function handleMenuHover(event) {
  */
 function handleMenuTouch(event) {
     event.preventDefault();
+    event.stopPropagation();
+    
     let touch = event.touches[0];
     if (!touch) return;
     
@@ -564,8 +587,19 @@ function handleMenuTouch(event) {
     let x = touch.clientX - rect.left;
     let y = touch.clientY - rect.top;
     
+    // Skalierung für Fullscreen
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    x = x * scaleX;
+    y = y * scaleY;
+    
+    console.log('Touch at:', { x, y, scaleX, scaleY }); // DEBUG
+    
     menuButtons.forEach(btn => {
-        if (isPointInButton(x, y, btn)) btn.onClick();
+        if (isPointInButton(x, y, btn)) {
+            console.log('Button touched!', btn.text); // DEBUG
+            btn.onClick();
+        }
     });
 }
 
@@ -771,15 +805,10 @@ function toggleFullscreen() {
     if (isFullscreen) {
         if (containerEl) containerEl.classList.add('fullscreen');
         canvas.classList.add('fullscreen');
-        // NEU: Behält aspect-ratio bei
-        const aspectRatio = 3 / 2;
-        if (window.innerWidth / window.innerHeight > aspectRatio) {
-            canvas.height = window.innerHeight;
-            canvas.width = window.innerHeight * aspectRatio;
-        } else {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerWidth / aspectRatio;
-        }
+        
+        // Canvas-Auflösung bleibt 720x480 (wichtig für Button-Koordinaten!)
+        canvas.width = 720;
+        canvas.height = 480;
     } else {
         if (containerEl) containerEl.classList.remove('fullscreen');
         canvas.classList.remove('fullscreen');
@@ -788,8 +817,13 @@ function toggleFullscreen() {
     }
     
     updateIconPositions();
-    if (gameState === 'start') drawStartScreen();
-    if (world && world.draw) requestAnimationFrame(() => world.draw());
+    
+    // Redraw screen
+    if (gameState === 'start') {
+        setTimeout(() => drawStartScreen(), 100);
+    } else if (world && world.draw) {
+        requestAnimationFrame(() => world.draw());
+    }
 }
 
 window.addEventListener('DOMContentLoaded', init);
