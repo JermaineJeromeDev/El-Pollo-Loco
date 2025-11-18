@@ -54,7 +54,6 @@ class Chicken extends MovableObject {
         this.moveInterval = setInterval(() => {
             this.moveLeft();
         }, 1000 / 60);
-
         this.animationInterval = setInterval(() => {
             this.playAnimation(this.IMAGES_WALKING);
         }, 200);
@@ -82,7 +81,6 @@ class Chicken extends MovableObject {
         setTimeout(() => {
             let fallSpeed = 2; 
             let groundLevel = 365;
-
             let fallInterval = setInterval(() => {
                 this.y += fallSpeed;
                 if (this.y >= groundLevel) {
