@@ -79,49 +79,6 @@ function showLoseScreen() {
 }
 
 /**
- * Calculates maximum dimensions for end screen image
- * @returns {Object} Max dimensions
- */
-function calculateMaxDimensions() {
-    return {
-        maxWidth: canvas.width * 0.75,
-        maxHeight: canvas.height * 0.75
-    };
-}
-
-/**
- * Calculates image size based on aspect ratio
- * @param {number} maxWidth - Maximum width
- * @param {number} maxHeight - Maximum height
- * @param {number} imgAspect - Image aspect ratio
- * @returns {Object} Image size
- */
-function calculateImageSize(maxWidth, maxHeight, imgAspect) {
-    let w, h;
-    if (maxWidth / imgAspect <= maxHeight) {
-        w = maxWidth;
-        h = maxWidth / imgAspect;
-    } else {
-        h = maxHeight;
-        w = maxHeight * imgAspect;
-    }
-    return { w, h };
-}
-
-/**
- * Calculates centered position for image
- * @param {number} w - Image width
- * @param {number} h - Image height
- * @returns {Object} Position
- */
-function calculateCenteredPosition(w, h) {
-    return {
-        x: (canvas.width - w) / 2,
-        y: (canvas.height - h) / 2
-    };
-}
-
-/**
  * Redraws menu screen
  */
 function redrawMenuScreen() {
@@ -130,7 +87,6 @@ function redrawMenuScreen() {
 
 /**
  * Adds fullscreen class to elements
- * @param {HTMLElement} containerEl - Container element
  */
 function addFullscreenClasses(containerEl) {
     if (containerEl) containerEl.classList.add('fullscreen');
@@ -139,7 +95,6 @@ function addFullscreenClasses(containerEl) {
 
 /**
  * Removes fullscreen class from elements
- * @param {HTMLElement} containerEl - Container element
  */
 function removeFullscreenClasses(containerEl) {
     if (containerEl) containerEl.classList.remove('fullscreen');
@@ -172,13 +127,11 @@ function redrawAfterFullscreen() {
 function toggleFullscreen() {
     isFullscreen = !isFullscreen;
     const containerEl = document.querySelector('.container');
-    
     if (isFullscreen) {
         addFullscreenClasses(containerEl);
     } else {
         removeFullscreenClasses(containerEl);
     }
-    
     updateCanvasDimensions();
     redrawAfterFullscreen();
 }

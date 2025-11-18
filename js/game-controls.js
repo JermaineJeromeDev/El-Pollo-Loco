@@ -151,3 +151,11 @@ function resumeGame() {
     }
     world.gamePaused = false;
 }
+
+/**
+ * Displays the options screen
+ */
+function drawOptionsScreen() {
+    pauseGame();
+    showOptionsModal();
+}

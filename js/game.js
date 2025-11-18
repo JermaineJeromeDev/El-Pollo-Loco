@@ -665,24 +665,6 @@ function drawWinLoseButtons() {
 }
 
 /**
- * Draws single button
- */
-function drawButton(btn, idx) {
-    ctx.save();
-    ctx.fillStyle = (idx === hoveredButtonIndex) ? "#FFD700" : "#FFA500";
-    let fontSize = Math.min(38, Math.max(24, canvas.width / 20));
-    ctx.font = `bold ${fontSize}px 'Luckiest Guy', cursive`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
-    ctx.shadowBlur = 8;
-    ctx.shadowOffsetX = 3;
-    ctx.shadowOffsetY = 3;
-    ctx.fillText(btn.text, btn.x + btn.w / 2, btn.y + btn.h / 2);
-    ctx.restore();
-}
-
-/**
  * Finishes end screen animation
  * @param {string} type - 'win' or 'lose'
  */
@@ -709,122 +691,6 @@ function drawEndScreenFrame(img, dimensions, opacity, scale) {
     
     ctx.drawImage(img, drawX, drawY, drawW, drawH);
     ctx.globalAlpha = 1;
-}
-
-/**
- * Sets up start menu buttons
- */
-function setupStartMenuButtons() {
-    const w = Math.min(200, canvas.width * 0.3);
-    const h = 60;
-    const x = (canvas.width - w) / 2;
-    const y = Math.max(60, canvas.height * 0.125);
-    menuButtons = [{
-        text: 'Start Game',
-        x, y, w, h,
-        onClick: () => {
-            gameState = 'playing';
-            menuButtons = [];
-            startGame();
-        }
-    }];
-}
-
-/**
- * Initializes mute button
- */
-function initMuteButton() {
-    const muteBtn = document.getElementById('mute-btn');
-    if (!muteBtn) return;
-    muteBtn.addEventListener('click', () => {
-        gameIsMuted = !gameIsMuted;
-        updateMuteButtonIcon();
-        if (gameIsMuted) {
-            SoundManager.stopGameplay();
-            SoundManager.muteAll();
-        } else {
-            SoundManager.unmuteAll();
-            setTimeout(() => SoundManager.playGameplay(), 100);
-        }
-    });
-}
-
-/**
- * Updates mute button icon
- */
-function updateMuteButtonIcon() {
-    const muteBtn = document.getElementById('mute-btn');
-    if (!muteBtn) return;
-    muteBtn.classList.toggle('muted', gameIsMuted);
-}
-
-/**
- * Initializes fullscreen button
- */
-function initFullscreenButton() {
-    const fsBtn = document.getElementById('fullscreen-btn');
-    if (!fsBtn) return;
-    fsBtn.addEventListener('click', () => {
-        toggleFullscreen();
-        if (document.activeElement) {
-            document.activeElement.blur();
-        }
-    });
-}
-
-/**
- * Adds fullscreen class to elements
- * @param {HTMLElement} containerEl - Container element
- */
-function addFullscreenClasses(containerEl) {
-    if (containerEl) containerEl.classList.add('fullscreen');
-    canvas.classList.add('fullscreen');
-}
-
-/**
- * Removes fullscreen class from elements
- * @param {HTMLElement} containerEl - Container element
- */
-function removeFullscreenClasses(containerEl) {
-    if (containerEl) containerEl.classList.remove('fullscreen');
-    canvas.classList.remove('fullscreen');
-}
-
-/**
- * Updates canvas dimensions
- */
-function updateCanvasDimensions() {
-    canvas.width = 720;
-    canvas.height = 480;
-}
-
-/**
- * Redraws screen after fullscreen toggle
- */
-function redrawAfterFullscreen() {
-    updateIconPositions();
-    if (gameState === 'start') {
-        setTimeout(() => drawStartScreen(), 100);
-    } else if (world && world.draw) {
-        requestAnimationFrame(() => world.draw());
-    }
-}
-
-/**
- * Toggles fullscreen mode
- */
-function toggleFullscreen() {
-    isFullscreen = !isFullscreen;
-    const containerEl = document.querySelector('.container');
-    
-    if (isFullscreen) {
-        addFullscreenClasses(containerEl);
-    } else {
-        removeFullscreenClasses(containerEl);
-    }
-    
-    updateCanvasDimensions();
-    redrawAfterFullscreen();
 }
 
 /**
@@ -877,10 +743,8 @@ function handleTouchMove(event) {
     event.preventDefault();
     let touch = event.touches[0];
     if (!touch) return;
-    
     let rect = canvas.getBoundingClientRect();
     const { x, y } = getTouchCoordinates(touch, rect);
-    
     hoveredButtonIndex = -1;
     menuButtons.forEach((btn, idx) => {
         if (isPointInButton(x, y, btn)) hoveredButtonIndex = idx;

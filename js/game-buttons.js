@@ -3,7 +3,7 @@
  */
 
 /**
- * Sets up canvas listeners for menu interactions
+ * Sets up canvas listeners
  */
 function setupCanvasListeners() {
     if (!canvas._listenersAdded) {
@@ -23,18 +23,14 @@ function setupCanvasListeners() {
 function handleMenuClick(event) {
     event.preventDefault();
     event.stopPropagation();
-    
     let { x, y } = getMousePos(event);
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     x = x * scaleX;
     y = y * scaleY;
-    
     menuButtons.forEach((btn) => {
-        if (isPointInButton(x, y, btn)) {
-            btn.onClick();
-        }
+        if (isPointInButton(x, y, btn)) btn.onClick();
     });
 }
 
@@ -52,7 +48,7 @@ function handleMenuHover(event) {
 }
 
 /**
- * Gets mouse position relative to canvas
+ * Gets mouse position
  */
 function getMousePos(event) {
     let rect = canvas.getBoundingClientRect();
@@ -68,9 +64,6 @@ function isPointInButton(mx, my, btn) {
 
 /**
  * Gets touch coordinates
- * @param {Touch} touch - Touch object
- * @param {DOMRect} rect - Canvas bounding rect
- * @returns {Object} Coordinates
  */
 function getTouchCoordinates(touch, rect) {
     let x = touch.clientX - rect.left;
@@ -81,15 +74,11 @@ function getTouchCoordinates(touch, rect) {
 }
 
 /**
- * Handles button click from touch
- * @param {number} x - X coordinate
- * @param {number} y - Y coordinate
+ * Handles button touch
  */
 function handleButtonTouch(x, y) {
     menuButtons.forEach(btn => {
-        if (isPointInButton(x, y, btn)) {
-            btn.onClick();
-        }
+        if (isPointInButton(x, y, btn)) btn.onClick();
     });
 }
 
@@ -99,27 +88,23 @@ function handleButtonTouch(x, y) {
 function handleMenuTouch(event) {
     event.preventDefault();
     event.stopPropagation();
-    
     let touch = event.touches[0];
     if (!touch) return;
-    
     let rect = canvas.getBoundingClientRect();
     const { x, y } = getTouchCoordinates(touch, rect);
     handleButtonTouch(x, y);
 }
 
 /**
- * Handles touch move events
+ * Handles touch move
  */
 function handleTouchMove(event) {
     if (!['start', 'win', 'lose'].includes(gameState)) return;
     event.preventDefault();
     let touch = event.touches[0];
     if (!touch) return;
-    
     let rect = canvas.getBoundingClientRect();
     const { x, y } = getTouchCoordinates(touch, rect);
-    
     hoveredButtonIndex = -1;
     menuButtons.forEach((btn, idx) => {
         if (isPointInButton(x, y, btn)) hoveredButtonIndex = idx;
@@ -128,59 +113,22 @@ function handleTouchMove(event) {
 }
 
 /**
- * Calculates button dimensions
- * @returns {Object} Button dimensions
+ * Sets up start menu buttons
  */
-function calculateButtonDimensions() {
-    const w = Math.min(200, canvas.width * 0.25);
+function setupStartMenuButtons() {
+    const w = Math.min(200, canvas.width * 0.3);
     const h = 60;
-    const spacing = (canvas.width - (w * 2)) / 3;
-    return { w, h, spacing };
-}
-
-/**
- * Creates restart button configuration
- */
-function createRestartButton(w, h, spacing) {
-    return { 
-        text: 'Restart', 
-        x: spacing, 
-        y: Math.max(75, canvas.height * 0.15), 
-        w, h, 
-        onClick: () => { 
-            winSoundPlayed = false; 
-            loseSoundPlayed = false; 
-            startGame(); 
-        } 
-    };
-}
-
-/**
- * Creates back to menu button configuration
- */
-function createBackToMenuButton(w, h, spacing) {
-    return { 
-        text: 'Back to Menu', 
-        x: spacing + w + spacing, 
-        y: Math.max(75, canvas.height * 0.15), 
-        w, h, 
+    const x = (canvas.width - w) / 2;
+    const y = Math.max(60, canvas.height * 0.125);
+    menuButtons = [{
+        text: 'Start Game',
+        x, y, w, h,
         onClick: () => {
-            winSoundPlayed = false;
-            loseSoundPlayed = false;
-            drawStartScreen();
+            gameState = 'playing';
+            menuButtons = [];
+            startGame();
         }
-    };
-}
-
-/**
- * Sets up win/lose buttons
- */
-function setupWinLoseButtons(type) {
-    const { w, h, spacing } = calculateButtonDimensions();
-    menuButtons = [
-        createRestartButton(w, h, spacing),
-        createBackToMenuButton(w, h, spacing)
-    ];
+    }];
 }
 
 /**
@@ -209,26 +157,6 @@ function drawButton(btn, idx) {
 }
 
 /**
- * Sets up start menu buttons
- */
-function setupStartMenuButtons() {
-    const w = Math.min(200, canvas.width * 0.3);
-    const h = 60;
-    const x = (canvas.width - w) / 2;
-    const y = Math.max(60, canvas.height * 0.125);
-    
-    menuButtons = [{
-        text: 'Start Game',
-        x, y, w, h,
-        onClick: () => {
-            gameState = 'playing';
-            menuButtons = [];
-            startGame();
-        }
-    }];
-}
-
-/**
  * Initializes fullscreen button
  */
 function initFullscreenButton() {
@@ -236,8 +164,25 @@ function initFullscreenButton() {
     if (!fsBtn) return;
     fsBtn.addEventListener('click', () => {
         toggleFullscreen();
-        if (document.activeElement) {
-            document.activeElement.blur();
+        if (document.activeElement) document.activeElement.blur();
+    });
+}
+
+/**
+ * Initializes mute button
+ */
+function initMuteButton() {
+    const muteBtn = document.getElementById('mute-btn');
+    if (!muteBtn) return;
+    muteBtn.addEventListener('click', () => {
+        gameIsMuted = !gameIsMuted;
+        muteBtn.classList.toggle('muted', gameIsMuted);
+        if (gameIsMuted) {
+            SoundManager.stopGameplay();
+            SoundManager.muteAll();
+        } else {
+            SoundManager.unmuteAll();
+            setTimeout(() => SoundManager.playGameplay(), 100);
         }
     });
 }
