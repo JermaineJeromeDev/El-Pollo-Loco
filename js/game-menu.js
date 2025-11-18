@@ -10,11 +10,11 @@ function showOptionsModal() {
         return;
     }
     
-    // Modal UND alle Children sichtbar machen
+    // Modal sichtbar machen
     modal.style.display = 'block';
     modal.style.visibility = 'visible';
     modal.style.opacity = '1';
-    modal.setAttribute('aria-hidden', 'false');
+    // ENTFERNT: aria-hidden auf Modal - verursacht Warnung wegen fokussiertem Button
     
     // Container-Backdrop
     if (container) {
@@ -63,7 +63,7 @@ function hideOptionsModal() {
     modal.style.display = 'none';
     modal.style.visibility = 'hidden';
     modal.style.opacity = '0';
-    modal.setAttribute('aria-hidden', 'true');
+    // ENTFERNT: aria-hidden wird nicht mehr gesetzt
     
     if (container) {
         container.classList.remove('modal-open');
