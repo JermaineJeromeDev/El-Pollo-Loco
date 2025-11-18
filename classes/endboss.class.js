@@ -1,3 +1,8 @@
+/**
+ * Represents the endboss enemy
+ * @class Endboss
+ * @extends MovableObject
+ */
 class Endboss extends MovableObject {
     offset = {
         top: 90,
@@ -58,6 +63,9 @@ class Endboss extends MovableObject {
     deadAnimationPlayed = false;
     deadAnimationFrame = 0;
 
+    /**
+     * Creates a new endboss instance
+     */
     constructor() {
         super().loadImage(this.IMAGES_ALERT[0]);
         this.loadImages(this.IMAGES_ALERT);
@@ -74,10 +82,17 @@ class Endboss extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Sets the world reference for the endboss
+     * @param {World} world - The game world instance
+     */
     setWorld(world) {
         this.world = world;
     }
 
+    /**
+     * Initializes animation and movement intervals
+     */
     animate() {
         this.deadAnimationInterval = null;
         setInterval(() => this.updateState(), 120);
@@ -85,7 +100,7 @@ class Endboss extends MovableObject {
     }
 
     /**
-     * Aktualisiert Endboss-Zustand
+     * Updates the endboss state based on current conditions
      */
     updateState() {
         if (this.isDead()) return this.handleDead();
@@ -97,7 +112,7 @@ class Endboss extends MovableObject {
     }
 
     /**
-     * Aktualisiert Statusbar
+     * Updates the status bar with current energy
      */
     updateStatusBar() {
         if (this.statusBarEndboss) {
@@ -105,23 +120,35 @@ class Endboss extends MovableObject {
         }
     }
 
+    /**
+     * Moves the endboss if conditions are met
+     */
     moveIfNeeded() {
         if (!this.isDead() && !this.isHurtEndboss() && (this.alertAnimationDone || this.activated)) {
             this.handleMovement();
         }
     }
 
+    /**
+     * Handles endboss death state
+     */
     handleDead() {
         this.speed = 0;
         if (!this.deadAnimationPlayed) this.playDeadAnimationLooped(3);
     }
 
+    /**
+     * Handles endboss hurt state
+     */
     handleHurt() {
         this.speed = 0;
         this.playAnimation(this.IMAGES_HURT);
         this.playHurtSound();
     }
 
+    /**
+     * Handles endboss alert state when player is near
+     */
     handleAlert() {
         this.speed = 0;
         this.playAlertAnimation();
@@ -129,12 +156,42 @@ class Endboss extends MovableObject {
         if (!this.statusBarEndboss) this.statusBarEndboss = new StatusBarEndboss();
     }
 
+    /**
+     * Handles endboss active state after alert
+     */
     handleActive() {
         this.alertAnimationDone = true;
         this.activated = true;
         this.handleMovementAndAnimation();
     }
 
+    /**
+     * Handles endboss movement
+     */
+    handleMovement() {
+        this.moveLeft();
+    }
+
+    /**
+     * Handles movement and animation based on player distance
+     */
+    handleMovementAndAnimation() {
+        if (this.world.character.x > this.x - 500) {
+            this.speed = 2;
+            this.playAnimation(this.IMAGES_ATTACK);
+        } else if (this.world.character.x > this.x - 300) {
+            this.speed = 0.8;
+            this.playAnimation(this.IMAGES_ALERT);
+        } else {
+            this.speed = 0.4;
+            this.playAnimation(this.IMAGES_WALKING);
+        }
+    }
+
+    /**
+     * Plays dead animation in loop
+     * @param {number} loopCount - Number of animation loops
+     */
     playDeadAnimationLooped(loopCount = 3) {
         this.deadAnimationPlayed = true;
         let frames = this.IMAGES_DEAD.length;
@@ -161,59 +218,81 @@ class Endboss extends MovableObject {
         }, frameDuration);
     }
 
+    /**
+     * Checks if player is near the endboss
+     * @returns {boolean} True if player is within detection range
+     */
     isPlayerNear() {
         return this.world && this.world.character.x > this.x - 300 && this.world.character.x < this.x + 1000;
     }
 
+    /**
+     * Plays alert animation with sound
+     */
     playAlertAnimation() {
         if (!this.alertPlayed) {
-            this.alertSound.currentTime = 0;
-            this.alertSound.muted = false;
-            this.alertSound.volume = 0.2;
-            this.alertSound.playbackRate = 1.2;
-            this.alertSound.play();
+            this.playAlertSound();
             this.alertPlayed = true;
         }
         this.playAnimation(this.IMAGES_ALERT);
         this.alertAnimationIndex++;
         if (this.alertAnimationIndex >= this.IMAGES_ALERT.length) {
             this.alertAnimationDone = true;
-            this.alertSound.pause();
-            this.alertSound.currentTime = 0;
+            this.stopAlertSound();
         }
     }
 
-    handleMovementAndAnimation() {
-        if (this.world.character.x > this.x - 500) {
-            this.speed = 2;
-            this.playAnimation(this.IMAGES_ATTACK);
-        } else if (this.world.character.x > this.x - 300) {
-            this.speed = 0.8;
-            this.playAnimation(this.IMAGES_ALERT);
-        } else {
-            this.speed = 0.4;
-            this.playAnimation(this.IMAGES_WALKING);
-        }
+    /**
+     * Plays alert sound if not muted
+     */
+    playAlertSound() {
+        const muted = (this.world && this.world.gameIsMuted) || 
+                      (typeof gameIsMuted !== 'undefined' && gameIsMuted);
+        
+        if (muted) return;
+        
+        this.alertSound.currentTime = 0;
+        this.alertSound.muted = false;
+        this.alertSound.volume = 0.2;
+        this.alertSound.playbackRate = 1.2;
+        this.alertSound.play();
     }
 
-    handleMovement() {
-        this.moveLeft();
+    /**
+     * Stops the alert sound
+     */
+    stopAlertSound() {
+        this.alertSound.pause();
+        this.alertSound.currentTime = 0;
     }
 
+    /**
+     * Plays hurt sound if not muted
+     */
     playHurtSound() {
-        if (this.hurtSound.paused) {
-            this.hurtSound.currentTime = 0;
-            this.hurtSound.muted = false;
-            this.hurtSound.volume = 0.2;
-            this.hurtSound.playbackRate = 1.2;
-            this.hurtSound.play();
-        }
+        const muted = (this.world && this.world.gameIsMuted) || 
+                    (typeof gameIsMuted !== 'undefined' && gameIsMuted);
+        
+        if (muted || !this.hurtSound.paused) return;
+        
+        this.hurtSound.currentTime = 0;
+        this.hurtSound.muted = false;
+        this.hurtSound.volume = 0.2;
+        this.hurtSound.playbackRate = 1.2;
+        this.hurtSound.play();
     }
 
+    /**
+     * Checks if endboss is hurt
+     * @returns {boolean} True if recently hit
+     */
     isHurtEndboss() {
         return this.isHurt();
     }
 
+    /**
+     * Reduces endboss energy and updates status bar
+     */
     hit() {
         this.energy -= 20;
         if (this.energy < 0) this.energy = 0;
