@@ -29,8 +29,10 @@ canvas {
     background-color: transparent;
     display: block;
     margin: 0 auto;
-    width: 720px;
-    height: 480px;
+    width: 100% !important; /* Immer 100% der Container-Breite */
+    height: auto !important; /* Automatische Höhe */
+    max-width: 720px;
+    aspect-ratio: 3 / 2;
     box-shadow: 0 0 20px #000;
     transition: width 0.3s, height 0.3s;
 }
