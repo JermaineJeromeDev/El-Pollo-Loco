@@ -1,3 +1,7 @@
+/**
+ * Main game entry point
+ */
+
 let canvas;
 let ctx;
 let world;
@@ -36,6 +40,11 @@ function handleResize() {
     updateIconPositions();
     updateRotateHint();
 }
+
+/**
+ * Initializes the game on DOMContentLoaded
+ */
+window.addEventListener('DOMContentLoaded', init);
 
 /**
  * Loads all sound files
@@ -722,6 +731,34 @@ function setupStartMenuButtons() {
 }
 
 /**
+ * Initializes mute button
+ */
+function initMuteButton() {
+    const muteBtn = document.getElementById('mute-btn');
+    if (!muteBtn) return;
+    muteBtn.addEventListener('click', () => {
+        gameIsMuted = !gameIsMuted;
+        updateMuteButtonIcon();
+        if (gameIsMuted) {
+            SoundManager.stopGameplay();
+            SoundManager.muteAll();
+        } else {
+            SoundManager.unmuteAll();
+            setTimeout(() => SoundManager.playGameplay(), 100);
+        }
+    });
+}
+
+/**
+ * Updates mute button icon
+ */
+function updateMuteButtonIcon() {
+    const muteBtn = document.getElementById('mute-btn');
+    if (!muteBtn) return;
+    muteBtn.classList.toggle('muted', gameIsMuted);
+}
+
+/**
  * Initializes fullscreen button
  */
 function initFullscreenButton() {
@@ -789,11 +826,6 @@ function toggleFullscreen() {
     updateCanvasDimensions();
     redrawAfterFullscreen();
 }
-
-/**
- * Initializes the game on DOMContentLoaded
- */
-window.addEventListener('DOMContentLoaded', init);
 
 /**
  * Gets touch coordinates
