@@ -166,29 +166,28 @@ function calculateBackgroundDimensions(imgAspect, canvasAspect) {
 }
 
 /**
- * Shows the win screen
+ * Shows the win screen (HTML Overlay Version)
  */
 function showWinScreen() {
-    console.log('showWinScreen called'); // DEBUG
     gameState = 'win';
     saveCanvasSnapshot();
-    console.log('Snapshot saved:', canvasSnapshot ? 'YES' : 'NO'); // DEBUG
     SoundManager.stopGameplay();
     if (!gameIsMuted && !winSoundPlayed) { 
         SoundManager.playWin(); 
         winSoundPlayed = true; 
     }
-    let img = new Image();
-    img.src = 'assets/img/You won, you lost/You win B.png';
-    img.onload = () => { 
-        console.log('Win image loaded'); // DEBUG
-        drawEndScreen(img, 'win'); 
-    };
-    img.onerror = () => console.error('Win image failed to load'); // DEBUG
+    
+    // Snapshot als CSS Background setzen
+    const winOverlay = document.getElementById('win-overlay');
+    const snapshotDiv = document.getElementById('win-snapshot');
+    snapshotDiv.style.backgroundImage = `url(${canvasSnapshot})`;
+    
+    // Overlay einblenden
+    winOverlay.classList.remove('d-none');
 }
 
 /**
- * Shows the lose screen
+ * Shows the lose screen (HTML Overlay Version)
  */
 function showLoseScreen() {
     gameState = 'lose';
@@ -198,9 +197,28 @@ function showLoseScreen() {
         SoundManager.playLose(); 
         loseSoundPlayed = true; 
     }
-    let img = new Image();
-    img.src = 'assets/img/You won, you lost/You lost.png';
-    img.onload = () => { drawEndScreen(img, 'lose'); };
+    
+    const loseOverlay = document.getElementById('lose-overlay');
+    const snapshotDiv = document.getElementById('lose-snapshot');
+    snapshotDiv.style.backgroundImage = `url(${canvasSnapshot})`;
+    
+    loseOverlay.classList.remove('d-none');
+}
+
+function restartGame() {
+    document.getElementById('win-overlay').classList.add('d-none');
+    document.getElementById('lose-overlay').classList.add('d-none');
+    winSoundPlayed = false;
+    loseSoundPlayed = false;
+    startGame();
+}
+
+function backToMenu() {
+    document.getElementById('win-overlay').classList.add('d-none');
+    document.getElementById('lose-overlay').classList.add('d-none');
+    winSoundPlayed = false;
+    loseSoundPlayed = false;
+    drawStartScreen();
 }
 
 /**
@@ -214,8 +232,8 @@ function saveCanvasSnapshot() {
     tempCanvas.height = canvas.height;
     const tempCtx = tempCanvas.getContext('2d');
     
-    tempCtx.drawImage(canvas, 0, 0);
-    canvasSnapshot = tempCanvas.toDataURL();
+    tempCtx.drawImage(canvas, 0, 0); // Kopiert aktuellen Canvas-Inhalt
+    canvasSnapshot = tempCanvas.toDataURL(); // Konvertiert zu Base64-String
 }
 
 /**
