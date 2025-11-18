@@ -247,10 +247,8 @@ class Endboss extends MovableObject {
      */
     playAlertSound() {
         const muted = (this.world && this.world.gameIsMuted) || 
-                      (typeof gameIsMuted !== 'undefined' && gameIsMuted);
-        
+                    (typeof gameIsMuted !== 'undefined' && gameIsMuted);
         if (muted) return;
-        
         this.alertSound.currentTime = 0;
         this.alertSound.muted = false;
         this.alertSound.volume = 0.2;
@@ -272,9 +270,7 @@ class Endboss extends MovableObject {
     playHurtSound() {
         const muted = (this.world && this.world.gameIsMuted) || 
                     (typeof gameIsMuted !== 'undefined' && gameIsMuted);
-        
         if (muted || !this.hurtSound.paused) return;
-        
         this.hurtSound.currentTime = 0;
         this.hurtSound.muted = false;
         this.hurtSound.volume = 0.2;
