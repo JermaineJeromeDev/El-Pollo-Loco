@@ -1,5 +1,5 @@
 /**
- * Aktualisiert Icon-Positionen relativ zum Canvas
+ * Updates icon positions relative to canvas
  */
 function updateIconPositions() {
     const containerEl = document.querySelector('.container');
@@ -16,7 +16,7 @@ function updateIconPositions() {
 }
 
 /**
- * Zeigt Rotations-Hinweis oder versteckt ihn
+ * Shows or hides rotation hint
  */
 function updateRotateHint() {
     const rotateHint = document.getElementById('rotate-screen-hint');
@@ -33,8 +33,8 @@ function updateRotateHint() {
 }
 
 /**
- * Zeigt den Rotations-Hinweis an
- * @param {HTMLElement} rotateHint - Das Rotate-Hint Element
+ * Shows the rotation hint
+ * @param {HTMLElement} rotateHint - The rotate hint element
  */
 function showRotateHint(rotateHint) {
     rotateHint.style.display = 'flex';
@@ -48,8 +48,8 @@ function showRotateHint(rotateHint) {
 }
 
 /**
- * Versteckt den Rotations-Hinweis
- * @param {HTMLElement} rotateHint - Das Rotate-Hint Element
+ * Hides the rotation hint
+ * @param {HTMLElement} rotateHint - The rotate hint element
  */
 function hideRotateHint(rotateHint) {
     rotateHint.style.display = 'none';
@@ -62,15 +62,15 @@ function hideRotateHint(rotateHint) {
 }
 
 /**
- * Verhindert Scroll-Events
- * @param {Event} e - Touch-Event
+ * Prevents scroll events
+ * @param {Event} e - Touch event
  */
 function preventScroll(e) {
     e.preventDefault();
 }
 
 /**
- * Initialisiert Mute-Button mit Event-Listener
+ * Initializes mute button with event listener
  */
 function initMuteButton() {
     const muteBtn = document.getElementById('mute-btn');
@@ -81,8 +81,8 @@ function initMuteButton() {
 }
 
 /**
- * Aktualisiert Mute-Icon basierend auf gameIsMuted
- * @param {HTMLElement} btn - Mute-Button Element
+ * Updates mute icon based on gameIsMuted
+ * @param {HTMLElement} btn - Mute button element
  */
 function updateMuteIcon(btn) {
     const img = btn.querySelector('img');
@@ -93,7 +93,7 @@ function updateMuteIcon(btn) {
 }
 
 /**
- * Togglet Mute-Status
+ * Toggles mute status
  */
 function toggleMute() {
     gameIsMuted = !gameIsMuted;
@@ -108,7 +108,7 @@ function toggleMute() {
 }
 
 /**
- * Aktualisiert alle Mute-Icons im UI
+ * Updates all mute icons in UI
  */
 function updateAllMuteIcons() {
     const muteBtnImg = document.querySelector('#mute-btn img');
