@@ -52,21 +52,12 @@ class World {
      */
     draw() {
         if (this.gameStopped) return; 
-        // clearRect entfernt - Canvas bleibt transparent
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
-        
-        // Spielobjekte (Character, Enemies, Items) zeichnen
         this.drawGameObjects();
-        
-        // Endboss-Statusbar zeichnen (bewegt sich mit der Kamera)
         this.drawEndbossStatusBar();
-        
         this.ctx.translate(-this.camera_x, 0);
-        
-        // Character-Statusbars (fest positioniert, bewegen sich NICHT mit)
         this.drawStatusBars();
-        
         requestAnimationFrame(() => this.draw());
     }
 
@@ -167,8 +158,6 @@ class World {
     clearAllIntervals() {
         this.intervals.forEach(i => clearInterval(i));
         this.intervals = [];
-        
-        // NEU: Stoppe auch alle Gegner-Intervalle
         if (this.level && this.level.enemies) {
             this.level.enemies.forEach(enemy => {
                 if (enemy.moveInterval) clearInterval(enemy.moveInterval);
