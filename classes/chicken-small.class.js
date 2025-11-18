@@ -4,9 +4,10 @@
  * @extends MovableObject
  */
 class ChickenSmall extends MovableObject {
-    y = 380;
-    width = 50;
-    height = 50;
+    y = 370;           // von 380 auf 370 (höher platziert)
+    width = 70;        // von 50 auf 70 (40% größer)
+    height = 70;       // von 50 auf 70 (40% größer)
+    
     IMAGES_WALKING = [
         'assets/img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
         'assets/img/3_enemies_chicken/chicken_small/1_walk/2_w.png',
@@ -18,10 +19,10 @@ class ChickenSmall extends MovableObject {
     ];
 
     offset = {
-        top: 6,
-        bottom: 6,
-        left: 6,
-        right: 6
+        top: 8,       // von 6 auf 8 (proportional angepasst)
+        bottom: 8,    // von 6 auf 8
+        left: 8,      // von 6 auf 8
+        right: 8      // von 6 auf 8
     };
 
 
@@ -101,7 +102,7 @@ class ChickenSmall extends MovableObject {
  */
 function startSmallChickenFalling(chicken) {
     const fallSpeed = 2;
-    const groundLevel = 365;
+    const groundLevel = 360;  // von 365 auf 360 (angepasst an neue Höhe)
     
     let fallInterval = setInterval(() => {
         chicken.y += fallSpeed;
