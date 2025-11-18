@@ -11,9 +11,11 @@ let winSoundPlayed = false;
 let loseSoundPlayed = false;
 let optionsOrigin = null;
 let endScreenImage = null;
+let canvasSnapshot = null;
+let snapshotImage = null;
 
 /**
- * Initialisiert das Spiel
+ * Initializes the game
  */
 function init() {
     canvas = document.getElementById('canvas');
@@ -24,9 +26,6 @@ function init() {
     setupMobileEvents();
     initMuteButton();
     initFullscreenButton();
-    initOptionsTopButton();
-    initOptionsCloseButton();
-    initOptionsTabs();
     
     updateIconPositions();
     updateRotateHint();
@@ -38,7 +37,7 @@ function init() {
 }
 
 /**
- * Behandelt Resize-Events
+ * Handles resize events
  */
 function handleResize() {
     updateIconPositions();
@@ -46,7 +45,7 @@ function handleResize() {
 }
 
 /**
- * Lädt alle Sound-Dateien
+ * Loads all sound files
  */
 function loadAllSounds() {
     const sounds = [
@@ -67,7 +66,7 @@ function loadAllSounds() {
 }
 
 /**
- * Startet ein neues Spiel
+ * Starts a new game
  */
 function startGame() {
     cleanupOldWorld();
@@ -82,7 +81,7 @@ function startGame() {
 }
 
 /**
- * Räumt alte World-Instanz auf
+ * Cleans up old world instance
  */
 function cleanupOldWorld() {
     if (!world) return;
@@ -93,7 +92,7 @@ function cleanupOldWorld() {
 }
 
 /**
- * Setzt Canvas auf Standardgröße zurück
+ * Resets canvas to default size
  */
 function resetCanvas() {
     canvas.classList.remove('fullscreen');
@@ -103,7 +102,7 @@ function resetCanvas() {
 }
 
 /**
- * Erstellt neue World-Instanz
+ * Creates new world instance
  */
 function createNewWorld() {
     world = new World(canvas, keyboard);
@@ -116,7 +115,7 @@ function createNewWorld() {
 }
 
 /**
- * Zeichnet den Start-Screen
+ * Draws the start screen
  */
 function drawStartScreen() {
     gameState = 'start';
@@ -132,8 +131,8 @@ function drawStartScreen() {
 }
 
 /**
- * Zeichnet Hintergrundbild skaliert
- * @param {Image} img - Das zu zeichnende Bild
+ * Draws background image scaled
+ * @param {Image} img - The image to draw
  */
 function drawScaledBackground(img) {
     const imgAspect = img.width / img.height;
@@ -157,46 +156,101 @@ function drawScaledBackground(img) {
 }
 
 /**
- * Zeigt den Gewinnbildschirm an
+ * Shows the win screen
  */
 function showWinScreen() {
+    console.log('showWinScreen called'); // DEBUG
     gameState = 'win';
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    saveCanvasSnapshot();
+    console.log('Snapshot saved:', canvasSnapshot ? 'YES' : 'NO'); // DEBUG
     SoundManager.stopGameplay();
-    if (!gameIsMuted && !winSoundPlayed) { SoundManager.playWin(); winSoundPlayed = true; }
+    if (!gameIsMuted && !winSoundPlayed) { 
+        SoundManager.playWin(); 
+        winSoundPlayed = true; 
+    }
     let img = new Image();
     img.src = 'assets/img/You won, you lost/You win B.png';
-    img.onload = () => { drawEndScreen(img, 'win'); };
+    img.onload = () => { 
+        console.log('Win image loaded'); // DEBUG
+        drawEndScreen(img, 'win'); 
+    };
+    img.onerror = () => console.error('Win image failed to load'); // DEBUG
 }
 
 /**
- * Zeigt den Verlustbildschirm an
+ * Shows the lose screen
  */
 function showLoseScreen() {
     gameState = 'lose';
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    saveCanvasSnapshot();
     SoundManager.stopGameplay();
-    if (!gameIsMuted && !loseSoundPlayed) { SoundManager.playLose(); loseSoundPlayed = true; }
+    if (!gameIsMuted && !loseSoundPlayed) { 
+        SoundManager.playLose(); 
+        loseSoundPlayed = true; 
+    }
     let img = new Image();
     img.src = 'assets/img/You won, you lost/You lost.png';
     img.onload = () => { drawEndScreen(img, 'lose'); };
 }
 
 /**
- * Zeichnet den Endbildschirm
- * @param {Image} img - Das zu zeichnende Bild
- * @param {string} type - 'win' oder 'lose'
+ * Saves current canvas content as snapshot
  */
-function drawEndScreen(img, type) {
-    endScreenImage = img;
-    const dimensions = calculateImageDimensions(img);
-    startFadeInAnimation(img, dimensions, type);
+function saveCanvasSnapshot() {
+    if (!canvas) return;
+    
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+    const tempCtx = tempCanvas.getContext('2d');
+    
+    tempCtx.drawImage(canvas, 0, 0);
+    canvasSnapshot = tempCanvas.toDataURL();
 }
 
 /**
- * Berechnet Bilddimensionen für Endbildschirm
- * @param {Image} img - Das Bild
- * @returns {Object} Dimensionen {x, y, w, h}
+ * Draws saved snapshot as background (synchronous)
+ */
+function drawSnapshotBackground() {
+    if (!canvasSnapshot || !snapshotImage) {
+        if (canvasSnapshot && !snapshotImage) {
+            snapshotImage = new Image();
+            snapshotImage.src = canvasSnapshot;
+        }
+        return;
+    }
+    
+    ctx.drawImage(snapshotImage, 0, 0, canvas.width, canvas.height);
+}
+
+/**
+ * Draws the end screen
+ * @param {Image} img - The image to draw
+ * @param {string} type - 'win' or 'lose'
+ */
+function drawEndScreen(img, type) {
+    console.log('drawEndScreen called with type:', type); // DEBUG
+    endScreenImage = img;
+    
+    if (canvasSnapshot) {
+        snapshotImage = new Image();
+        snapshotImage.src = canvasSnapshot;
+        snapshotImage.onload = () => {
+            console.log('Snapshot image loaded'); // DEBUG
+            const dimensions = calculateImageDimensions(img);
+            startFadeInAnimation(img, dimensions, type);
+        };
+    } else {
+        console.log('No snapshot, starting animation directly'); // DEBUG
+        const dimensions = calculateImageDimensions(img);
+        startFadeInAnimation(img, dimensions, type);
+    }
+}
+
+/**
+ * Calculates image dimensions for end screen
+ * @param {Image} img - The image
+ * @returns {Object} Dimensions {x, y, w, h}
  */
 function calculateImageDimensions(img) {
     const maxWidth = canvas.width * 0.6;
@@ -221,10 +275,10 @@ function calculateImageDimensions(img) {
 }
 
 /**
- * Startet Fade-In Animation
- * @param {Image} img - Das Bild
- * @param {Object} dimensions - Dimensionen
- * @param {string} type - 'win' oder 'lose'
+ * Starts fade-in animation
+ * @param {Image} img - The image
+ * @param {Object} dimensions - Dimensions
+ * @param {string} type - 'win' or 'lose'
  */
 function startFadeInAnimation(img, dimensions, type) {
     let opacity = 0;
@@ -243,8 +297,8 @@ function startFadeInAnimation(img, dimensions, type) {
 }
 
 /**
- * Beendet Endbildschirm-Animation
- * @param {string} type - 'win' oder 'lose'
+ * Finishes end screen animation
+ * @param {string} type - 'win' or 'lose'
  */
 function finishEndScreen(type) {
     setupWinLoseButtons(type);
@@ -253,16 +307,16 @@ function finishEndScreen(type) {
 }
 
 /**
- * Zeichnet einen Frame des Endbildschirms
- * @param {Image} img - Das Bild
+ * Draws a frame of the end screen
+ * @param {Image} img - The image
  * @param {Object} dimensions - {x, y, w, h}
- * @param {number} opacity - Opazität
- * @param {number} scale - Skalierung
+ * @param {number} opacity - Opacity
+ * @param {number} scale - Scale
  */
 function drawEndScreenFrame(img, dimensions, opacity, scale) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.globalAlpha = opacity;
+    drawSnapshotBackground();
     
+    ctx.globalAlpha = opacity;
     const drawW = dimensions.w * scale;
     const drawH = dimensions.h * scale;
     const drawX = dimensions.x - (drawW - dimensions.w) / 2;
@@ -273,217 +327,60 @@ function drawEndScreenFrame(img, dimensions, opacity, scale) {
 }
 
 /**
- * Setzt die Start-Menü-Buttons
+ * Sets up start menu buttons
  */
 function setupStartMenuButtons() {
-    let w = Math.min(200, canvas.width * 0.3); // max 200px oder 30% der Canvas-Breite
-    let h = 60;
-    let x = (canvas.width - w) / 2;
-    let y = Math.max(60, canvas.height * 0.125); // min 60px oder 12.5% der Canvas-Höhe
+    const w = Math.min(200, canvas.width * 0.3);
+    const h = 60;
+    const x = (canvas.width - w) / 2;
+    const y = Math.max(60, canvas.height * 0.125);
     
-    menuButtons = [
-        { 
-            text: 'Start Game', 
-            x, 
-            y, 
-            w, 
-            h, 
-            onClick: () => { 
-                gameState = 'playing'; 
-                menuButtons = []; 
-                startGame(); 
-            } 
+    menuButtons = [{
+        text: 'Start Game',
+        x, y, w, h,
+        onClick: () => {
+            gameState = 'playing';
+            menuButtons = [];
+            startGame();
         }
-    ];
+    }];
 }
 
 /**
- * Initialisiert den Optionen-Button im oberen Bereich
+ * Initializes fullscreen button
  */
-function initOptionsTopButton() {
-    const optBtn = document.getElementById('options-top-btn');
-    if (!optBtn) return;
-    const img = optBtn.querySelector('img');
-    if (img) img.src = 'assets/img/10_button_icons/options.png';
-    optBtn.addEventListener('click', () => {
-        if (gameState === 'playing' && world) {
-            optionsOrigin = 'playing';
-            openOptionsFromGameplay();
-        } else {
-            optionsOrigin = 'start';
-            showOptionsModal();
-        }
-    });
+function initFullscreenButton() {
+    const fsBtn = document.getElementById('fullscreen-btn');
+    if (!fsBtn) return;
+    fsBtn.addEventListener('click', toggleFullscreen);
 }
 
 /**
- * Neues: bindet Close-Icon im Modal an closeOptions()
+ * Toggles fullscreen mode
  */
-function initOptionsCloseButton() {
-    const closeBtn = document.getElementById('options-close-btn');
-    if (!closeBtn) return;
-    closeBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        closeOptions();
-    });
-}
-
-/**
- * Tab-Logik für Options-Modal
- */
-function initOptionsTabs() {
-    const tabs = [
-        { btnId: 'tab-story', paneId: 'story-content' },
-        { btnId: 'tab-controls', paneId: 'controls-content' },
-        { btnId: 'tab-back-menu', action: 'backToMenu' }, // NEU: Back to Menu Action
-        { btnId: 'tab-imprint', paneId: 'imprint-content' },
-        { btnId: 'tab-privacy', paneId: 'privacy-content' }
-    ];
-    tabs.forEach(t => {
-        const btn = document.getElementById(t.btnId);
-        if (!btn) return;
-        btn.addEventListener('click', (e) => {
-            // Wenn Link mit target="_blank" → normale Navigation erlauben
-            if (btn.tagName === 'A' && btn.getAttribute('target') === '_blank') {
-                document.querySelectorAll('.tab-btn').forEach(b => {
-                    b.classList.remove('active');
-                    b.setAttribute('aria-selected', 'false');
-                });
-                return;
-            }
-            
-            // NEU: Wenn "Zurück zum Menü" Button
-            if (t.action === 'backToMenu') {
-                e.preventDefault();
-                handleBackToMenu();
-                return;
-            }
-            
-            // Ansonsten: Navigation verhindern, Tab wechseln
-            if (e && typeof e.preventDefault === 'function') e.preventDefault();
-            switchOptionsTab(t.btnId, t.paneId);
-        });
-    });
-}
-
-/**
- * NEU: Funktion für "Zurück zum Menü"
- */
-function handleBackToMenu() {
-    // Schließe das Options-Modal
-    const modal = document.getElementById('options-modal');
-    if (modal) {
-        modal.classList.add('d-none');
-        modal.classList.remove('fredoka-ui');
-    }
-    
+function toggleFullscreen() {
+    isFullscreen = !isFullscreen;
     const containerEl = document.querySelector('.container');
-    if (containerEl) containerEl.classList.remove('modal-open');
     
-    // Stoppe das Spiel falls es läuft
-    if (world) {
-        world.clearAllIntervals();
-        world.gameStopped = true;
-        world = null;
-    }
-    
-    // Stoppe alle Sounds
-    SoundManager.stopAll();
-    
-    // Reset game state
-    gameState = 'start';
-    optionsOrigin = null;
-    winSoundPlayed = false;
-    loseSoundPlayed = false;
-    endScreenImage = null;
-    
-    // Zeige Startscreen
-    drawStartScreen();
-}
-
-/**
- * Wechselt Tab: setzt aktive Klasse am Button und zeigt das Pane
- * @param {string} activeBtnId - ID des aktiven Buttons
- * @param {string} activePaneId - ID des aktiven Panes
- */
-function switchOptionsTab(activeBtnId, activePaneId) {
-    // buttons
-    document.querySelectorAll('.tab-btn').forEach(b => {
-        if (b.id === activeBtnId) {
-            b.classList.add('active');
-            b.setAttribute('aria-selected', 'true');
-        } else {
-            b.classList.remove('active');
-            b.setAttribute('aria-selected', 'false');
-        }
-    });
-    // panes
-    document.querySelectorAll('.tab-content').forEach(p => {
-        if (p.id === activePaneId) p.classList.remove('d-none');
-        else p.classList.add('d-none');
-    });
-}
-
-/**
- * Im showOptionsModal standardmäßig Story öffnen
- */
-function showOptionsModal() {
-    gameState = 'options';
-    const modal = document.getElementById('options-modal');
-    if (!modal) return;
-
-    const wasHidden = modal.classList.contains('d-none');
-
-    modal.classList.remove('d-none');
-    modal.classList.add('fredoka-ui');
-
-    const containerEl = document.querySelector('.container');
-    if (containerEl) containerEl.classList.add('modal-open');
-
-    if (wasHidden) {
-        const anyVisible = Array.from(document.querySelectorAll('.tab-content')).some(p => !p.classList.contains('d-none'));
-        if (!anyVisible) switchOptionsTab('tab-story', 'story-content');
-    }
-}
-
-/**
- * Anpassung: openOptionsFromGameplay pausiert weiterhin das Spiel und zeigt Modal
- */
-function openOptionsFromGameplay() {
-    if (!world) { showOptionsModal(); return; }
-    try { world.clearAllIntervals(); } catch(e) { /* ignore */ }
-    world.gameStopped = true;
-    SoundManager.stopGameplay();
-    showOptionsModal();
-}
-
-/**
- * Beim Schließen Modal verbergen und Spielzustand wiederherstellen
- */
-function closeOptions() {
-    const modal = document.getElementById('options-modal');
-    if (modal) {
-        modal.classList.add('d-none');
-        modal.classList.remove('fredoka-ui');
-    }
-
-    const containerEl = document.querySelector('.container');
-    if (containerEl) containerEl.classList.remove('modal-open');
-
-    if (optionsOrigin === 'playing' && world) {
-        world.gameStopped = false;
-        if (typeof world.run === 'function') world.run();
-        if (typeof world.draw === 'function') world.draw();
-        gameState = 'playing';
-        if (!gameIsMuted) SoundManager.playGameplay();
+    if (isFullscreen) {
+        if (containerEl) containerEl.classList.add('fullscreen');
+        canvas.classList.add('fullscreen');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     } else {
-        drawStartScreen();
+        if (containerEl) containerEl.classList.remove('fullscreen');
+        canvas.classList.remove('fullscreen');
+        canvas.width = 720;
+        canvas.height = 480;
     }
-    optionsOrigin = null;
+    
+    updateIconPositions();
+    if (gameState === 'start') drawStartScreen();
+    if (world && world.draw) requestAnimationFrame(() => world.draw());
 }
 
 /**
- * Setzt Canvas-Listener für Menu-Interaktionen
+ * Sets up canvas listeners for menu interactions
  */
 function setupCanvasListeners() {
     if (!canvas._listenersAdded) {
@@ -498,7 +395,7 @@ function setupCanvasListeners() {
 }
 
 /**
- * Behandelt Menu-Klicks
+ * Handles menu clicks
  */
 function handleMenuClick(event) {
     let { x, y } = getMousePos(event);
@@ -508,7 +405,7 @@ function handleMenuClick(event) {
 }
 
 /**
- * Behandelt Menu-Hover
+ * Handles menu hover
  */
 function handleMenuHover(event) {
     if (!['start', 'win', 'lose'].includes(gameState)) return;
@@ -521,7 +418,7 @@ function handleMenuHover(event) {
 }
 
 /**
- * Behandelt Menu-Touch
+ * Handles menu touch
  */
 function handleMenuTouch(event) {
     event.preventDefault();
@@ -538,7 +435,7 @@ function handleMenuTouch(event) {
 }
 
 /**
- * Behandelt Touch-Move Events
+ * Handles touch move events
  */
 function handleTouchMove(event) {
     if (!['start', 'win', 'lose'].includes(gameState)) return;
@@ -558,7 +455,7 @@ function handleTouchMove(event) {
 }
 
 /**
- * Holt Maus-Position relativ zum Canvas
+ * Gets mouse position relative to canvas
  */
 function getMousePos(event) {
     let rect = canvas.getBoundingClientRect();
@@ -566,14 +463,14 @@ function getMousePos(event) {
 }
 
 /**
- * Prüft ob Punkt in Button ist
+ * Checks if point is inside button
  */
 function isPointInButton(mx, my, btn) {
     return mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h;
 }
 
 /**
- * Zeichnet Menu-Screen neu
+ * Redraws menu screen
  */
 function redrawMenuScreen() {
     if (gameState === 'start') drawStartScreen();
@@ -581,19 +478,19 @@ function redrawMenuScreen() {
 }
 
 /**
- * Zeichnet End-Screen neu
+ * Redraws end screen
  */
 function redrawEndScreen() {
     if (!endScreenImage) return;
     
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawSnapshotBackground();
     const dimensions = calculateImageDimensions(endScreenImage);
     ctx.drawImage(endScreenImage, dimensions.x, dimensions.y, dimensions.w, dimensions.h);
     drawWinLoseButtons();
 }
 
 /**
- * Setzt Win/Lose Buttons
+ * Sets up win/lose buttons
  */
 function setupWinLoseButtons(type) {
     let w = Math.min(200, canvas.width * 0.25);
@@ -631,21 +528,21 @@ function setupWinLoseButtons(type) {
 }
 
 /**
- * Zeichnet Menu-Buttons
+ * Draws menu buttons
  */
 function drawMenuButtons() {
     menuButtons.forEach((btn, idx) => drawButton(btn, idx));
 }
 
 /**
- * Zeichnet Win/Lose-Buttons
+ * Draws win/lose buttons
  */
 function drawWinLoseButtons() {
     menuButtons.forEach((btn, idx) => drawButton(btn, idx));
 }
 
 /**
- * Zeichnet einzelnen Button
+ * Draws single button
  */
 function drawButton(btn, idx) {
     ctx.save();
@@ -666,7 +563,7 @@ function drawButton(btn, idx) {
 }
 
 /**
- * Setzt Mobile-Events
+ * Initializes mobile button visibility
  */
 function setupMobileEvents() {
     updateMobileBtnsVisibility();
@@ -697,14 +594,14 @@ function setupMobileEvents() {
 }
 
 /**
- * Prüft ob Mobile Landscape
+ * Checks if mobile landscape
  */
 function isMobileLandscape() {
     return window.innerWidth <= 667 && window.innerHeight <= 375 && window.innerWidth > window.innerHeight;
 }
 
 /**
- * Aktualisiert Mobile-Button-Sichtbarkeit
+ * Updates mobile button visibility
  */
 function updateMobileBtnsVisibility() {
     const mobileBtns = document.getElementById('mobile-btns');
@@ -714,7 +611,7 @@ function updateMobileBtnsVisibility() {
 }
 
 /**
- * Behandelt Keydown
+ * Handles keydown events
  */
 function handleKeyDown(event) {
     if (event.key === 'Escape') toggleFullscreen();
@@ -723,7 +620,7 @@ function handleKeyDown(event) {
 }
 
 /**
- * Behandelt Keyup
+ * Handles keyup events
  */
 function handleKeyUp(event) {
     if (gameState !== 'playing') return;
@@ -731,7 +628,7 @@ function handleKeyUp(event) {
 }
 
 /**
- * Setzt Keyboard-Status
+ * Sets keyboard state
  */
 function setKeyState(keyCode, state) {
     if (keyCode === 37) keyboard.LEFT = state;
@@ -741,42 +638,11 @@ function setKeyState(keyCode, state) {
 }
 
 /**
- * Initialisiert Fullscreen-Button
+ * Displays the options/settings screen by showing the options modal.
+ * This function is called to present configuration options to the user.
  */
-function initFullscreenButton() {
-    const fsBtn = document.getElementById('fullscreen-btn');
-    if (!fsBtn) return;
-    fsBtn.addEventListener('click', toggleFullscreen);
-}
-
-/**
- * Togglet Fullscreen-Modus
- */
-function toggleFullscreen() {
-    isFullscreen = !isFullscreen;
-    const containerEl = document.querySelector('.container');
-    
-    if (isFullscreen) {
-        if (containerEl) containerEl.classList.add('fullscreen');
-        canvas.classList.add('fullscreen');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    } else {
-        if (containerEl) containerEl.classList.remove('fullscreen');
-        canvas.classList.remove('fullscreen');
-        canvas.width = 720;
-        canvas.height = 480;
-    }
-    
-    updateIconPositions();
-    if (gameState === 'start') drawStartScreen();
-    if (world && world.draw) requestAnimationFrame(() => world.draw());
+function drawOptionsScreen() {
+    showOptionsModal();
 }
 
 window.addEventListener('DOMContentLoaded', init);
-// ====================== SCREENS ======================
-// Ersetze canvas-basierte drawOptionsScreen: jetzt zeigt Modal
-function drawOptionsScreen() {
-    // delegated to modal display (kept for backward compatibility)
-    showOptionsModal();
-}
