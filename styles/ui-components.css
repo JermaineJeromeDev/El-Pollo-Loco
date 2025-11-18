@@ -367,21 +367,19 @@ a.tab-btn.active {
 }
 
 .mobile-btns button {
-    width: 11vh;
-    height: 11vh;
-    min-width: 50px;
-    min-height: 50px;
-    border-radius: 12px;
-    border: none;
-    background: rgba(44, 62, 80, 0.8);
-    color: #fff;
-    font-size: 2em;
+    width: 60px;          /* von 80px auf 60px */
+    height: 60px;         /* von 80px auf 60px */
+    background: rgba(255, 255, 255, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: auto;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: background 0.2s;
+    padding: 0;
 }
 
 .mobile-btns button:active {
@@ -390,9 +388,11 @@ a.tab-btn.active {
 }
 
 .mobile-btns button img {
-    width: 60%;
-    height: 60%;
+    width: 35px;          /* von 45px auf 35px */
+    height: 35px;         /* von 45px auf 35px */
     object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
 }
 
 @keyframes fadeIn {
