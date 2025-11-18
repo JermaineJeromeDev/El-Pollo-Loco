@@ -1,3 +1,8 @@
+/**
+ * Represents the main playable character
+ * @class Character
+ * @extends MovableObject
+ */
 class Character extends MovableObject {
     x = 50;
     y = 160;
@@ -81,6 +86,9 @@ class Character extends MovableObject {
         right: 30
     }
 
+    /**
+     * Creates a new character instance
+     */
     constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
@@ -93,11 +101,17 @@ class Character extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Initializes character animations and controls
+     */
     animate() {
         this.controlCharacter();
         this.animateCharacter();
     }
 
+    /**
+     * Controls character movement and camera
+     */
     controlCharacter() {
         setInterval(() => {
             if (this.isDead()) return;
@@ -107,6 +121,9 @@ class Character extends MovableObject {
         }, 1000 / 60);
     }
 
+    /**
+     * Handles horizontal movement input
+     */
     handleMovement() {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
             this.moveRight();
@@ -120,12 +137,18 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Handles jump input
+     */
     handleJump() {
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
             this.jump();
         }
     }
 
+    /**
+     * Handles character animation states
+     */
     animateCharacter() {
         setInterval(() => {
             if (this.isDead() && !this.deadAnimationPlayed) {
@@ -145,7 +168,7 @@ class Character extends MovableObject {
     }
 
     /**
-     * Behandelt Hurt-Animation
+     * Handles hurt animation
      */
     handleHurtAnimation() {
         this.playAnimation(this.IMAGES_HURT);
@@ -153,7 +176,7 @@ class Character extends MovableObject {
     }
 
     /**
-     * Spielt Hurt-Sound ab
+     * Plays hurt sound if not muted
      */
     playHurtSound() {
         if (this._hurtSoundPlaying || this.world.gameIsMuted) return;
@@ -163,16 +186,25 @@ class Character extends MovableObject {
         setTimeout(() => { this._hurtSoundPlaying = false; }, 500);
     }
 
+    /**
+     * Handles jumping animation
+     */
     handleJumpingAnimation() {
         this.playAnimation(this.IMAGES_JUMPING);
         this.idleTime = 0;
     }
 
+    /**
+     * Handles walking animation
+     */
     handleWalkingAnimation() {
         this.playAnimation(this.IMAGES_WALKING);
         this.idleTime = 0;
     }
 
+    /**
+     * Handles idle animations based on idle time
+     */
     handleIdleAnimation() {
         this.idleTime++;
         if (this.idleTime > 150) {
@@ -182,6 +214,9 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Plays death animation and shows lose screen
+     */
     playDeadAnimationAndLose() {
         this.deadAnimationPlayed = true;
         this.playDeadAnimation(() => {
@@ -189,6 +224,10 @@ class Character extends MovableObject {
         });
     }
 
+    /**
+     * Plays the death animation sequence
+     * @param {Function} callback - Callback after animation completes
+     */
     playDeadAnimation(callback) {
         let frames = this.IMAGES_DEAD.length;
         let frameDuration = 120;
@@ -203,6 +242,9 @@ class Character extends MovableObject {
         }, frameDuration);
     }
 
+    /**
+     * Handles lose screen display
+     */
     handleLoseScreen() {
         if (this.world && !this.loseScreenShown) {
             this.loseScreenShown = true;
@@ -216,6 +258,9 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Makes character jump and plays sound
+     */
     jump() {
         this.speedY = 20;
         if (!this.world.gameIsMuted) {
@@ -223,12 +268,18 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Adds a coin and plays sound
+     */
     addCoin() {
         super.addCoin();
         const muted = this.world ? this.world.gameIsMuted : (typeof gameIsMuted !== 'undefined' ? gameIsMuted : false);
         if (!muted) SoundManager.playCoin();
     }
 
+    /**
+     * Adds a bottle and plays sound
+     */
     addBottle() {
         super.addBottle();
         const muted = this.world ? this.world.gameIsMuted : (typeof gameIsMuted !== 'undefined' ? gameIsMuted : false);
