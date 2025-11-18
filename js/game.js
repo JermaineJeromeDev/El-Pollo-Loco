@@ -410,7 +410,12 @@ function addMobileControlListener(control) {
  * Checks if mobile landscape
  */
 function isMobileLandscape() {
-    return window.innerWidth <= 667 && window.innerHeight <= 375 && window.innerWidth > window.innerHeight;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const isLandscape = width > height;
+    const isSmallScreen = width <= 1200; // ERWEITERT: von 900 auf 1200
+    
+    return isLandscape && isSmallScreen;
 }
 
 /**
@@ -418,9 +423,20 @@ function isMobileLandscape() {
  */
 function updateMobileBtnsVisibility() {
     const mobileBtns = document.getElementById('mobile-btns');
-    if (mobileBtns) {
-        mobileBtns.style.display = isMobileLandscape() ? 'block' : 'none';
+    if (!mobileBtns) {
+        console.error('Mobile buttons element (#mobile-btns) not found!');
+        return;
     }
+    
+    const shouldShow = isMobileLandscape();
+    mobileBtns.style.display = shouldShow ? 'block' : 'none';
+    
+    console.log('Mobile buttons:', {
+        shouldShow,
+        width: window.innerWidth,
+        height: window.innerHeight,
+        isLandscape: window.innerWidth > window.innerHeight
+    });
 }
 
 /**
