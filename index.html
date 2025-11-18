@@ -42,6 +42,7 @@
     <div class="container">
         <h1 id="title">El pollo loco</h1>
         <canvas id="canvas" width="720" height="480"></canvas>
+        <canvas id="overlay-canvas" width="720" height="480" class="d-none"></canvas>
         
         <!-- Neuer Container für die Top-Icons -->
         <div class="top-controls">
@@ -162,6 +163,29 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEU: Win/Lose Overlay -->
+        <div class="endscreen-overlay d-none" id="win-overlay">
+            <div class="endscreen-snapshot" id="win-snapshot"></div>
+            <div class="endscreen-content">
+                <img src="assets/img/You won, you lost/You win B.png" alt="You Win!" class="endscreen-image">
+                <div class="endscreen-buttons">
+                    <button class="endscreen-btn" onclick="restartGame()">Restart</button>
+                    <button class="endscreen-btn" onclick="backToMenu()">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="endscreen-overlay d-none" id="lose-overlay">
+            <div class="endscreen-snapshot" id="lose-snapshot"></div>
+            <div class="endscreen-content">
+                <img src="assets/img/You won, you lost/You lost.png" alt="You Lost" class="endscreen-image">
+                <div class="endscreen-buttons">
+                    <button class="endscreen-btn" onclick="restartGame()">Restart</button>
+                    <button class="endscreen-btn" onclick="backToMenu()">Back to Menu</button>
                 </div>
             </div>
         </div>
