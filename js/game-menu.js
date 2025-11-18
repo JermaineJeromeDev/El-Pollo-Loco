@@ -2,6 +2,15 @@
  * Shows the options modal
  */
 function showOptionsModal() {
+    // Pausiere Spiel UND Sound
+    if (typeof pauseGame === 'function' && typeof world !== 'undefined' && world) {
+        pauseGame();
+    }
+    
+    if (typeof SoundManager !== 'undefined') {
+        SoundManager.pauseAll();
+    }
+    
     const modal = document.getElementById('options-modal');
     const container = document.querySelector('.container');
     
@@ -10,18 +19,17 @@ function showOptionsModal() {
         return;
     }
     
-    // Modal sichtbar machen
+    // Modal sichtbar machen - JETZT NUR NOCH JAVASCRIPT, KEIN CSS-ATTRIBUT-SELEKTOR
     modal.style.display = 'block';
-    modal.style.visibility = 'visible';
-    modal.style.opacity = '1';
-    // ENTFERNT: aria-hidden auf Modal - verursacht Warnung wegen fokussiertem Button
+    setTimeout(() => {
+        modal.style.visibility = 'visible';
+        modal.style.opacity = '1';
+    }, 10); // Kleine Verzögerung für Transition-Effekt
     
-    // Container-Backdrop
     if (container) {
         container.classList.add('modal-open');
     }
     
-    // WICHTIG: Zuerst Story-Content sichtbar machen
     const storyContent = document.getElementById('story-content');
     const controlsContent = document.getElementById('controls-content');
     
@@ -34,7 +42,6 @@ function showOptionsModal() {
         controlsContent.classList.add('d-none');
     }
     
-    // Story-Tab aktivieren
     const tabButtons = document.querySelectorAll('.tab-btn');
     tabButtons.forEach(btn => btn.classList.remove('active'));
     
@@ -43,12 +50,7 @@ function showOptionsModal() {
         storyTab.classList.add('active');
     }
     
-    console.log('Modal opened:', {
-        modalDisplay: modal.style.display,
-        modalVisibility: modal.style.visibility,
-        storyContentVisible: storyContent ? !storyContent.classList.contains('d-none') : 'NOT FOUND',
-        storyContentDisplay: storyContent ? storyContent.style.display : 'NOT FOUND'
-    });
+    console.log('Modal opened - Game & Sound paused');
 }
 
 /**
@@ -60,18 +62,28 @@ function hideOptionsModal() {
     
     if (!modal) return;
     
-    modal.style.display = 'none';
-    modal.style.visibility = 'hidden';
+    // Transition zurück
     modal.style.opacity = '0';
+    modal.style.visibility = 'hidden';
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300); // Wartet bis Transition fertig ist
     
     if (container) {
         container.classList.remove('modal-open');
     }
     
-    // NEU: Resume Game wenn Modal geschlossen wird
-    if (typeof resumeGame === 'function') {
+    // Resume Game & Sound
+    if (typeof resumeGame === 'function' && typeof world !== 'undefined' && world) {
         resumeGame();
     }
+    
+    if (typeof SoundManager !== 'undefined') {
+        SoundManager.resumeAll();
+    }
+    
+    console.log('Modal closed - Game & Sound resumed');
 }
 
 /**
