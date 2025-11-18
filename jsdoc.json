@@ -24,9 +24,6 @@
         "collapse": true,
         "typedefs": true,
         "removeQuotes": "none",
-        "styles": [
-            "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
-        ],
         "menu": {
             "El Pollo Loco": {
                 "href": "index.html"
@@ -36,19 +33,12 @@
             "title": "El Pollo Loco 🐔🌶️",
             "description": "HTML5 Canvas Jump'n'Run Game Documentation",
             "keyword": "game, javascript, canvas, OOP, documentation"
-        },
-        "commonNav": "",
-        "default": {
-            "outputSourceFiles": true
         }
     },
     "templates": {
         "default": {
             "outputSourceFiles": true,
-            "includeDate": false,
-            "staticFiles": {
-                "include": ["./jsdoc-custom.css"]
-            }
+            "includeDate": false
         },
         "cleverLinks": false,
         "monospaceLinks": false
