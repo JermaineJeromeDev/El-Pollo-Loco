@@ -191,7 +191,7 @@ class World {
         let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, direction);
         bottle.world = this;
         this.throwableObjects.push(bottle);
-        if (!this.gameIsMuted) SoundManager.play('throw', 0.6, true);
+        if (!this.gameIsMuted) SoundManager.play('throw', 0.3, true);  // 0.6 → 0.3
         this.character.bottle -= 20;
         if(this.character.bottle < 0) this.character.bottle = 0;
         this.statusBarBottles.setPercentageBottles(this.character.bottle);

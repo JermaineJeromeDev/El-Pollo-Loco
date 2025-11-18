@@ -123,5 +123,5 @@ function initBreaking(bottle) {
  */
 function playBreakSound(world) {
     let muted = (world && world.gameIsMuted) || (typeof gameIsMuted !== 'undefined' && gameIsMuted);
-    if (!muted) SoundManager.play('break', 0.7, true);
+    if (!muted) SoundManager.play('break', 0.4, true);
 }

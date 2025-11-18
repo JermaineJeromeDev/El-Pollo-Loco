@@ -188,7 +188,7 @@ class Character extends MovableObject {
         if (this._hurtSoundPlaying || this.world.gameIsMuted) return;
         
         this._hurtSoundPlaying = true;
-        SoundManager.play('hurt', 0.3, false);
+        SoundManager.play('hurt', 0.15, false);  // Bereits korrekt auf 0.15
         setTimeout(() => { this._hurtSoundPlaying = false; }, 500);
     }
 
@@ -270,7 +270,7 @@ class Character extends MovableObject {
     jump() {
         this.speedY = 20;
         if (!this.world.gameIsMuted) {
-            SoundManager.play('jump', 0.5, true);
+            SoundManager.play('jump', 0.2, true);  // 0.5 → 0.2
         }
     }
 

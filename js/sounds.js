@@ -52,13 +52,13 @@ const SoundManager = {
      * This is a convenience method that calls the main play() function with specific       parameters.
      * Available sounds: jump, throw, break, hurt, win, lose, coin
      */
-    playJump() { this.play('jump', 0.5, true); },
-    playThrow() { this.play('throw', 0.6, true); },
-    playBreak() { this.play('break', 0.7, true); },
-    playHurt() { this.play('hurt', 0.3, false); },
-    playWin() { this.play('win', 0.5, false); },
-    playLose() { this.play('lose', 0.5, false); },
-    playCoin() { this.play('coin', 0.5, true); },
+    playJump() { this.play('jump', 0.2, true); },
+    playThrow() { this.play('throw', 0.3, true); },
+    playBreak() { this.play('break', 0.4, true); },
+    playHurt() { this.play('hurt', 0.15, false); },
+    playWin() { this.play('win', 0.3, false); },
+    playLose() { this.play('lose', 0.3, false); },
+    playCoin() { this.play('coin', 0.25, true); },
 
     /**
      * Starts gameplay loop sound
@@ -68,7 +68,7 @@ const SoundManager = {
         let audio = this.sounds['gameplay'];
         if (!audio) return;
         audio.loop = true;
-        audio.volume = 0.3;
+        audio.volume = 0.15;
         
         const playPromise = audio.play();
         if (playPromise !== undefined) {
