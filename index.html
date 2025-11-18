@@ -25,6 +25,7 @@
     <script src="./levels/level1.js"></script>
     <script src="./js/sounds.js"></script>
     <script src="./js/game-ui.js"></script>
+    <script src="./js/game-menu.js"></script>
     <script src="./js/game.js"></script>
 </head>
 <body>
@@ -94,10 +95,8 @@
             <button id="restart-btn">Neu starten</button>
         </div>
         
-        <!-- Optionen-Modal: Tab-Layout mit Story / Steuerung / Impressum / Datenschutz -->
         <div class="menu-options control-description d-none" id="options-modal" aria-hidden="true">
             <div class="options-tabs">
-                <!-- Neuer Close-Button oben links -->
                 <button id="options-close-btn" class="options-close-btn" aria-label="Close options">
                     <img src="assets/img/10_button_icons/close.png" alt="close">
                 </button>
@@ -107,7 +106,6 @@
                     <button id="tab-controls" class="tab-btn" role="tab" aria-selected="false">Steuerung</button>
                     <button id="tab-back-menu" class="tab-btn" role="tab" aria-selected="false">Zurück zum Menü</button>
 
-                    <!-- Buttons -> Links (jetzt beide mit target="_blank") -->
                     <a id="tab-imprint" class="tab-btn" role="tab" aria-selected="false" href="impressum.html" target="_blank" rel="noopener noreferrer">Impressum</a>
                     <a id="tab-privacy" class="tab-btn" role="tab" aria-selected="false" href="datenschutz.html" target="_blank" rel="noopener noreferrer">Datenschutz</a>
                 </div>
