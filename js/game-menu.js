@@ -278,12 +278,28 @@ function handleTabClick(clickEvent, button, allTabButtons) {
 }
 
 /**
- * Initializes the tab system
+ * Initializes tab system for options modal
  */
 function initTabSystem() {
-    const tabButtons = document.querySelectorAll('.tab-btn:not(a)');
-    tabButtons.forEach(button => {
-        button.addEventListener('click', (clickEvent) => handleTabClick(clickEvent, button, tabButtons));
+    const tabs = document.querySelectorAll('.tab-btn');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            // Links (Impressum, Datenschutz) normal öffnen lassen
+            if (tab.tagName === 'A') {
+                return; // Browser öffnet Link in neuem Tab
+            }
+            
+            // Nur bei echten Buttons preventDefault
+            e.preventDefault();
+            
+            if (tab.id === 'tab-back-menu') {
+                handleBackToMenuTab();
+                return;
+            }
+            
+            handleTabClick(tab);
+        });
     });
 }
 
