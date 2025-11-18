@@ -134,7 +134,6 @@ class World {
         }
     }
 
-    // ----------------- Flaschen werfen -----------------
     checkThrowObjects() {
         if(this.keyboard.D && this.character.bottle > 0 && this.canThrow) {
             this.throwBottle();
@@ -142,14 +141,11 @@ class World {
     }
 
     throwBottle() {
-        // Übergibt jetzt die Richtung des Characters an ThrowableObject
         let direction = this.character.otherDirection; // true = nach links
         let offsetX = direction ? -100 : 100;
         let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, direction);
-        // wichtig: World der Flasche zuweisen, damit breakAndSplash() auf this.world zugreifen kann
         bottle.world = this;
         this.throwableObjects.push(bottle);
-        // spiele Throw-Sound beim Werfen
         if (!this.gameIsMuted) SoundManager.play('throw', 0.6, true);
         this.character.bottle -= 20;
         if(this.character.bottle < 0) this.character.bottle = 0;
@@ -160,7 +156,6 @@ class World {
         }, 1000);
     }
 
-    // ----------------- Kollisionen -----------------
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
             if (this.isChicken(enemy)) {
