@@ -263,7 +263,204 @@ handleChickenHitByBottle(enemy, enemyIndex) {
 <hr>
 <h3>🙏 Credits</h3>
 <ul>
-<li><strong>Grafiken &amp; Assets</strong> - Developer Akademie GmbH</li>
+<li><strong>Grafiken &amp; Assets</strong> - Developer Akademie</li>
+<li><strong>Sounds</strong> - Freesound.org</li>
+<li><strong>Fonts</strong> - Luckiest Guy, Fredoka (Google Fonts)</li>
+</ul>
+<hr>
+<h2>English</h2>
+<p>A classic jump'n'run game developed with <strong>HTML5 Canvas</strong> and <strong>Vanilla JavaScript</strong>.</p>
+<h3>📖 Game Description</h3>
+<p>In a world full of feathers and chaos, a true hero rises against the chicken army! Pepe must fight through dangerous enemies, collect coins, and defeat the mighty endboss.</p>
+<h4>Story</h4>
+<p>Three enemy types stand in your way:</p>
+<ul>
+<li><strong>Small Chicks</strong> - Fast and agile</li>
+<li><strong>Normal Chickens</strong> - Sturdy and dangerous</li>
+<li><strong>The Endboss</strong> - A mighty enemy with enormous strength</li>
+</ul>
+<p>Trample the small and normal enemies with precise jumps from above. But the endboss is different – only targeted bottle throws can break his power!</p>
+<p>⚠️ <strong>Important:</strong> Use your resources wisely – those who waste everything will have no chance in the final battle.</p>
+<hr>
+<h3>🎮 Game Mechanics</h3>
+<h4>Desktop Controls</h4>
+<ul>
+<li><strong>← →</strong> - Move left/right</li>
+<li><strong>Spacebar</strong> - Jump</li>
+<li><strong>D</strong> - Throw bottle</li>
+</ul>
+<h4>Mobile Controls</h4>
+<ul>
+<li><strong>Touch Buttons</strong> - Left, Right, Jump, Throw</li>
+<li><strong>Auto-Fullscreen</strong> on mobile devices</li>
+</ul>
+<h4>Game Objective</h4>
+<ol>
+<li>Collect <strong>coins</strong> and <strong>bottles</strong></li>
+<li>Defeat enemies by <strong>jumping from above</strong></li>
+<li>Defeat the <strong>endboss</strong> with <strong>bottle throws</strong></li>
+<li>Survive until the end!</li>
+</ol>
+<hr>
+<h3>🏗️ Technical Details</h3>
+<h4>Architecture</h4>
+<p><strong>Class Hierarchy:</strong></p>
+<pre class="prettyprint source"><code>DrawableObject (Base for drawable objects)
+└── MovableObject (Base for movable objects)
+    ├── Character (Player)
+    ├── Chicken (Normal Chicken)
+    ├── ChickenSmall (Small Chicken)
+    ├── Endboss (Boss Enemy)
+    ├── ThrowableObject (Thrown Bottle)
+    ├── Cloud (Clouds)
+    ├── Coin (Coins)
+    └── Bottle (Collectible Bottles)
+
+StatusBar Variants:
+├── StatusBarHealth (Health Energy)
+├── StatusBarCoins (Coins)
+├── StatusBarBottles (Bottles)
+└── StatusBarEndboss (Endboss Health)
+</code></pre>
+<h4>Technology Stack</h4>
+<ul>
+<li><strong>HTML5 Canvas</strong> - Rendering</li>
+<li><strong>Vanilla JavaScript (ES6)</strong> - Game Logic</li>
+<li><strong>CSS3</strong> - Responsive Design</li>
+<li><strong>JSDoc</strong> - Code Documentation</li>
+</ul>
+<h4>Features</h4>
+<p>✅ <strong>Object-Oriented Programming</strong> - Clean Code with Classes<br>
+✅ <strong>Responsive Design</strong> - Optimized for Desktop &amp; Mobile<br>
+✅ <strong>Sound System</strong> - SoundManager with Mute Function<br>
+✅ <strong>Pause Function</strong> - Pause game via Options Modal<br>
+✅ <strong>Fullscreen Mode</strong> - Immersive Gaming Experience<br>
+✅ <strong>Collision Detection</strong> - Precise Hitboxes with Offsets<br>
+✅ <strong>Animation System</strong> - Frame-based Animations<br>
+✅ <strong>Status Bars</strong> - Real-time Display of Health, Coins, Bottles</p>
+<hr>
+<h3>📂 Project Structure</h3>
+<pre class="prettyprint source"><code>El Pollo Loco/
+├── assets/               # Images, Sounds, Fonts
+│   ├── img/
+│   ├── audio/
+│   └── fonts/
+├── classes/              # JavaScript Classes
+│   ├── character.class.js
+│   ├── chicken.class.js
+│   ├── endboss.class.js
+│   ├── world.class.js
+│   └── ...
+├── js/                   # JavaScript Modules
+│   ├── game.js          # Main Game Logic
+│   ├── sounds.js        # Sound Manager
+│   ├── game-menu.js     # Menu System
+│   └── game-ui.js       # UI Functions
+├── levels/               # Level Definitions
+│   └── level1.js
+├── styles/               # CSS Modules
+│   ├── base.css
+│   ├── ui-components.css
+│   └── ...
+├── index.html            # Main HTML
+├── style.css             # CSS Import
+├── jsdoc.json            # JSDoc Configuration
+└── README.md             # This File
+</code></pre>
+<hr>
+<h3>🚀 Installation &amp; Execution</h3>
+<h4>1. Clone Repository</h4>
+<pre class="prettyprint source lang-bash"><code>git clone &lt;repository-url>
+cd &quot;El Pollo Loco&quot;
+</code></pre>
+<h4>2. Start Live Server</h4>
+<p><strong>Option A - VS Code Live Server:</strong></p>
+<ol>
+<li>Right-click on <code>index.html</code></li>
+<li>Select &quot;Open with Live Server&quot;</li>
+</ol>
+<p><strong>Option B - Python HTTP Server:</strong></p>
+<pre class="prettyprint source lang-bash"><code>python -m http.server 8000
+# Open: http://localhost:8000
+</code></pre>
+<h4>3. Open Game in Browser</h4>
+<pre class="prettyprint source"><code>http://127.0.0.1:5500/index.html
+</code></pre>
+<hr>
+<h3>📚 Generate Documentation</h3>
+<h4>Install JSDoc</h4>
+<pre class="prettyprint source lang-bash"><code>npm install -g jsdoc
+</code></pre>
+<h4>Create Documentation</h4>
+<pre class="prettyprint source lang-bash"><code>jsdoc -c jsdoc.json
+</code></pre>
+<h4>Open Documentation</h4>
+<pre class="prettyprint source lang-bash"><code># Windows
+start docs/index.html
+
+# Mac/Linux
+open docs/index.html
+</code></pre>
+<p>The generated documentation contains:</p>
+<ul>
+<li>All classes with descriptions</li>
+<li>Methods with parameters and return values</li>
+<li>Class hierarchy</li>
+<li>Code examples</li>
+</ul>
+<hr>
+<h3>🎨 Features in Detail</h3>
+<h4>Sound System</h4>
+<pre class="prettyprint source lang-javascript"><code>SoundManager.load('jump', [{ src: 'path/to/jump.mp3', type: 'audio/mpeg' }]);
+SoundManager.play('jump', 0.5, true); // name, volume, allowOverlap
+SoundManager.pauseAll(); // Pauses all sounds
+</code></pre>
+<h4>Collision Detection</h4>
+<pre class="prettyprint source lang-javascript"><code>character.isColliding(enemy); // Checks collision with offset
+</code></pre>
+<h4>Animation System</h4>
+<pre class="prettyprint source lang-javascript"><code>character.playAnimation(IMAGES_WALKING); // Frame-based
+</code></pre>
+<hr>
+<h3>🐛 Known Issues &amp; Solutions</h3>
+<h4>Issue: Sounds not working</h4>
+<p><strong>Solution:</strong> Browser autoplay policy - user must interact once</p>
+<h4>Issue: Mobile buttons not visible</h4>
+<p><strong>Solution:</strong> Only in landscape mode on devices ≤ 1200px</p>
+<h4>Issue: Fullscreen not working</h4>
+<p><strong>Solution:</strong> User interaction required (button click)</p>
+<hr>
+<h3>📝 Code Guidelines</h3>
+<h4>Clean Code Principles</h4>
+<p>✅ Each function max. <strong>14 lines</strong><br>
+✅ One function = <strong>one task</strong><br>
+✅ <strong>Meaningful names</strong> for variables &amp; functions<br>
+✅ <strong>JSDoc comments</strong> for all public methods<br>
+✅ <strong>DRY principle</strong> - Don't Repeat Yourself</p>
+<h4>Example</h4>
+<pre class="prettyprint source lang-javascript"><code>/**
+ * Handles chicken hit by bottle
+ * @param {Chicken} enemy - Chicken enemy
+ * @param {number} enemyIndex - Index in enemies array
+ */
+handleChickenHitByBottle(enemy, enemyIndex) {
+    enemy.energy = 0;
+    enemy.die && enemy.die();
+    setTimeout(() => {
+        this.level.enemies.splice(enemyIndex, 1);
+    }, 1000);
+}
+</code></pre>
+<hr>
+<h3>👨‍💻 Autor</h3>
+<p>Entwickelt mit ❤️ als Lernprojekt für objektorientiertes JavaScript und Game Development.</p>
+<hr>
+<h3>📄 Lizenz</h3>
+<p>Dieses Projekt ist ein Lernprojekt und steht unter der MIT-Lizenz.</p>
+<hr>
+<h3>🙏 Credits</h3>
+<ul>
+<li><strong>Grafiken &amp; Assets</strong> - Developer Akademie</li>
 <li><strong>Sounds</strong> - Freesound.org</li>
 <li><strong>Fonts</strong> - Luckiest Guy, Fredoka (Google Fonts)</li>
 </ul>
@@ -459,25 +656,26 @@ handleChickenHitByBottle(enemy, enemyIndex) {
 }
 </code></pre>
 <hr>
-<h3>👨‍💻 Author</h3>
-<p>Developed with ❤️ as a learning project for object-oriented JavaScript and game development.</p>
+<h3>👨‍💻 Autor</h3>
+<p>Entwickelt mit ❤️ als Lernprojekt für objektorientiertes JavaScript und Game Development.</p>
 <hr>
-<h3>📄 License</h3>
-<p>This project is a learning project and is under the MIT License.</p>
+<h3>📄 Lizenz</h3>
+<p>Dieses Projekt ist ein Lernprojekt und steht unter der MIT-Lizenz.</p>
 <hr>
 <h3>🙏 Credits</h3>
 <ul>
-<li><strong>Graphics &amp; Assets</strong> - Developer Akademie</li>
+<li><strong>Grafiken &amp; Assets</strong> - Developer Akademie</li>
 <li><strong>Sounds</strong> - Freesound.org</li>
 <li><strong>Fonts</strong> - Luckiest Guy, Fredoka (Google Fonts)</li>
 </ul>
 <hr>
 <h3>🔗 Links</h3>
 <ul>
-<li><a href="impressum.html">Imprint</a></li>
-<li><a href="datenschutz.html">Privacy Policy</a></li>
-<li><a href="docs/index.html">JSDoc Documentation</a></li>
-</ul></article>
+<li><a href="impressum.html">Impressum</a></li>
+<li><a href="datenschutz.html">Datenschutz</a></li>
+<li><a href="docs/index.html">JSDoc Dokumentation</a></li>
+</ul>
+<hr></article>
     </section>
 
 
