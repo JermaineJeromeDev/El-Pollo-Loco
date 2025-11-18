@@ -1,5 +1,5 @@
 /**
- * Repräsentiert ein bewegliches Objekt im Spiel
+ * Represents a movable object in the game
  * @class MovableObject
  * @extends DrawableObject
  */
@@ -20,7 +20,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Wendet Schwerkraft auf das Objekt an
+     * Applies gravity to the object
      */
     applyGravity() {
         setInterval(() => {
@@ -32,7 +32,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Prüft ob Objekt über dem Boden ist
+     * Checks if object is above ground
      * @returns {boolean}
      */
     isAboveGround() {
@@ -41,7 +41,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Berechnet den echten Rahmen (mit Offset)
+     * Calculates the real frame (with offset)
      */
     getRealFrame() {
         this.rX = this.x + this.offset.left;
@@ -51,8 +51,8 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Prüft Kollision mit anderem Objekt
-     * @param {MovableObject} mo - Anderes Objekt
+     * Checks collision with another object
+     * @param {MovableObject} mo - Other object
      * @returns {boolean}
      */
     isColliding(mo) {
@@ -67,7 +67,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Reduziert Energie bei Treffer
+     * Reduces energy on hit
      */
     hit() {
         if (this instanceof Character) this.energy -= 10;
@@ -80,7 +80,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Prüft ob Objekt gerade verletzt ist
+     * Checks if object is currently hurt
      * @returns {boolean}
      */
     isHurt() {
@@ -89,7 +89,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Prüft ob Objekt tot ist
+     * Checks if object is dead
      * @returns {boolean}
      */
     isDead() {
@@ -97,22 +97,22 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Fügt Münze hinzu
+     * Adds a coin
      */
     addCoin() {
         this.coin = Math.min(100, this.coin + 20);
     }
 
     /**
-     * Fügt Flasche hinzu
+     * Adds a bottle
      */
     addBottle() {
         this.bottle = Math.min(100, this.bottle + 20);
     }
 
     /**
-     * Spielt Animation ab
-     * @param {Array<string>} images - Bild-Pfade
+     * Plays animation
+     * @param {Array<string>} images - Image paths
      */
     playAnimation(images) {
         let i = this.currentImage % images.length;
@@ -120,17 +120,17 @@ class MovableObject extends DrawableObject {
         this.currentImage++;
     }
 
-    /** Bewegt Objekt nach rechts */
+    /** Moves object to the right */
     moveRight() {
         this.x += this.speed;
     }
 
-    /** Bewegt Objekt nach links */
+    /** Moves object to the left */
     moveLeft() {
         this.x -= this.speed;
     }
 
-    /** Lässt Objekt springen */
+    /** Makes object jump */
     jump() {
         this.speedY = 20;
     }

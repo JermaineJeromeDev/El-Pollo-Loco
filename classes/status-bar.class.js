@@ -1,5 +1,5 @@
 /**
- * Repräsentiert die Gesundheits-Statusbar
+ * Represents the health status bar
  * @class StatusBarHealth
  * @extends DrawableObject
  */
@@ -16,7 +16,7 @@ class StatusBarHealth extends DrawableObject {
     percentage = 100;
 
     /**
-     * Erstellt eine neue Gesundheits-Statusbar
+     * Creates a new health status bar
      */
     constructor() {
         super();
@@ -29,8 +29,8 @@ class StatusBarHealth extends DrawableObject {
     }
 
     /**
-     * Setzt Prozentsatz der Gesundheit
-     * @param {number} percentage - Prozentwert (0-100)
+     * Sets health percentage
+     * @param {number} percentage - Percentage value (0-100)
      */
     setPercentage(percentage) {
         this.percentage = percentage;
@@ -39,8 +39,8 @@ class StatusBarHealth extends DrawableObject {
     }
 
     /**
-     * Ermittelt Bild-Index basierend auf Prozentsatz
-     * @returns {number} Index des Bildes
+     * Resolves image index based on percentage
+     * @returns {number} Image index
      */
     resolveImageIndex() {
         if (this.percentage == 100) return 5;
@@ -53,7 +53,7 @@ class StatusBarHealth extends DrawableObject {
 }
 
 /**
- * Repräsentiert die Flaschen-Statusbar
+ * Represents the bottle status bar
  * @class StatusBarBottles
  * @extends DrawableObject
  */
@@ -70,7 +70,7 @@ class StatusBarBottles extends DrawableObject {
     percentageBottles = 0;
 
     /**
-     * Erstellt eine neue Flaschen-Statusbar
+     * Creates a new bottle status bar
      */
     constructor() {
         super();
@@ -83,8 +83,8 @@ class StatusBarBottles extends DrawableObject {
     }
 
     /**
-     * Setzt Prozentsatz der Flaschen
-     * @param {number} percentageBottles - Prozentwert (0-100)
+     * Sets bottle percentage
+     * @param {number} percentageBottles - Percentage value (0-100)
      */
     setPercentageBottles(percentageBottles) {
         this.percentageBottles = percentageBottles;
@@ -93,8 +93,8 @@ class StatusBarBottles extends DrawableObject {
     }
 
     /**
-     * Ermittelt Bild-Index für Flaschen
-     * @returns {number} Index des Bildes
+     * Resolves image index for bottles
+     * @returns {number} Image index
      */
     resolveImageIndexBottles() {
         if (this.percentageBottles == 100) return 5;
@@ -107,7 +107,7 @@ class StatusBarBottles extends DrawableObject {
 }
 
 /**
- * Repräsentiert die Münzen-Statusbar
+ * Represents the coin status bar
  * @class StatusBarCoins
  * @extends DrawableObject
  */
@@ -124,7 +124,7 @@ class StatusBarCoins extends DrawableObject {
     percentageCoins = 0;
 
     /**
-     * Erstellt eine neue Münzen-Statusbar
+     * Creates a new coin status bar
      */
     constructor() {
         super();
@@ -137,8 +137,8 @@ class StatusBarCoins extends DrawableObject {
     }
 
     /**
-     * Setzt Prozentsatz der Münzen
-     * @param {number} percentageCoins - Prozentwert (0-100)
+     * Sets coin percentage
+     * @param {number} percentageCoins - Percentage value (0-100)
      */
     setPercentageCoins(percentageCoins) {
         this.percentageCoins = percentageCoins;
@@ -147,8 +147,8 @@ class StatusBarCoins extends DrawableObject {
     }
 
     /**
-     * Ermittelt Bild-Index für Münzen
-     * @returns {number} Index des Bildes
+     * Resolves image index for coins
+     * @returns {number} Image index
      */
     resolveImageIndexCoins() {
         if (this.percentageCoins == 100) return 5;

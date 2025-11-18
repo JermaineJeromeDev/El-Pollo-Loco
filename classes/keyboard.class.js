@@ -1,26 +1,26 @@
 /**
- * Repräsentiert den Keyboard-Status
+ * Represents the keyboard status
  * @class Keyboard
  */
 class Keyboard {
-    /** Linke Pfeiltaste */
+    /** Left arrow key */
     LEFT = false;
     
-    /** Rechte Pfeiltaste */
+    /** Right arrow key */
     RIGHT = false;
     
-    /** Obere Pfeiltaste */
+    /** Up arrow key */
     UP = false;
     
-    /** Untere Pfeiltaste */
+    /** Down arrow key */
     DOWN = false;
     
-    /** Leertaste (Springen) */
+    /** Spacebar (jump) */
     SPACE = false;
     
-    /** D-Taste (Werfen) */
+    /** D key (throw) */
     D = false;
     
-    /** P-Taste */
+    /** P key */
     P = false;
 }

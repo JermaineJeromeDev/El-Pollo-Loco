@@ -1,5 +1,5 @@
 /**
- * Repräsentiert eine Münze
+ * Represents a collectible coin
  * @class Coin
  * @extends MovableObject
  */
@@ -18,7 +18,7 @@ class Coin extends MovableObject {
     };
 
     /**
-     * Erstellt eine neue Münze
+     * Creates a new coin
      */
     constructor() {
         super()
@@ -30,7 +30,7 @@ class Coin extends MovableObject {
     }
 
     /**
-     * Startet Animation
+     * Starts animation
      */
     animate() {
         setInterval(() => {

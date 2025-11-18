@@ -1,3 +1,7 @@
+/**
+ * Represents the game world
+ * @class World
+ */
 class World {
     character = new Character();
     level; // wird im Constructor initialisiert
@@ -15,6 +19,11 @@ class World {
     gameStopped = false;
     intervals = [];
 
+    /**
+     * Creates a new world instance
+     * @param {HTMLCanvasElement} canvas - The game canvas
+     * @param {Keyboard} keyboard - The keyboard instance
+     */
     constructor(canvas, keyboard){
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -26,6 +35,9 @@ class World {
         this.checkCollisions();
     }
 
+    /**
+     * Sets world reference for character and enemies
+     */
     setWorld() {
         this.character.world = this;
         this.level.enemies.forEach(enemy => {
@@ -35,7 +47,9 @@ class World {
         });
     }
 
-    // ----------------- Draw() -----------------
+    /**
+     * Main draw loop
+     */
     draw() {
         if (this.gameStopped) return; 
         // clearRect entfernt - Canvas bleibt transparent
@@ -56,12 +70,18 @@ class World {
         requestAnimationFrame(() => this.draw());
     }
 
+    /**
+     * Draws status bars
+     */
     drawStatusBars() {
         this.addToMap(this.statusBarHealth);
         this.addToMap(this.statusBarBottles);
         this.addToMap(this.statusBarCoins);
     }
 
+    /**
+     * Draws endboss status bar
+     */
     drawEndbossStatusBar() {
         let endboss = this.level.enemies.find(e => e instanceof Endboss);
         if (endboss && endboss.statusBarEndboss) {
@@ -77,6 +97,9 @@ class World {
         }
     }
 
+    /**
+     * Draws all game objects
+     */
     drawGameObjects() {
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.clouds);
@@ -86,10 +109,18 @@ class World {
         this.addObjectsToMap(this.throwableObjects);
     }
 
+    /**
+     * Adds objects array to map
+     * @param {Array} objects - Objects to add
+     */
     addObjectsToMap(objects){
         objects.forEach(o => this.addToMap(o));
     }
 
+    /**
+     * Adds single object to map
+     * @param {MovableObject} mo - Object to add
+     */
     addToMap(mo){
         if(mo.otherDirection) this.flipImage(mo);
         mo.draw(this.ctx);
@@ -97,6 +128,10 @@ class World {
         if(mo.otherDirection) this.flipImageBack(mo);
     }
 
+    /**
+     * Flips image horizontally
+     * @param {MovableObject} mo - Object to flip
+     */
     flipImage(mo) {
         this.ctx.save();
         this.ctx.translate(mo.width, 0);
@@ -104,11 +139,18 @@ class World {
         mo.x = mo.x * -1;
     }
 
+    /**
+     * Flips image back
+     * @param {MovableObject} mo - Object to flip back
+     */
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
 
+    /**
+     * Main game loop
+     */
     run() {
         let id = setInterval(() => {
             this.checkCollisions();
@@ -119,6 +161,9 @@ class World {
         this.intervals.push(id);
     }
 
+    /**
+     * Clears all intervals
+     */
     clearAllIntervals() {
         this.intervals.forEach(i => clearInterval(i));
         this.intervals = [];
@@ -134,12 +179,18 @@ class World {
         }
     }
 
+    /**
+     * Checks if throw key is pressed
+     */
     checkThrowObjects() {
         if(this.keyboard.D && this.character.bottle > 0 && this.canThrow) {
             this.throwBottle();
         }
     }
 
+    /**
+     * Throws a bottle
+     */
     throwBottle() {
         let direction = this.character.otherDirection; // true = nach links
         let offsetX = direction ? -100 : 100;
@@ -156,6 +207,9 @@ class World {
         }, 1000);
     }
 
+    /**
+     * Checks all collisions
+     */
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
             if (this.isChicken(enemy)) {
@@ -167,10 +221,19 @@ class World {
         this.hitEnemyWithBottle();
     }
 
+    /**
+     * Checks if enemy is a chicken
+     * @param {Object} enemy - Enemy to check
+     * @returns {boolean}
+     */
     isChicken(enemy) {
         return (enemy instanceof Chicken || enemy instanceof ChickenSmall) && !enemy.isDead();
     }
 
+    /**
+     * Handles chicken collision
+     * @param {Object} enemy - Chicken enemy
+     */
     handleChickenCollision(enemy) {
         if (this.character.isColliding(enemy)) {
             const characterBottom = this.character.y + this.character.height - this.character.offset.bottom;
@@ -187,6 +250,10 @@ class World {
         }
     }
 
+    /**
+     * Handles endboss collision
+     * @param {Endboss} enemy - Endboss enemy
+     */
     handleEndbossCollision(enemy) {
         if (this.character.isColliding(enemy) && !enemy.isDead() && !this.character.isHurt()) {
             this.character.hit();
@@ -195,6 +262,9 @@ class World {
     }
 
 
+    /**
+     * Checks if bottle hits enemy
+     */
     hitEnemyWithBottle() {
         this.level.enemies.forEach((enemy, enemyIndex) => {
             this.throwableObjects.forEach((bottle, bottleIndex) => {
@@ -214,6 +284,9 @@ class World {
         });
     }
 
+    /**
+     * Checks coin collision
+     */
     checkCoinCollision() {
         this.level.coins.forEach((coin, index) => {
             if(this.character.isColliding(coin)) {
@@ -224,6 +297,9 @@ class World {
         });
     }
 
+    /**
+     * Checks bottle collision
+     */
     checkBottleCollision() {
         this.level.bottles.forEach((bottle, index) => {
             if(this.character.isColliding(bottle)) {
@@ -234,6 +310,9 @@ class World {
         });
     }
 
+    /**
+     * Stops the game
+     */
     stopGame() {
         this.gameStopped = true;
     }

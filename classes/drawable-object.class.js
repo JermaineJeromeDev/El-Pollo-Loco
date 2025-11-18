@@ -1,5 +1,5 @@
 /**
- * Basisklasse für alle zeichenbaren Objekte
+ * Base class for all drawable objects
  * @class DrawableObject
  */
 class DrawableObject {
@@ -12,8 +12,8 @@ class DrawableObject {
     height = 150;
 
     /**
-     * Lädt ein einzelnes Bild
-     * @param {string} path - Pfad zum Bild
+     * Loads a single image
+     * @param {string} path - Path to image
      */
     loadImage(path) {
         this.img = new Image();
@@ -21,16 +21,16 @@ class DrawableObject {
     }
 
     /**
-     * Zeichnet das Objekt auf Canvas
-     * @param {CanvasRenderingContext2D} ctx - Canvas Context
+     * Draws the object on canvas
+     * @param {CanvasRenderingContext2D} ctx - Canvas context
      */
     draw(ctx) {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
     }
 
     /**
-     * Zeichnet Rahmen um Objekt (Debug)
-     * @param {CanvasRenderingContext2D} ctx - Canvas Context
+     * Draws frame around object (debug)
+     * @param {CanvasRenderingContext2D} ctx - Canvas context
      */
     drawFrame(ctx) {
 
@@ -44,8 +44,8 @@ class DrawableObject {
     }
 
     /**
-     * Lädt mehrere Bilder in Cache
-     * @param {Array<string>} arr - Array mit Bild-Pfaden
+     * Loads multiple images into cache
+     * @param {Array<string>} arr - Array with image paths
      */
     loadImages(arr){
         arr.forEach((path) => {

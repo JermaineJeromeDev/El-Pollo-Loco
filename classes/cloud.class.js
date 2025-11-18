@@ -1,8 +1,18 @@
+/**
+ * Represents a moving cloud
+ * @class Cloud
+ * @extends MovableObject
+ */
 class Cloud extends MovableObject {
     y = 20;
     width = 500;
     height = 250;
 
+    /**
+     * Creates a new cloud
+     * @param {number} x - X-position
+     * @param {number} y - Y-position
+     */
     constructor(x = Math.random() * 500, y = 20) {
         let images = [
             'assets/img/5_background/layers/4_clouds/1.png',
@@ -17,9 +27,12 @@ class Cloud extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Starts cloud animation
+     */
     animate() {
         setInterval(() => {
             this.moveLeft();
-        }, 1000 / 60); // 60 FPS
+        }, 1000 / 60); 
     }
 }

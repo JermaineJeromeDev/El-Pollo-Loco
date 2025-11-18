@@ -1,3 +1,7 @@
+/**
+ * Creates and returns level 1
+ * @returns {Level} Level 1 instance
+ */
 function createLevel1() {
     return new Level(
         [
@@ -87,5 +91,5 @@ function createLevel1() {
     );
 }
 
-// Für Abwärtskompatibilität
+// For backward compatibility
 let level1 = createLevel1();

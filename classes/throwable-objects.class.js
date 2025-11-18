@@ -1,5 +1,5 @@
 /**
- * Repräsentiert eine geworfene Flasche
+ * Represents a thrown bottle
  * @class ThrowableObject
  * @extends MovableObject
  */
@@ -32,10 +32,10 @@ class ThrowableObject extends MovableObject {
     ];
 
     /**
-     * Erstellt ein werfbares Objekt
-     * @param {number} x - X-Position
-     * @param {number} y - Y-Position
-     * @param {boolean} direction - Wurfrichtung (true = links)
+     * Creates a throwable object
+     * @param {number} x - X-position
+     * @param {number} y - Y-position
+     * @param {boolean} direction - Throw direction (true = left)
      */
     constructor(x, y, direction) {
         super();
@@ -52,7 +52,7 @@ class ThrowableObject extends MovableObject {
     }
     
     /**
-     * Wirft die Flasche
+     * Throws the bottle
      */
     throw() {
         this.throwBottleAir = true;
@@ -66,7 +66,7 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Wendet Schwerkraft an und bewegt Flasche
+     * Applies gravity and moves bottle
      */
     applyGravityAndMove() {
         this.intervalId = setInterval(() => {
@@ -82,7 +82,7 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Lässt Flasche zerbrechen
+     * Makes bottle break and splash
      */
     breakAndSplash() {
         if (!this.isBreaking) {
@@ -102,7 +102,7 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Startet Rotations-Animation
+     * Starts rotation animation
      */
     animate() {
         setInterval(() => {
