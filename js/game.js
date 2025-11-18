@@ -352,7 +352,12 @@ function setupStartMenuButtons() {
 function initFullscreenButton() {
     const fsBtn = document.getElementById('fullscreen-btn');
     if (!fsBtn) return;
-    fsBtn.addEventListener('click', toggleFullscreen);
+    fsBtn.addEventListener('click', () => {
+        toggleFullscreen();
+        if (document.activeElement) {
+            document.activeElement.blur();
+        }
+    });
 }
 
 /**
