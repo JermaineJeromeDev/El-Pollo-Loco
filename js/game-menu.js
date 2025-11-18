@@ -102,11 +102,7 @@ function initTabSystem() {
             
             if (tabId === 'tab-back-menu') {
                 hideOptionsModal();
-                if (typeof gameState !== 'undefined' && gameState === 'playing') {
-                    if (typeof drawStartScreen === 'function') {
-                        drawStartScreen();
-                    }
-                }
+                backToMenuFromGame();
                 return;
             }
             
@@ -172,16 +168,64 @@ function initOptionsModal() {
             e.preventDefault();
             e.stopPropagation();
             hideOptionsModal();
-            if (typeof gameState !== 'undefined' && gameState === 'playing') {
-                if (typeof drawStartScreen === 'function') {
-                    drawStartScreen();
-                }
-            }
+            backToMenuFromGame();
         });
     }
     
     initTabSystem();
     console.log('Options modal initialized');
+}
+
+/**
+ * Initializes tab button listeners
+ */
+function initTabButtons() {
+    const tabStory = document.getElementById('tab-story');
+    const tabControls = document.getElementById('tab-controls');
+    const tabBackMenu = document.getElementById('tab-back-menu');
+    
+    if (tabStory) {
+        tabStory.addEventListener('click', () => switchTab('story'));
+    }
+    
+    if (tabControls) {
+        tabControls.addEventListener('click', () => switchTab('controls'));
+    }
+    
+    if (tabBackMenu) {
+        // NEU: Beendet Spiel und geht zurück zum Menü
+        tabBackMenu.addEventListener('click', () => {
+            hideOptionsModal();
+            backToMenuFromGame();
+        });
+    }
+}
+
+/**
+ * Goes back to main menu from game
+ */
+function backToMenuFromGame() {
+    // Stoppe das Spiel
+    if (typeof world !== 'undefined' && world) {
+        world.clearAllIntervals();
+        world.gameStopped = true;
+    }
+    
+    // Stoppe alle Sounds
+    if (typeof SoundManager !== 'undefined') {
+        SoundManager.stopAll();
+    }
+    
+    // Reset Flags
+    if (typeof winSoundPlayed !== 'undefined') winSoundPlayed = false;
+    if (typeof loseSoundPlayed !== 'undefined') loseSoundPlayed = false;
+    
+    // Gehe zum Startscreen
+    if (typeof drawStartScreen === 'function') {
+        drawStartScreen();
+    }
+    
+    console.log('🏠 Returned to main menu');
 }
 
 // Initialize when DOM is loaded
