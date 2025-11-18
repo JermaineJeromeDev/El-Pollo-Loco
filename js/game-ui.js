@@ -5,12 +5,10 @@ function updateIconPositions() {
     const containerEl = document.querySelector('.container');
     const topControls = document.querySelector('.top-controls');
     if (!containerEl || !topControls) return;
-
     const canvasRect = canvas.getBoundingClientRect();
     const containerRect = containerEl.getBoundingClientRect();
     const topOffset = canvasRect.top - containerRect.top + 8;
     const rightOffset = containerRect.right - canvasRect.right + 8;
-    
     topControls.style.top = `${topOffset}px`;
     topControls.style.right = `${rightOffset}px`;
 }
@@ -21,10 +19,8 @@ function updateIconPositions() {
 function updateRotateHint() {
     const rotateHint = document.getElementById('rotate-screen-hint');
     if (!rotateHint) return;
-
     const isPortrait = window.innerHeight > window.innerWidth;
     const isSmallScreen = window.innerWidth <= 768;
-
     if (isPortrait && isSmallScreen) {
         showRotateHint(rotateHint);
     } else {
@@ -97,14 +93,16 @@ function updateMuteIcon(btn) {
  */
 function toggleMute() {
     gameIsMuted = !gameIsMuted;
-    
     if (gameIsMuted) {
         SoundManager.stopAll();
     } else if (gameState === 'playing') {
         SoundManager.playGameplay();
     }
-    
     updateAllMuteIcons();
+    
+    if (document.activeElement) {
+        document.activeElement.blur();
+    }
 }
 
 /**
