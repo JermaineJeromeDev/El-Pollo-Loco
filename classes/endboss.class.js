@@ -118,6 +118,9 @@ class Endboss extends MovableObject {
      * Updates the endboss state based on current conditions
      */
     updateState() {
+        // NEU: Pausiere wenn Spiel pausiert ist
+        if (this.world && this.world.gamePaused) return;
+        
         if (this.isDead()) return this.handleDead();
         if (this.isHurtEndboss()) return this.handleHurt();
         if (!this.alertAnimationDone && this.isPlayerNear()) return this.handleAlert();
@@ -139,6 +142,9 @@ class Endboss extends MovableObject {
      * Moves the endboss if conditions are met
      */
     moveIfNeeded() {
+        // NEU: Pausiere wenn Spiel pausiert ist
+        if (this.world && this.world.gamePaused) return;
+        
         if (!this.isDead() && !this.isHurt() && (this.alertAnimationDone || this.activated)) {
             this.handleMovement();
         }
