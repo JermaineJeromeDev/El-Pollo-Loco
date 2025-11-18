@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title><?js= title ?> - Documentation</title>
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <style>
+        /* El Pollo Loco - Dark Theme */
+        :root {
+            --primary: #43cea2;
+            --secondary: #185a9d;
+        }
+        body {
+            background: #1a1a1a !important;
+            color: #f5f5f5 !important;
+        }
+        nav {
+            background: #0d0d0d !important;
+            border-right: 2px solid var(--primary);
+        }
+        #main {
+            background: #1a1a1a !important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--primary) !important;
+        }
+        a {
+            color: var(--primary) !important;
+        }
+        a:hover {
+            color: var(--secondary) !important;
+        }
+        pre {
+            background: #2d2d2d !important;
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+        }
+        code {
+            background: #2d2d2d !important;
+            color: #ffa500 !important;
+        }
+        table {
+            background: #0d0d0d !important;
+        }
+        th {
+            background: linear-gradient(90deg, var(--primary), var(--secondary)) !important;
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+<?js= content ?>
+</body>
+</html>
