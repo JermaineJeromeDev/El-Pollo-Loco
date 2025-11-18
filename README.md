@@ -508,7 +508,7 @@ This project is a learning project and is under the MIT License.
 
 ### 🙏 Credits
 
-- **Graphics & Assets** - Developer Akademie GmbH
+- **Graphics & Assets** - Developer Akademie
 - **Sounds** - Freesound.org
 - **Fonts** - Luckiest Guy, Fredoka (Google Fonts)
 
