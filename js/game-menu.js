@@ -1,35 +1,41 @@
 /**
- * Shows the options modal
+ * Pauses game and sound
  */
-function showOptionsModal() {
-    // Pausiere Spiel UND Sound
+function pauseGameAndSound() {
     if (typeof pauseGame === 'function' && typeof world !== 'undefined' && world) {
         pauseGame();
     }
-    
     if (typeof SoundManager !== 'undefined') {
         SoundManager.pauseAll();
     }
-    
-    const modal = document.getElementById('options-modal');
-    const container = document.querySelector('.container');
-    
-    if (!modal) {
-        console.error('Options modal (#options-modal) not found!');
-        return;
-    }
-    
-    // Modal sichtbar machen - JETZT NUR NOCH JAVASCRIPT, KEIN CSS-ATTRIBUT-SELEKTOR
+}
+
+/**
+ * Shows modal with transition
+ * @param {HTMLElement} modal - Modal element
+ */
+function showModalWithTransition(modal) {
     modal.style.display = 'block';
     setTimeout(() => {
         modal.style.visibility = 'visible';
         modal.style.opacity = '1';
-    }, 10); // Kleine Verzögerung für Transition-Effekt
-    
+    }, 10);
+}
+
+/**
+ * Sets container modal state
+ * @param {HTMLElement} container - Container element
+ */
+function setContainerModalState(container) {
     if (container) {
         container.classList.add('modal-open');
     }
-    
+}
+
+/**
+ * Shows default tab content (story)
+ */
+function showDefaultTabContent() {
     const storyContent = document.getElementById('story-content');
     const controlsContent = document.getElementById('controls-content');
     
@@ -37,11 +43,15 @@ function showOptionsModal() {
         storyContent.classList.remove('d-none');
         storyContent.style.display = 'block';
     }
-    
     if (controlsContent) {
         controlsContent.classList.add('d-none');
     }
-    
+}
+
+/**
+ * Sets active tab to story
+ */
+function setActiveTabToStory() {
     const tabButtons = document.querySelectorAll('.tab-btn');
     tabButtons.forEach(btn => btn.classList.remove('active'));
     
@@ -49,6 +59,26 @@ function showOptionsModal() {
     if (storyTab) {
         storyTab.classList.add('active');
     }
+}
+
+/**
+ * Shows the options modal
+ */
+function showOptionsModal() {
+    pauseGameAndSound();
+    
+    const modal = document.getElementById('options-modal');
+    if (!modal) {
+        console.error('Options modal (#options-modal) not found!');
+        return;
+    }
+    
+    const container = document.querySelector('.container');
+    
+    showModalWithTransition(modal);
+    setContainerModalState(container);
+    showDefaultTabContent();
+    setActiveTabToStory();
     
     console.log('Modal opened - Game & Sound paused');
 }
