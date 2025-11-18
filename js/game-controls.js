@@ -131,6 +131,14 @@ function setKeyState(keyCode, state) {
 }
 
 /**
+ * Displays the options screen
+ */
+function drawOptionsScreen() {
+    pauseGame();
+    showOptionsModal();
+}
+
+/**
  * Pauses the game
  */
 function pauseGame() {
@@ -150,12 +158,4 @@ function resumeGame() {
         return;
     }
     world.gamePaused = false;
-}
-
-/**
- * Displays the options screen
- */
-function drawOptionsScreen() {
-    pauseGame();
-    showOptionsModal();
 }
