@@ -4,9 +4,9 @@
  * @extends MovableObject
  */
 class ChickenSmall extends MovableObject {
-    y = 370;           // von 380 auf 370 (höher platziert)
-    width = 70;        // von 50 auf 70 (40% größer)
-    height = 70;       // von 50 auf 70 (40% größer)
+    y = 370;          
+    width = 70;        
+    height = 70;       
     
     IMAGES_WALKING = [
         'assets/img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
@@ -19,28 +19,31 @@ class ChickenSmall extends MovableObject {
     ];
 
     offset = {
-        top: 8,       // von 6 auf 8 (proportional angepasst)
-        bottom: 8,    // von 6 auf 8
-        left: 8,      // von 6 auf 8
-        right: 8      // von 6 auf 8
+        top: 8,       
+        bottom: 8,   
+        left: 8,      
+        right: 8      
     };
 
-
     /**
-     * Creates a new small chicken instance
+     * Creates an instance of the small chicken enemy.
+     * Initializes the chicken with a random position and speed,
+     * loads walking and dead images, and starts animation.
+     *
+     * @constructor
      */
     constructor(){
         super().loadImage('assets/img/3_enemies_chicken/chicken_small/1_walk/1_w.png');
         this.loadImages(this.IMAGES_WALKING);
         this.loadImage(this.IMAGE_DEAD);
-
         this.x = 500 + Math.random() * 1800;
         this.speed = 0.15 + Math.random() * 0.8;
         this.animate();
     }
 
     /**
-     * Initializes chicken movement and death check
+     * Animates the chicken by updating its movement and checking its status.
+     * Calls moveChicken() to handle movement logic and checkIfDead() to verify if the chicken is dead.
      */
     animate() {
         this.moveChicken();
@@ -48,24 +51,26 @@ class ChickenSmall extends MovableObject {
     }
 
     /**
-     * Starts chicken movement and animation intervals
+     * Starts the movement and walking animation intervals for the chicken.
+     * Movement is paused if the game is currently paused.
+     * - Moves the chicken to the left at approximately 60 frames per second.
+     * - Plays the walking animation every 200 milliseconds.
      */
     moveChicken() {
         this.moveInterval = setInterval(() => {
-            // NEU: Prüfe ob Spiel pausiert ist
             if (this.world && this.world.gamePaused) return;
             this.moveLeft();
         }, 1000 / 60);
-        
         this.animationInterval = setInterval(() => {
-            // NEU: Prüfe ob Spiel pausiert ist
             if (this.world && this.world.gamePaused) return;
             this.playAnimation(this.IMAGES_WALKING);
         }, 200);
     }
 
     /**
-     * Checks periodically if chicken is dead
+     * Starts an interval that periodically checks if the chicken is dead.
+     * If the chicken is dead, triggers the death handling logic.
+     * The check is performed every 100 milliseconds.
      */
     checkIfDead() {
         this.deathCheckInterval = setInterval(() => {
@@ -76,7 +81,11 @@ class ChickenSmall extends MovableObject {
     }
 
     /**
-     * Handles chicken death animation and falling
+     * Handles the death sequence for the small chicken.
+     * - Prevents multiple executions by checking `isDeadHandled`.
+     * - Changes the chicken's image to the dead state.
+     * - Performs cleanup operations.
+     * - Initiates the falling animation after a short delay.
      */
     handleDeath() {
         if (this.isDeadHandled) return;
@@ -87,7 +96,8 @@ class ChickenSmall extends MovableObject {
     }
     
     /**
-     * Clears all active intervals
+     * Cleans up all active intervals associated with this instance.
+     * Stops movement, animation, and death check intervals if they are running.
      */
     cleanup() {
         if (this.moveInterval) clearInterval(this.moveInterval);
@@ -102,8 +112,7 @@ class ChickenSmall extends MovableObject {
  */
 function startSmallChickenFalling(chicken) {
     const fallSpeed = 2;
-    const groundLevel = 360;  // von 365 auf 360 (angepasst an neue Höhe)
-    
+    const groundLevel = 360; 
     let fallInterval = setInterval(() => {
         chicken.y += fallSpeed;
         if (chicken.y >= groundLevel) {
