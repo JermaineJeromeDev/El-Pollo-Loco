@@ -60,7 +60,12 @@
             </button>
         </div>
 
-        <div class="startscreen" id="startscreen"></div>
+        <div class="startscreen" id="startscreen">
+            <div class="startscreen-links" style="margin-top:24px; text-align:center;">
+                <a id="tab-imprint" href="impressum.html" target="_blank" rel="noopener noreferrer" style="margin-right:18px;">Impressum</a>
+                <a id="tab-privacy" href="datenschutz.html" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+            </div>
+        </div>
 
         <div class="ingame-options d-none" id="ingame-options">
             <button id="audio-btn" onclick="toggleMute()">
@@ -104,14 +109,11 @@
                 <button id="options-close-btn" class="options-close-btn" aria-label="Close options">
                     <img src="assets/img/10_button_icons/close.png" alt="close">
                 </button>
-
                 <div class="tab-buttons" role="tablist" aria-label="Options Tabs">
                     <button id="tab-story" class="tab-btn active" role="tab" aria-selected="true">Story</button>
                     <button id="tab-controls" class="tab-btn" role="tab" aria-selected="false">Steuerung</button>
                     <button id="tab-back-menu" class="tab-btn" role="tab" aria-selected="false">Zurück zum Menü</button>
-
-                    <a id="tab-imprint" class="tab-btn" role="tab" aria-selected="false" href="impressum.html" target="_blank" rel="noopener noreferrer">Impressum</a>
-                    <a id="tab-privacy" class="tab-btn" role="tab" aria-selected="false" href="datenschutz.html" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+                    <!-- Entferne Impressum und Datenschutz aus dem Modal -->
                 </div>
 
                 <div class="tab-contents">
