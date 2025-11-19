@@ -78,16 +78,12 @@ function getMousePos(event) {
 }
 
 /**
- * Checks if a point (x, y) is within the boundaries of a button.
- * 
- * @param {number} mx - The x-coordinate of the point to check.
- * @param {number} my - The y-coordinate of the point to check.
- * @param {Object} btn - The button object containing position and dimensions.
- * @param {number} btn.x - The x-coordinate of the button's top-left corner.
- * @param {number} btn.y - The y-coordinate of the button's top-left corner.
- * @param {number} btn.w - The width of the button.
- * @param {number} btn.h - The height of the button.
- * @returns {boolean} True if the point is within the button boundaries, false otherwise.
+ * Checks if a point is inside a button.
+ *
+ * @param {number} mx - X-coordinate of the point.
+ * @param {number} my - Y-coordinate of the point.
+ * @param {{x: number, y: number, w: number, h: number}} btn - Button position and size.
+ * @returns {boolean} True if the point is inside the button.
  */
 function isPointInButton(mx, my, btn) {
     return mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h;
@@ -162,19 +158,11 @@ function handleTouchMove(event) {
 
 /**
  * Sets up the start menu buttons for the game.
- * Creates a single "Start Game" button positioned at the top center of the canvas.
- * The button's dimensions are responsive to the canvas size, with a maximum width of 200px
- * and a width of 30% of the canvas width, whichever is smaller.
- * 
- * When clicked, the button:
- * - Changes the game state to 'playing'
- * - Clears the menu buttons array
- * - Initiates the game by calling startGame()
- * 
- * @function setupStartMenuButtons
- * @returns {void}
- * @modifies {menuButtons} - Populates the global menuButtons array with the start button configuration
- * @modifies {gameState} - Sets to 'playing' when the button is clicked
+ * Creates a "Start Game" button centered on the canvas and assigns its click handler.
+ * Updates the global `menuButtons` array with the button configuration.
+ *
+ * @function
+ * @global
  */
 function setupStartMenuButtons() {
     const w = Math.min(200, canvas.width * 0.3);
@@ -297,11 +285,9 @@ function updateMuteIcon(muteImg) {
 }
 
 /**
- * Sets up the win/lose screen buttons by creating restart and back to menu buttons.
- * Initializes the menuButtons array with two button objects based on calculated dimensions.
- * 
- * @param {string} type - The type of game state (e.g., 'win' or 'lose')
- * @global {Array} menuButtons - Global array that stores the created button objects
+ * @type {Array}
+ * @name menuButtons
+ * Global array that stores the created button objects
  */
 function setupWinLoseButtons(type) {
     const { w, h, spacing } = calculateButtonDimensions();
@@ -378,9 +364,6 @@ function calculateButtonDimensions() {
     return { w, h, spacing };
 }
 
-/**
- * Handles keydown events
- */
 /**
  * Handles keydown events during gameplay.
  * Sets corresponding properties on the `keyboard` object to `true` based on the pressed key.
