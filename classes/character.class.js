@@ -154,23 +154,66 @@ class Character extends MovableObject {
      */
     animateCharacter() {
         setInterval(() => {
-            // NEU: Pausiere wenn Spiel pausiert ist
             if (this.world && this.world.gamePaused) return;
-            
-            if (this.isDead() && !this.deadAnimationPlayed) {
-                this.playDeadAnimationAndLose();
-            } else if (this.isHurt() && !this.loseScreenShown) {
-                this.handleHurtAnimation();
-            } else if (this.isAboveGround()) {
-                this.handleJumpingAnimation();
-                this.idleTime = 0;
-            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.handleWalkingAnimation();
-                this.idleTime = 0;
-            } else {
-                this.handleIdleAnimation();
-            }
+            this.updateCharacterState();
         }, 200);
+    }
+
+    /**
+     * Updates character state and animation
+     */
+    updateCharacterState() {
+        if (this.shouldPlayDeathAnimation()) {
+            this.playDeadAnimationAndLose();
+        } else if (this.shouldPlayHurtAnimation()) {
+            this.handleHurtAnimation();
+        } else if (this.shouldPlayJumpAnimation()) {
+            this.handleJumpingAnimation();
+        } else if (this.shouldPlayWalkAnimation()) {
+            this.handleWalkingAnimation();
+        } else {
+            this.handleIdleAnimation();
+        }
+    }
+
+    /**
+     * Checks if death animation should play
+     * @returns {boolean}
+     */
+    shouldPlayDeathAnimation() {
+        return this.isDead() && !this.deadAnimationPlayed;
+    }
+
+    /**
+     * Checks if hurt animation should play
+     * @returns {boolean}
+     */
+    shouldPlayHurtAnimation() {
+        return this.isHurt() && !this.loseScreenShown;
+    }
+
+    /**
+     * Checks if jump animation should play
+     * @returns {boolean}
+     */
+    shouldPlayJumpAnimation() {
+        if (this.isAboveGround()) {
+            this.idleTime = 0;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if walk animation should play
+     * @returns {boolean}
+     */
+    shouldPlayWalkAnimation() {
+        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.idleTime = 0;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -188,7 +231,7 @@ class Character extends MovableObject {
         if (this._hurtSoundPlaying || this.world.gameIsMuted) return;
         
         this._hurtSoundPlaying = true;
-        SoundManager.play('hurt', 0.15, false);  // Bereits korrekt auf 0.15
+        SoundManager.play('hurt', 0.15, false); 
         setTimeout(() => { this._hurtSoundPlaying = false; }, 500);
     }
 
@@ -236,7 +279,7 @@ class Character extends MovableObject {
      */
     playDeadAnimation(callback) {
         let frames = this.IMAGES_DEAD.length;
-        let frameDuration = 120;
+        let frameDuration = 250; 
         let frame = 0;
         let interval = setInterval(() => {
             this.img = this.imageCache[this.IMAGES_DEAD[frame]];
