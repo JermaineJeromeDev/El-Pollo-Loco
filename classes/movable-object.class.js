@@ -15,12 +15,20 @@ class MovableObject extends DrawableObject {
     coin = 0;
     bottle = 0;
 
+    /**
+     * Creates an instance of the class and calls the parent constructor.
+     */
     constructor() {
         super();
     }
 
     /**
-     * Applies gravity to the object
+     * Applies gravity to the object by continuously updating its vertical position and speed.
+     * The method uses a timer to simulate gravity, decreasing the vertical speed (`speedY`)
+     * by the object's acceleration and updating its position (`y`) accordingly.
+     * Gravity is applied only if the object is above the ground or moving upwards.
+     *
+     * @returns {void}
      */
     applyGravity() {
         setInterval(() => {
@@ -41,7 +49,10 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Calculates the real frame (with offset)
+     * Calculates and updates the real frame coordinates and dimensions of the object,
+     * taking into account the specified offsets.
+     *
+     * @returns {void}
      */
     getRealFrame() {
         this.rX = this.x + this.offset.left;
@@ -67,7 +78,12 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Reduces energy on hit
+     * Reduces the energy of the object based on its type when it is hit.
+     * - Character: loses 10 energy
+     * - ChickenSmall: loses 2 energy
+     * - Chicken: loses 5 energy
+     * - Endboss: loses 20 energy
+     * Ensures energy does not drop below 0 and updates the last hit timestamp.
      */
     hit() {
         if (this instanceof Character) this.energy -= 10;
@@ -97,14 +113,14 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Adds a coin
+     * Increases the coin count by 20, up to a maximum of 100.
      */
     addCoin() {
         this.coin = Math.min(100, this.coin + 20);
     }
 
     /**
-     * Adds a bottle
+     * Increases the bottle count by 20, up to a maximum of 100.
      */
     addBottle() {
         this.bottle = Math.min(100, this.bottle + 20);
@@ -120,17 +136,25 @@ class MovableObject extends DrawableObject {
         this.currentImage++;
     }
 
-    /** Moves object to the right */
+    /**
+     * Moves the object to the right by increasing its x-coordinate by its speed.
+     */
     moveRight() {
         this.x += this.speed;
     }
 
-    /** Moves object to the left */
+    /**
+     * Moves the object to the left by decreasing its x-coordinate by its speed.
+     */
     moveLeft() {
         this.x -= this.speed;
     }
 
-    /** Makes object jump */
+    /**
+     * Initiates a jump by setting the vertical speed.
+     * @function
+     * @returns {void}
+     */
     jump() {
         this.speedY = 20;
     }
