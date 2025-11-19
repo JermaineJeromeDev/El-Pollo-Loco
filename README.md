@@ -1,265 +1,6 @@
 # El Pollo Loco 🐔🌶️
 
-[🇩🇪 Deutsch](#deutsch) | [🇬🇧 English](#english)
-
----
-
-## Deutsch
-
-Ein klassisches Jump'n'Run-Spiel entwickelt mit **HTML5 Canvas** und **Vanilla JavaScript**.
-
-### 📖 Spielbeschreibung
-
-In einer Welt voller Federn und Chaos erhebt sich ein wahrer Held gegen die Hühnerarmee! Pepe muss sich durch gefährliche Gegner kämpfen, Münzen sammeln und den mächtigen Endboss besiegen.
-
-#### Story
-Drei Gegnerarten stellen sich dir in den Weg:
-- **Kleine Küken** - Schnell und wendig
-- **Normale Hühner** - Standhaft und gefährlich  
-- **Der Endboss** - Ein gewaltiger Gegner mit enormer Stärke
-
-Zertrample die kleinen und normalen Gegner mit präzisen Sprüngen von oben. Doch der Endboss ist anders – nur gezielte Flaschenwürfe können seine Macht brechen!
-
-⚠️ **Wichtig:** Setze deine Ressourcen mit Bedacht ein – wer alles verschleudert, wird im finalen Kampf keine Chance haben.
-
----
-
-### 🎮 Spielmechanik
-
-#### Steuerung Desktop
-- **← →** - Bewegung links/rechts
-- **Leertaste** - Springen
-- **D** - Flasche werfen
-
-#### Steuerung Mobile
-- **Touch-Buttons** - Links, Rechts, Springen, Werfen
-- **Auto-Fullscreen** auf mobilen Geräten
-
-#### Spielziel
-1. Sammle **Münzen** und **Flaschen**
-2. Besiege Gegner durch **Sprünge von oben**
-3. Besiege den **Endboss** mit **Flaschenwürfen**
-4. Überlebe bis zum Ende!
-
----
-
-### 🏗️ Technische Details
-
-#### Architektur
-
-**Klassen-Hierarchie:**
-```
-DrawableObject (Basis für zeichenbare Objekte)
-└── MovableObject (Basis für bewegbare Objekte)
-    ├── Character (Spieler)
-    ├── Chicken (Normales Huhn)
-    ├── ChickenSmall (Kleines Huhn)
-    ├── Endboss (Boss-Gegner)
-    ├── ThrowableObject (Geworfene Flasche)
-    ├── Cloud (Wolken)
-    ├── Coin (Münzen)
-    └── Bottle (Sammelbare Flaschen)
-
-StatusBar-Varianten:
-├── StatusBarHealth (Lebensenergie)
-├── StatusBarCoins (Münzen)
-├── StatusBarBottles (Flaschen)
-└── StatusBarEndboss (Endboss-Leben)
-```
-
-#### Technologie-Stack
-- **HTML5 Canvas** - Rendering
-- **Vanilla JavaScript (ES6)** - Spiellogik
-- **CSS3** - Responsive Design
-- **JSDoc** - Code-Dokumentation
-
-#### Features
-✅ **Object-Oriented Programming** - Clean Code mit Klassen  
-✅ **Responsive Design** - Desktop & Mobile optimiert  
-✅ **Sound-System** - SoundManager mit Mute-Funktion  
-✅ **Pause-Funktion** - Spiel anhalten über Options-Modal  
-✅ **Fullscreen-Modus** - Immersives Spielerlebnis  
-✅ **Collision Detection** - Präzise Hitboxen mit Offsets  
-✅ **Animation System** - Frame-basierte Animationen  
-✅ **Status Bars** - Echtzeit-Anzeige von Leben, Coins, Flaschen  
-
----
-
-### 📂 Projektstruktur
-
-```
-El Pollo Loco/
-├── assets/               # Bilder, Sounds, Fonts
-│   ├── img/
-│   ├── audio/
-│   └── fonts/
-├── classes/              # JavaScript-Klassen
-│   ├── character.class.js
-│   ├── chicken.class.js
-│   ├── endboss.class.js
-│   ├── world.class.js
-│   └── ...
-├── js/                   # JavaScript-Module
-│   ├── game.js          # Hauptspiel-Logik
-│   ├── sounds.js        # Sound-Manager
-│   ├── game-menu.js     # Menü-System
-│   └── game-ui.js       # UI-Funktionen
-├── levels/               # Level-Definitionen
-│   └── level1.js
-├── styles/               # CSS-Module
-│   ├── base.css
-│   ├── ui-components.css
-│   └── ...
-├── index.html            # Haupt-HTML
-├── style.css             # CSS-Import
-├── jsdoc.json            # JSDoc-Konfiguration
-└── README.md             # Diese Datei
-```
-
----
-
-### 🚀 Installation & Ausführung
-
-#### 1. Repository klonen
-```bash
-git clone <repository-url>
-cd "El Pollo Loco"
-```
-
-#### 2. Live Server starten
-
-**Option A - VS Code Live Server:**
-1. Rechtsklick auf `index.html`
-2. "Open with Live Server" wählen
-
-**Option B - Python HTTP Server:**
-```bash
-python -m http.server 8000
-# Öffne: http://localhost:8000
-```
-
-#### 3. Spiel im Browser öffnen
-```
-http://127.0.0.1:5500/index.html
-```
-
----
-
-### 📚 Dokumentation generieren
-
-#### JSDoc installieren
-```bash
-npm install -g jsdoc
-```
-
-#### Dokumentation erstellen
-```bash
-jsdoc -c jsdoc.json
-```
-
-#### Dokumentation öffnen
-```bash
-# Windows
-start docs/index.html
-
-# Mac/Linux
-open docs/index.html
-```
-
-Die generierte Dokumentation enthält:
-- Alle Klassen mit Beschreibungen
-- Methoden mit Parametern und Rückgabewerten
-- Klassen-Hierarchie
-- Code-Beispiele
-
----
-
-### 🎨 Features im Detail
-
-#### Sound-System
-```javascript
-SoundManager.load('jump', [{ src: 'path/to/jump.mp3', type: 'audio/mpeg' }]);
-SoundManager.play('jump', 0.5, true); // name, volume, allowOverlap
-SoundManager.pauseAll(); // Pausiert alle Sounds
-```
-
-#### Collision Detection
-```javascript
-character.isColliding(enemy); // Prüft Kollision mit Offset
-```
-
-#### Animation System
-```javascript
-character.playAnimation(IMAGES_WALKING); // Frame-basiert
-```
-
----
-
-### 🐛 Bekannte Probleme & Lösungen
-
-#### Problem: Sounds funktionieren nicht
-**Lösung:** Browser-Autoplay-Policy - User muss einmal interagieren
-
-#### Problem: Mobile Buttons nicht sichtbar
-**Lösung:** Nur in Landscape-Modus auf Geräten ≤ 1200px
-
-#### Problem: Fullscreen funktioniert nicht
-**Lösung:** User-Interaktion erforderlich (Button-Klick)
-
----
-
-### 📝 Code-Richtlinien
-
-#### Clean Code Principles
-✅ Jede Funktion max. **14 Zeilen**  
-✅ Eine Funktion = **eine Aufgabe**  
-✅ **Sprechende Namen** für Variablen & Funktionen  
-✅ **JSDoc-Kommentare** für alle öffentlichen Methoden  
-✅ **DRY-Prinzip** - Don't Repeat Yourself  
-
-#### Beispiel
-```javascript
-/**
- * Handles chicken hit by bottle
- * @param {Chicken} enemy - Chicken enemy
- * @param {number} enemyIndex - Index in enemies array
- */
-handleChickenHitByBottle(enemy, enemyIndex) {
-    enemy.energy = 0;
-    enemy.die && enemy.die();
-    setTimeout(() => {
-        this.level.enemies.splice(enemyIndex, 1);
-    }, 1000);
-}
-```
-
----
-
-### 👨‍💻 Autor
-
-Entwickelt mit ❤️ als Lernprojekt für objektorientiertes JavaScript und Game Development.
-
----
-
-### 📄 Lizenz
-
-Dieses Projekt ist ein Lernprojekt und steht unter der MIT-Lizenz.
-
----
-
-### 🙏 Credits
-
-- **Grafiken & Assets** - Developer Akademie
-- **Sounds** - Freesound.org
-- **Fonts** - Luckiest Guy, Fredoka (Google Fonts)
-
----
-
-### 🔗 Links
-
-- [Impressum](impressum.html)
-- [Datenschutz](datenschutz.html)
-- [JSDoc Dokumentation](docs/index.html)
+[🇬🇧 English](#english) | [🇩🇪 Deutsch](#deutsch)
 
 ---
 
@@ -477,6 +218,268 @@ character.playAnimation(IMAGES_WALKING); // Frame-based
 ✅ **DRY principle** - Don't Repeat Yourself  
 
 #### Example
+```javascript
+/**
+ * Handles chicken hit by bottle
+ * @param {Chicken} enemy - Chicken enemy
+ * @param {number} enemyIndex - Index in enemies array
+ */
+handleChickenHitByBottle(enemy, enemyIndex) {
+    enemy.energy = 0;
+    enemy.die && enemy.die();
+    setTimeout(() => {
+        this.level.enemies.splice(enemyIndex, 1);
+    }, 1000);
+}
+```
+
+---
+
+### 👨‍💻 Autor
+
+Entwickelt mit ❤️ als Lernprojekt für objektorientiertes JavaScript und Game Development.
+
+---
+
+### 📄 Lizenz
+
+Dieses Projekt ist ein Lernprojekt und steht unter der MIT-Lizenz.
+
+---
+
+### 🙏 Credits
+
+- **Grafiken & Assets** - Developer Akademie
+- **Sounds** - Freesound.org
+- **Fonts** - Luckiest Guy, Fredoka (Google Fonts)
+
+---
+
+### 🔗 Links
+
+- [Impressum](impressum.html)
+- [Datenschutz](datenschutz.html)
+- [JSDoc Dokumentation](docs/index.html)
+
+---
+
+## Deutsch
+
+<details>
+<summary>Klicke hier für die deutsche Anleitung</summary>
+
+Ein klassisches Jump'n'Run-Spiel entwickelt mit **HTML5 Canvas** und **Vanilla JavaScript**.
+
+### 📖 Spielbeschreibung
+
+In einer Welt voller Federn und Chaos erhebt sich ein wahrer Held gegen die Hühnerarmee! Pepe muss sich durch gefährliche Gegner kämpfen, Münzen sammeln und den mächtigen Endboss besiegen.
+
+#### Story
+Drei Gegnerarten stellen sich dir in den Weg:
+- **Kleine Küken** - Schnell und wendig
+- **Normale Hühner** - Standhaft und gefährlich  
+- **Der Endboss** - Ein gewaltiger Gegner mit enormer Stärke
+
+Zertrample die kleinen und normalen Gegner mit präzisen Sprüngen von oben. Doch der Endboss ist anders – nur gezielte Flaschenwürfe können seine Macht brechen!
+
+⚠️ **Wichtig:** Setze deine Ressourcen mit Bedacht ein – wer alles verschleudert, wird im finalen Kampf keine Chance haben.
+
+---
+
+### 🎮 Spielmechanik
+
+#### Steuerung Desktop
+- **← →** - Bewegung links/rechts
+- **Leertaste** - Springen
+- **D** - Flasche werfen
+
+#### Steuerung Mobile
+- **Touch-Buttons** - Links, Rechts, Springen, Werfen
+- **Auto-Fullscreen** auf mobilen Geräten
+
+#### Spielziel
+1. Sammle **Münzen** und **Flaschen**
+2. Besiege Gegner durch **Sprünge von oben**
+3. Besiege den **Endboss** mit **Flaschenwürfen**
+4. Überlebe bis zum Ende!
+
+---
+
+### 🏗️ Technische Details
+
+#### Architektur
+
+**Klassen-Hierarchie:**
+```
+DrawableObject (Basis für zeichenbare Objekte)
+└── MovableObject (Basis für bewegbare Objekte)
+    ├── Character (Spieler)
+    ├── Chicken (Normales Huhn)
+    ├── ChickenSmall (Kleines Huhn)
+    ├── Endboss (Boss-Gegner)
+    ├── ThrowableObject (Geworfene Flasche)
+    ├── Cloud (Wolken)
+    ├── Coin (Münzen)
+    └── Bottle (Sammelbare Flaschen)
+
+StatusBar-Varianten:
+├── StatusBarHealth (Lebensenergie)
+├── StatusBarCoins (Münzen)
+├── StatusBarBottles (Flaschen)
+└── StatusBarEndboss (Endboss-Leben)
+```
+
+#### Technologie-Stack
+- **HTML5 Canvas** - Rendering
+- **Vanilla JavaScript (ES6)** - Spiellogik
+- **CSS3** - Responsive Design
+- **JSDoc** - Code-Dokumentation
+
+#### Features
+✅ **Object-Oriented Programming** - Clean Code mit Klassen  
+✅ **Responsive Design** - Desktop & Mobile optimiert  
+✅ **Sound-System** - SoundManager mit Mute-Funktion  
+✅ **Pause-Funktion** - Spiel anhalten über Options-Modal  
+✅ **Fullscreen-Modus** - Immersives Spielerlebnis  
+✅ **Collision Detection** - Präzise Hitboxen mit Offsets  
+✅ **Animation System** - Frame-basierte Animationen  
+✅ **Status Bars** - Echtzeit-Anzeige von Leben, Coins, Flaschen  
+
+---
+
+### 📂 Projektstruktur
+
+```
+El Pollo Loco/
+├── assets/               # Bilder, Sounds, Fonts
+│   ├── img/
+│   ├── audio/
+│   └── fonts/
+├── classes/              # JavaScript-Klassen
+│   ├── character.class.js
+│   ├── chicken.class.js
+│   ├── endboss.class.js
+│   ├── world.class.js
+│   └── ...
+├── js/                   # JavaScript-Module
+│   ├── game.js          # Hauptspiel-Logik
+│   ├── sounds.js        # Sound-Manager
+│   ├── game-menu.js     # Menü-System
+│   └── game-ui.js       # UI-Funktionen
+├── levels/               # Level-Definitionen
+│   └── level1.js
+├── styles/               # CSS-Module
+│   ├── base.css
+│   ├── ui-components.css
+│   └── ...
+├── index.html            # Haupt-HTML
+├── style.css             # CSS-Import
+├── jsdoc.json            # JSDoc-Konfiguration
+└── README.md             # Diese Datei
+```
+
+---
+
+### 🚀 Installation & Ausführung
+
+#### 1. Repository klonen
+```bash
+git clone <repository-url>
+cd "El Pollo Loco"
+```
+
+#### 2. Live Server starten
+
+**Option A - VS Code Live Server:**
+1. Rechtsklick auf `index.html`
+2. "Open with Live Server" wählen
+
+**Option B - Python HTTP Server:**
+```bash
+python -m http.server 8000
+# Öffne: http://localhost:8000
+```
+
+#### 3. Spiel im Browser öffnen
+```
+http://127.0.0.1:5500/index.html
+```
+
+---
+
+### 📚 Dokumentation generieren
+
+#### JSDoc installieren
+```bash
+npm install -g jsdoc
+```
+
+#### Dokumentation erstellen
+```bash
+jsdoc -c jsdoc.json
+```
+
+#### Dokumentation öffnen
+```bash
+# Windows
+start docs/index.html
+
+# Mac/Linux
+open docs/index.html
+```
+
+Die generierte Dokumentation enthält:
+- Alle Klassen mit Beschreibungen
+- Methoden mit Parametern und Rückgabewerten
+- Klassen-Hierarchie
+- Code-Beispiele
+
+---
+
+### 🎨 Features im Detail
+
+#### Sound-System
+```javascript
+SoundManager.load('jump', [{ src: 'path/to/jump.mp3', type: 'audio/mpeg' }]);
+SoundManager.play('jump', 0.5, true); // name, volume, allowOverlap
+SoundManager.pauseAll(); // Pausiert alle Sounds
+```
+
+#### Collision Detection
+```javascript
+character.isColliding(enemy); // Prüft Kollision mit Offset
+```
+
+#### Animation System
+```javascript
+character.playAnimation(IMAGES_WALKING); // Frame-basiert
+```
+
+---
+
+### 🐛 Bekannte Probleme & Lösungen
+
+#### Problem: Sounds funktionieren nicht
+**Lösung:** Browser-Autoplay-Policy - User muss einmal interagieren
+
+#### Problem: Mobile Buttons nicht sichtbar
+**Lösung:** Nur in Landscape-Modus auf Geräten ≤ 1200px
+
+#### Problem: Fullscreen funktioniert nicht
+**Lösung:** User-Interaktion erforderlich (Button-Klick)
+
+---
+
+### 📝 Code-Richtlinien
+
+#### Clean Code Principles
+✅ Jede Funktion max. **14 Zeilen**  
+✅ Eine Funktion = **eine Aufgabe**  
+✅ **Sprechende Namen** für Variablen & Funktionen  
+✅ **JSDoc-Kommentare** für alle öffentlichen Methoden  
+✅ **DRY-Prinzip** - Don't Repeat Yourself  
+
+#### Beispiel
 ```javascript
 /**
  * Handles chicken hit by bottle
