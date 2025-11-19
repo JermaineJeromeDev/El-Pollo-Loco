@@ -14,20 +14,18 @@
     z-index: 10;
 }
 
-/* NEU: Alle Kinder bleiben relativ zum Container */
 .container > .top-controls,
 .container > .mobile-btns {
     position: absolute;
 }
 
-/* Wichtig: Alle absolut positionierten Elemente richten sich am Container aus */
 .container > * {
     position: absolute;
 }
 
 #canvas,
 #overlay-canvas {
-    position: relative; /* Canvas ist relativ im Container */
+    position: relative; 
     width: 100%;
     height: auto;
 }
@@ -46,7 +44,6 @@
     z-index: 1000;
 }
 
-/* Top-Controls bleiben IMMER sichtbar im Fullscreen */
 .container.fullscreen .top-controls,
 .container .top-controls {
     position: fixed !important;
@@ -207,7 +204,6 @@
     filter: drop-shadow(4px 8px 0px black);
 }
 
-/* Mobile Control Buttons */
 .mobile-btns {
     position: absolute;
     left: 0;
@@ -268,4 +264,26 @@
     height: 60%;
     object-fit: contain;
     pointer-events: none;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: transparent;
+}
+
+.container.fullscreen {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    aspect-ratio: auto; 
+}
+
+.container.fullscreen canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
