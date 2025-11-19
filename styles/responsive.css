@@ -1,6 +1,5 @@
 /* Responsive Styles - Media Queries, Mobile Controls */
 
-/* GLOBAL: Canvas immer responsive */
 #canvas,
 #overlay-canvas {
     width: 100% !important;
@@ -10,7 +9,7 @@
 }
 
 .container {
-    width: 95vw !important; /* 95% statt 100vw - verhindert horizontalen Scroll */
+    width: 95vw !important; 
     max-width: 720px;
 }
 
@@ -28,7 +27,6 @@
     }
 }
 
-/* NEU: Alle Bildschirmgrößen - Canvas responsiv */
 .container {
     width: 100%;
     max-width: 720px;
@@ -42,7 +40,6 @@
     aspect-ratio: 3 / 2 !important;
 }
 
-/* Tablets und kleine Desktops */
 @media (max-width: 768px) {
     .container {
         width: 100%;
@@ -63,10 +60,9 @@
     }
 }
 
-/* Sehr kleine Bildschirme (< 425px) */
 @media (max-width: 425px) {
     .container {
-        width: 98vw !important; /* Noch mehr Platz nutzen */
+        width: 98vw !important; 
         padding: 0;
     }
 
@@ -125,10 +121,9 @@
     }
 }
 
-/* Extra kleine Bildschirme (< 375px) */
 @media (max-width: 375px) {
     .container {
-        width: 100vw !important; /* Volle Breite auf sehr kleinen Bildschirmen */
+        width: 100vw !important; 
         padding: 0;
         left: 0;
         transform: translate(0, -50%);
@@ -177,13 +172,11 @@
     }
 }
 
-/* Kritischer Breakpoint: 667 x 450 */
 @media (max-width: 667px) {
     .container {
         width: 98vw !important;
     }
 
-    /* Top-Controls FIX: Immer rechts oben positioniert */
     .top-controls {
         position: absolute !important;
         top: 2% !important;
@@ -199,7 +192,6 @@
         height: 36px !important;
     }
 
-    /* Mobile-Buttons FIX: Immer relativ zum Container */
     .mobile-btns {
         position: absolute !important;
         left: 0 !important;
@@ -246,7 +238,6 @@
         max-height: 100vh;
     }
 
-    /* Top-Controls im Landscape-Modus - RECHTS OBEN */
     .top-controls {
         position: absolute !important;
         top: 1vh !important;
@@ -278,7 +269,6 @@
         height: 20px !important;
     }
 
-    /* Mobile-Buttons im Landscape */
     .mobile-btns {
         display: block !important;
         z-index: 2100 !important;
@@ -406,5 +396,39 @@
     .top-controls .fullscreen-btn img {
         width: 22px;
         height: 22px;
+    }
+}
+
+@media only screen and (max-width: 900px) and (orientation: landscape) {
+    .container {
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        aspect-ratio: auto; 
+        margin: 0;
+        padding: 0;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover; 
+    }
+}
+
+@media only screen and (max-width: 900px) and (orientation: portrait) {
+    .container {
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        aspect-ratio: auto; 
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover; 
     }
 }
