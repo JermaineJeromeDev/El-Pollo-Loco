@@ -57,7 +57,7 @@ canvas, #overlay-canvas {
     justify-content: space-evenly;
     gap: 22px;
     z-index: 150;
-    cursor: pointer;
+    
 }
 
 .top-controls button {
@@ -118,4 +118,19 @@ canvas, #overlay-canvas {
     .desktopButton {
         display: inline-block !important;
     }
+}
+
+#options-modal .tab-content#story-content {
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 12px;
+}
+
+#options-modal .tab-content#story-content p {
+    font-size: 24px;
+    line-height: 1.7;
+    color: white;
+    font-family: "Fredoka", Arial, sans-serif;
+    margin: 0 0 12px 0;
+    letter-spacing: 0.01em;
 }
