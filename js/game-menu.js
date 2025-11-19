@@ -1,16 +1,4 @@
 /**
- * Pauses game and sound
- */
-function pauseGameAndSound() {
-    if (typeof pauseGame === 'function' && typeof world !== 'undefined' && world) {
-        pauseGame();
-    }
-    if (typeof SoundManager !== 'undefined') {
-        SoundManager.pauseAll();
-    }
-}
-
-/**
  * Shows modal with transition
  * @param {HTMLElement} modal - Modal element
  */
@@ -33,7 +21,9 @@ function setContainerModalState(container) {
 }
 
 /**
- * Shows default tab content (story)
+ * Displays the default tab content by showing the story section and hiding the controls section.
+ * Removes the 'd-none' class and sets display to 'block' for the story content element,
+ * and adds the 'd-none' class to the controls content element.
  */
 function showDefaultTabContent() {
     const storyContent = document.getElementById('story-content');
@@ -48,7 +38,8 @@ function showDefaultTabContent() {
 }
 
 /**
- * Sets active tab to story
+ * Sets the "Story" tab as the active tab in the game menu.
+ * Removes the "active" class from all tab buttons and adds it to the "Story" tab.
  */
 function setActiveTabToStory() {
     const tabButtons = document.querySelectorAll('.tab-btn');
@@ -60,7 +51,15 @@ function setActiveTabToStory() {
 }
 
 /**
- * Shows the options modal
+ * Displays the options modal, pauses the game and sound, and initializes modal state.
+ * - Pauses the game and sound.
+ * - Shows the options modal with a transition.
+ * - Sets the container to modal state.
+ * - Displays the default tab content.
+ * - Sets the active tab to "Story".
+ * - Logs modal opening to the console.
+ *
+ * @function
  */
 function showOptionsModal() {
     pauseGameAndSound();
@@ -74,7 +73,6 @@ function showOptionsModal() {
     setContainerModalState(container);
     showDefaultTabContent();
     setActiveTabToStory();
-    console.log('Modal opened - Game & Sound paused');
 }
 
 /**
@@ -102,19 +100,10 @@ function removeContainerModalState(container) {
 }
 
 /**
- * Resumes game and sound
- */
-function resumeGameAndSound() {
-    if (typeof resumeGame === 'function' && typeof world !== 'undefined' && world) {
-        resumeGame();
-    }
-    if (typeof SoundManager !== 'undefined') {
-        SoundManager.resumeAll();
-    }
-}
-
-/**
- * Hides the options modal
+ * Hides the options modal with a transition, removes modal state from the container,
+ * and resumes the game and sound. Logs the action to the console.
+ *
+ * @function hideOptionsModal
  */
 function hideOptionsModal() {
     const modal = document.getElementById('options-modal');
@@ -129,7 +118,8 @@ function hideOptionsModal() {
 }
 
 /**
- * Handles back to menu tab action
+ * Handles the action of returning to the main menu tab.
+ * Hides the options modal and navigates back to the menu from the game.
  */
 function handleBackToMenuTab() {
     hideOptionsModal();
@@ -145,7 +135,8 @@ function deactivateAllTabs(tabButtons) {
 }
 
 /**
- * Hides all tab contents
+ * Hides all elements with the class 'tab-content' by adding the 'd-none' class
+ * and setting their display style to 'none'.
  */
 function hideAllTabContents() {
     document.querySelectorAll('.tab-content').forEach(content => {
@@ -155,23 +146,39 @@ function hideAllTabContents() {
 }
 
 /**
- * Shows specific tab content
- * @param {string} tabId - Tab ID
+ * Returns the content element associated with a given tab ID.
+ *
+ * @param {string} tabId - The ID of the tab for which to retrieve the content element.
+ * @returns {HTMLElement|null} The corresponding content element, or null if not found.
+ */
+function getContentElement(tabId) {
+    const mapping = {
+        'tab-story': 'story-content',
+        'tab-controls': 'controls-content'
+    };
+    const contentId = mapping[tabId];
+    return contentId ? document.getElementById(contentId) : null;
+}
+
+/**
+ * Displays the specified HTML element by removing the 'd-none' class and setting its display style to 'block'.
+ *
+ * @param {HTMLElement} element - The DOM element to show. If null or undefined, the function does nothing.
+ */
+function showContent(element) {
+    if (!element) return;
+    element.classList.remove('d-none');
+    element.style.display = 'block';
+}
+
+/**
+ * Displays the content associated with the specified tab.
+ *
+ * @param {string} tabId - The identifier of the tab whose content should be shown.
  */
 function showTabContent(tabId) {
-    if (tabId === 'tab-story') {
-        const storyContent = document.getElementById('story-content');
-        if (storyContent) {
-            storyContent.classList.remove('d-none');
-            storyContent.style.display = 'block';
-        }
-    } else if (tabId === 'tab-controls') {
-        const controlsContent = document.getElementById('controls-content');
-        if (controlsContent) {
-            controlsContent.classList.remove('d-none');
-            controlsContent.style.display = 'block';
-        }
-    }
+    const content = getContentElement(tabId);
+    showContent(content);
 }
 
 /**
@@ -209,19 +216,21 @@ function handleBackMenuButtonClick(clickEvent) {
 }
 
 /**
- * Attaches options button listener
+ * Attaches a click event listener to the options button at the top of the page.
+ * When the button is clicked, the `handleOptionsButtonClick` function is invoked.
+ * 
+ * @function
  */
 function attachOptionsButtonListener() {
     const optionsTopBtn = document.getElementById('options-top-btn');
     if (optionsTopBtn) {
         optionsTopBtn.addEventListener('click', handleOptionsButtonClick);
-    } else {
-        console.warn('Options button (#options-top-btn) not found!');
     }
 }
 
 /**
- * Attaches close button listener
+ * Attaches a click event listener to the options close button.
+ * When the button with ID 'options-close-btn' is clicked, the handleCloseButtonClick function is invoked.
  */
 function attachCloseButtonListener() {
     const optionsCloseBtn = document.getElementById('options-close-btn');
@@ -231,7 +240,8 @@ function attachCloseButtonListener() {
 }
 
 /**
- * Attaches back to menu button listener
+ * Attaches a click event listener to the back menu tab element.
+ * When the element with ID 'tab-back-menu' is clicked, the handleBackMenuButtonClick function is invoked.
  */
 function attachBackMenuButtonListener() {
     const tabBackMenu = document.getElementById('tab-back-menu');
@@ -241,7 +251,8 @@ function attachBackMenuButtonListener() {
 }
 
 /**
- * Attaches all modal event listeners
+ * Attaches event listeners to modal-related buttons, including options, close, and back menu buttons.
+ * Ensures that the modal UI responds to user interactions appropriately.
  */
 function attachModalEventListeners() {
     attachOptionsButtonListener();
@@ -250,7 +261,8 @@ function attachModalEventListeners() {
 }
 
 /**
- * Initializes the options modal and its event listeners
+ * Initializes the options modal by attaching event listeners and setting up the tab system.
+ * Should be called when the options modal needs to be prepared for user interaction.
  */
 function initOptionsModal() {
     attachModalEventListeners();
@@ -258,105 +270,112 @@ function initOptionsModal() {
 }
 
 /**
- * Initializes tab system for options modal
+ * Retrieves all elements with the class 'tab-btn' from the document.
+ *
+ * @returns {NodeListOf<Element>} A NodeList containing all tab button elements.
+ */
+function getAllTabs() {
+    return document.querySelectorAll('.tab-btn');
+}
+
+/**
+ * Determines whether a tab click should be ignored based on the tab's tag name.
+ * Ignores the click if the tab is an anchor element ('A').
+ *
+ * @param {HTMLElement} tab - The tab element to check.
+ * @returns {boolean} True if the tab click should be ignored; otherwise, false.
+ */
+function shouldIgnoreTabClick(tab) {
+    return tab.tagName === 'A';
+}
+
+/**
+ * Checks if the given tab element is the "back menu" tab.
+ *
+ * @param {Object} tab - The tab object to check.
+ * @param {string} tab.id - The ID of the tab.
+ * @returns {boolean} Returns true if the tab's ID is 'tab-back-menu', otherwise false.
+ */
+function isBackMenuTab(tab) {
+    return tab.id === 'tab-back-menu';
+}
+
+/**
+ * Registers a click event listener on the given tab element.
+ * Handles tab click events, including ignoring certain tabs,
+ * navigating back to the menu, and handling regular tab clicks.
+ *
+ * @param {HTMLElement} tab - The tab element to register the click event for.
+ */
+function registerTabClick(tab) {
+    tab.addEventListener('click', (event) => {
+        if (shouldIgnoreTabClick(tab)) return;
+        event.preventDefault();
+        if (isBackMenuTab(tab)) {
+            handleBackToMenuTab();
+            return;
+        }
+        handleTabClick(tab);
+    });
+}
+
+/**
+ * Initializes the tab system by retrieving all tabs and registering click events for each tab.
+ * This function sets up the necessary event listeners to enable tab navigation.
  */
 function initTabSystem() {
-    const tabs = document.querySelectorAll('.tab-btn');
-    
+    const tabs = getAllTabs();
+    tabs.forEach(registerTabClick);
+}
+
+/**
+ * Deactivates all tabs by removing the 'active' class and setting 'aria-selected' to 'false'.
+ *
+ * @param {HTMLElement[]} tabs - An array of tab elements to deactivate.
+ */
+function deactivateAllTabs(tabs) {
     tabs.forEach(tab => {
-        tab.addEventListener('click', (e) => {
-            // Links (Impressum, Datenschutz) normal öffnen lassen
-            if (tab.tagName === 'A') {
-                return; // Browser öffnet Link in neuem Tab
-            }
-            
-            // Nur bei echten Buttons preventDefault
-            e.preventDefault();
-            
-            if (tab.id === 'tab-back-menu') {
-                handleBackToMenuTab();
-                return;
-            }
-            
-            handleTabClick(tab); // KORRIGIERT: tab statt e übergeben
-        });
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
     });
 }
 
 /**
- * Handles tab click
- * @param {HTMLElement} clickedTab - Clicked tab element
+ * Hides all provided DOM elements by adding the 'd-none' CSS class to each.
+ *
+ * @param {HTMLElement[]} contents - An array of DOM elements to hide.
+ */
+function hideAllContents(contents) {
+    contents.forEach(content => content.classList.add('d-none'));
+}
+
+/**
+ * Activates a tab element by adding the 'active' class, setting its 'aria-selected' attribute to true,
+ * and displaying the associated content element by removing the 'd-none' class.
+ *
+ * @param {HTMLElement} tab - The tab element to activate.
+ */
+function activateTab(tab) {
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+    const targetId = tab.id.replace('tab-', '') + '-content';
+    const targetContent = document.getElementById(targetId);
+    if (targetContent) targetContent.classList.remove('d-none');
+}
+
+/**
+ * Handles the click event for a tab button.
+ * Deactivates all tabs, hides all tab contents, and activates the clicked tab.
+ *
+ * @param {HTMLElement} clickedTab - The tab button element that was clicked.
  */
 function handleTabClick(clickedTab) {
-    // ENTFERNT: clickEvent.preventDefault() - nicht mehr nötig
-    
     const allTabs = document.querySelectorAll('.tab-btn');
     const allContents = document.querySelectorAll('.tab-content');
-    
-    allTabs.forEach(t => {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-    });
-    
-    allContents.forEach(c => c.classList.add('d-none'));
-    
-    clickedTab.classList.add('active');
-    clickedTab.setAttribute('aria-selected', 'true');
-    
-    const targetId = clickedTab.id.replace('tab-', '') + '-content';
-    const targetContent = document.getElementById(targetId);
-    
-    if (targetContent) {
-        targetContent.classList.remove('d-none');
-    }
+    deactivateAllTabs(allTabs);
+    hideAllContents(allContents);
+    activateTab(clickedTab);
 }
-
-/**
- * Stops the running game world
- */
-function stopGameWorld() {
-    if (typeof world !== 'undefined' && world) {
-        world.clearAllIntervals();
-        world.gameStopped = true;
-    }
-}
-
-/**
- * Stops all game sounds
- */
-function stopAllGameSounds() {
-    if (typeof SoundManager !== 'undefined') {
-        SoundManager.stopAll();
-    }
-}
-
-/**
- * Resets win/lose sound flags
- */
-function resetSoundFlags() {
-    if (typeof winSoundPlayed !== 'undefined') winSoundPlayed = false;
-    if (typeof loseSoundPlayed !== 'undefined') loseSoundPlayed = false;
-}
-
-/**
- * Navigates to start screen
- */
-function navigateToStartScreen() {
-    if (typeof drawStartScreen === 'function') {
-        drawStartScreen();
-    }
-}
-
-/**
- * Goes back to main menu from game
- */
-function backToMenuFromGame() {
-    stopGameWorld();
-    stopAllGameSounds();
-    resetSoundFlags();
-    navigateToStartScreen();
-}
-
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initOptionsModal);
