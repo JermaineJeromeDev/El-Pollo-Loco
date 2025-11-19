@@ -44,6 +44,10 @@ function handleResize() {
     resizeCanvasToContainer(); 
     updateIconPositions();
     updateRotateHint();
+    // NEU: Startscreen neu zeichnen, wenn im Startscreen
+    if (gameState === 'start') {
+        drawStartScreen();
+    }
 }
 
 /**
