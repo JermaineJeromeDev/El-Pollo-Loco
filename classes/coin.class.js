@@ -18,7 +18,11 @@ class Coin extends MovableObject {
     };
 
     /**
-     * Creates a new coin
+     * Creates a new Coin instance.
+     * Initializes the coin by loading its images, setting its position to a random location,
+     * and starting its animation.
+     *
+     * @constructor
      */
     constructor() {
         super()
@@ -30,7 +34,8 @@ class Coin extends MovableObject {
     }
 
     /**
-     * Starts animation
+     * Starts an interval that animates the coin by cycling through its images.
+     * Calls `playAnimation` with the coin image sequence every 300 milliseconds.
      */
     animate() {
         setInterval(() => {
