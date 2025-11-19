@@ -399,7 +399,6 @@
     }
 }
 
-/* Mobile Landscape */
 @media only screen and (max-width: 900px) and (orientation: landscape) {
     .container {
         width: 100vw;
@@ -415,12 +414,11 @@
         width: 100% !important;
         height: 100% !important;
         object-fit: cover;
-        touch-action: none; /* NEU: Verhindert Standard-Touch-Behavior */
-        -webkit-tap-highlight-color: transparent; /* NEU: Entfernt Tap-Highlight */
+        touch-action: none; 
+        -webkit-tap-highlight-color: transparent; 
     }
 }
 
-/* Mobile Portrait */
 @media only screen and (max-width: 900px) and (orientation: portrait) {
     .container {
         width: 100vw;
@@ -434,7 +432,7 @@
         width: 100% !important;
         height: 100% !important;
         object-fit: cover;
-        touch-action: none; /* NEU: Verhindert Standard-Touch-Behavior */
-        -webkit-tap-highlight-color: transparent; /* NEU: Entfernt Tap-Highlight */
+        touch-action: none; 
+        -webkit-tap-highlight-color: transparent;
     }
 }
