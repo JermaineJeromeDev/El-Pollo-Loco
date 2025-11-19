@@ -127,14 +127,21 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Plays animation
-     * @param {Array<string>} images - Image paths
+     * Plays an animation sequence.
+     * Each animation keeps its own frame counter.
+     * @param {Array<string>} images - Array of image paths
+     * @param {string} animationName - Unique name of the animation
      */
-    playAnimation(images) {
-        let i = this.currentImage % images.length;
+    playAnimation(images, animationName) {
+        if (!this.animationFrames) this.animationFrames = {};
+        if (!(animationName in this.animationFrames)) {
+            this.animationFrames[animationName] = 0; 
+        }
+        let i = this.animationFrames[animationName] % images.length;
         this.img = this.imageCache[images[i]];
-        this.currentImage++;
+        this.animationFrames[animationName]++;
     }
+
 
     /**
      * Moves the object to the right by increasing its x-coordinate by its speed.
