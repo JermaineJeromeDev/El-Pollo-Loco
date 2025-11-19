@@ -52,7 +52,9 @@ class ThrowableObject extends MovableObject {
     }
     
     /**
-     * Throws the bottle
+     * Initiates the throwing action for the bottle object.
+     * Sets the bottle's vertical and horizontal speed based on its direction,
+     * marks it as airborne, and applies gravity and movement.
      */
     throw() {
         this.throwBottleAir = true;
@@ -66,7 +68,11 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Applies gravity and moves bottle
+     * Applies gravity and movement to the object by updating its position at regular intervals.
+     * The object's vertical position (`y`) is affected by gravity (`acceleration`), and its horizontal position (`x`) is updated by `speedX`.
+     * When the object reaches the ground level (`y >= 380`), its position is fixed and `breakAndSplash()` is called.
+     *
+     * @returns {void}
      */
     applyGravityAndMove() {
         this.intervalId = setInterval(() => {
@@ -81,7 +87,11 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Makes bottle break and splash
+     * Handles the breaking and splash animation of the throwable object.
+     * Initiates the breaking process if not already started, plays the splash animation,
+     * fades out the object, and plays the breaking sound effect.
+     *
+     * @returns {void}
      */
     breakAndSplash() {
         if (!this.isBreaking) {
@@ -94,7 +104,10 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Starts rotation animation
+     * Starts the animation loop for the throwable object.
+     * Continuously checks if the bottle is in the air (`throwBottleAir`).
+     * If so, plays the rotation animation using the images in `IMAGES_ROTATE`.
+     * The animation updates approximately 60 times per second.
      */
     animate() {
         setInterval(() => {
