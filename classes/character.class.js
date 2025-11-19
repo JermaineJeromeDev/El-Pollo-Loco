@@ -167,18 +167,33 @@ class Character extends MovableObject {
     }
 
     /**
-     * Starts the character animation update loop.
-     * Periodically evaluates the character state and updates the
-     * corresponding animation. Automatically pauses when the game is paused.
-     *
-     * @returns {void}
+     * Starts the character animation loop.
+     * Decides which animation to play based on the current state.
      */
     animateCharacter() {
         setInterval(() => {
             if (this.world && this.world.gamePaused) return;
-            this.updateCharacterState();
-        }, 200);
+            if (this.shouldPlayDeathAnimation()) {
+                this.playDeadAnimationAndLose();
+                return;
+            }
+            if (this.shouldPlayHurtAnimation()) {
+                this.handleHurtAnimation();
+                return;
+            }
+            if (this.shouldPlayJumpAnimation()) {
+                this.handleJumpingAnimation();
+                return;
+            }
+            if (this.shouldPlayWalkAnimation()) {
+                this.handleWalkingAnimation();
+                return;
+            }
+            this.handleIdleAnimation();
+
+        }, 100);
     }
+
 
     /**
      * Determines and applies the current character animation based on its state.
@@ -248,7 +263,7 @@ class Character extends MovableObject {
      * Handles hurt animation
      */
     handleHurtAnimation() {
-        this.playAnimation(this.IMAGES_HURT);
+        this.playAnimation(this.IMAGES_HURT, 'hurt');
         this.playHurtSound();
     }
 
@@ -272,11 +287,10 @@ class Character extends MovableObject {
      *
      * @returns {void}
      */
-    handleJumpingAnimation() {
-        this.playAnimation(this.IMAGES_JUMPING);
+        handleJumpingAnimation() {
+        this.playAnimation(this.IMAGES_JUMPING, 'jump');
         this.idleTime = 0;
     }
-
     /**
      * Updates the character's animation to the walking sequence.
      * Resets idle time whenever a walking animation is played.
@@ -284,7 +298,7 @@ class Character extends MovableObject {
      * @returns {void}
      */
     handleWalkingAnimation() {
-        this.playAnimation(this.IMAGES_WALKING);
+        this.playAnimation(this.IMAGES_WALKING, 'walk');
         this.idleTime = 0;
     }
 
@@ -297,9 +311,9 @@ class Character extends MovableObject {
     handleIdleAnimation() {
         this.idleTime++;
         if (this.idleTime > 150) {
-            this.playAnimation(this.IMAGES_LONG_IDLE);
+            this.playAnimation(this.IMAGES_LONG_IDLE, 'longIdle');
         } else {
-            this.playAnimation(this.IMAGES_IDLE);
+            this.playAnimation(this.IMAGES_IDLE, 'idle');
         }
     }
 
@@ -309,15 +323,12 @@ class Character extends MovableObject {
      *
      * @returns {void}
      */
-    playDeadAnimationAndLose() {
+        playDeadAnimationAndLose() {
         this.deadAnimationPlayed = true;
-        // Starte den Death-Sound synchron zur Animation
         if (this.world && !this.world.gameIsMuted) {
             SoundManager.playLose();
         }
-        this.playDeadAnimation(() => {
-            this.handleLoseScreen();
-        });
+        this.playDeadAnimation(() => this.handleLoseScreen());
     }
 
     /**
