@@ -3,7 +3,11 @@
  */
 
 /**
- * Draws the start screen
+ * Draws the start screen of the game by setting the game state,
+ * loading the background image, clearing the canvas, drawing the scaled background,
+ * and rendering the start menu buttons.
+ *
+ * @function
  */
 function drawStartScreen() {
     gameState = 'start';
@@ -51,7 +55,11 @@ function calculateBackgroundDimensions(imgAspect, canvasAspect) {
 }
 
 /**
- * Shows the win screen
+ * Displays the win screen overlay and handles win state logic.
+ * - Sets the game state to 'win'.
+ * - Stops gameplay sounds.
+ * - Plays the win sound if not muted and not already played.
+ * - Shows the win overlay element.
  */
 function showWinScreen() {
     gameState = 'win';
@@ -65,7 +73,11 @@ function showWinScreen() {
 }
 
 /**
- * Shows the lose screen
+ * Displays the lose screen overlay and handles related game state changes.
+ * - Sets the game state to 'lose'.
+ * - Stops gameplay sounds.
+ * - Plays the lose sound if not muted and not already played.
+ * - Shows the lose overlay by removing the 'd-none' class.
  */
 function showLoseScreen() {
     gameState = 'lose';
@@ -79,14 +91,17 @@ function showLoseScreen() {
 }
 
 /**
- * Redraws menu screen
+ * Redraws the menu screen based on the current game state.
+ * If the game state is 'start', it draws the start screen.
  */
 function redrawMenuScreen() {
     if (gameState === 'start') drawStartScreen();
 }
 
 /**
- * Adds fullscreen class to elements
+ * Adds the 'fullscreen' CSS class to the specified container element and the global canvas element.
+ *
+ * @param {HTMLElement} containerEl - The container element to which the 'fullscreen' class will be added. If null or undefined, only the canvas will be affected.
  */
 function addFullscreenClasses(containerEl) {
     if (containerEl) containerEl.classList.add('fullscreen');
@@ -94,7 +109,9 @@ function addFullscreenClasses(containerEl) {
 }
 
 /**
- * Removes fullscreen class from elements
+ * Removes the 'fullscreen' CSS class from the specified container element and the global canvas element.
+ *
+ * @param {HTMLElement} containerEl - The container element from which to remove the 'fullscreen' class.
  */
 function removeFullscreenClasses(containerEl) {
     if (containerEl) containerEl.classList.remove('fullscreen');
@@ -102,7 +119,10 @@ function removeFullscreenClasses(containerEl) {
 }
 
 /**
- * Resets canvas to default size
+ * Resets the game canvas to its default state by:
+ * - Removing the 'fullscreen' class from the canvas element.
+ * - Resizing the canvas to fit its container.
+ * - Clearing all drawings from the canvas context.
  */
 function resetCanvas() {
     canvas.classList.remove('fullscreen');
@@ -111,7 +131,11 @@ function resetCanvas() {
 }
 
 /**
- * Resizes canvas to match container size
+ * Resizes the canvas element to fit its parent container.
+ * On mobile devices (window width <= 900px), the canvas fills the container and covers its area.
+ * On larger screens, the canvas matches the container's dimensions and maintains its aspect ratio.
+ *
+ * Assumes a global `canvas` variable referencing the canvas element.
  */
 function resizeCanvasToContainer() {
     const container = canvas.parentElement;
@@ -131,14 +155,18 @@ function resizeCanvasToContainer() {
 }
 
 /**
- * Updates canvas dimensions
+ * Updates the dimensions of the game canvas by resizing it to fit its container.
+ * Calls the `resizeCanvasToContainer` function to perform the resizing.
  */
 function updateCanvasDimensions() {
     resizeCanvasToContainer();
 }
 
 /**
- * Redraws screen after fullscreen toggle
+ * Redraws the game canvas after toggling fullscreen mode.
+ * Updates icon positions and redraws the appropriate screen based on the current game state.
+ * - If the game is at the start screen, redraws the start screen after a short delay.
+ * - If the game world exists, requests an animation frame to redraw the world.
  */
 function redrawAfterFullscreen() {
     updateIconPositions();
@@ -150,7 +178,11 @@ function redrawAfterFullscreen() {
 }
 
 /**
- * Toggles fullscreen mode
+ * Toggles the fullscreen mode for the game container.
+ * Adds or removes fullscreen-related CSS classes and updates the canvas dimensions accordingly.
+ * Also triggers a redraw of the canvas after toggling fullscreen.
+ *
+ * @function
  */
 function toggleFullscreen() {
     isFullscreen = !isFullscreen;
