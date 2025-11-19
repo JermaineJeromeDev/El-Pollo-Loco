@@ -12,7 +12,6 @@
     flex-direction: row;
 }
 
-/* Wichtig: Buttons IMMER sichtbar */
 .mute-btn,
 .fullscreen-btn,
 .options-btn {
@@ -54,7 +53,6 @@
     pointer-events: none;
 }
 
-/* Options Modal - NUR EINE Deklaration */
 #options-modal {
     display: none;
     visibility: hidden;
@@ -77,9 +75,6 @@
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-/* ENTFERNT: :not(.d-none) Regel - verursacht Auto-Open Bug */
-
-/* Modal schließen Animation */
 #options-modal.modal-closing {
     opacity: 0;
     visibility: hidden;
@@ -294,7 +289,7 @@ a.tab-btn.active {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.85); /* NEU: Fester schwarzer Hintergrund statt Snapshot */
+    background: rgba(0, 0, 0, 0.85);
     animation: fadeIn 0.5s ease-in-out;
 }
 
@@ -335,7 +330,6 @@ a.tab-btn.active {
     transform: translateY(-3px);
 }
 
-/* Mobile Control Buttons */
 .mobile-btns {
     position: absolute;
     left: 0;
@@ -344,7 +338,7 @@ a.tab-btn.active {
     height: 100%;
     pointer-events: none;
     z-index: 2100;
-    display: none; /* Standard: versteckt */
+    display: none; 
 }
 
 .mobile-btns .mobile-btns-left,
@@ -367,8 +361,8 @@ a.tab-btn.active {
 }
 
 .mobile-btns button {
-    width: 60px;          /* von 80px auf 60px */
-    height: 60px;         /* von 80px auf 60px */
+    width: 60px;          
+    height: 60px;        
     background: rgba(255, 255, 255, 0.25);
     border: 2px solid rgba(255, 255, 255, 0.4);
     border-radius: 50%;
@@ -388,8 +382,8 @@ a.tab-btn.active {
 }
 
 .mobile-btns button img {
-    width: 35px;          /* von 45px auf 35px */
-    height: 35px;         /* von 45px auf 35px */
+    width: 35px;         
+    height: 35px;        
     object-fit: contain;
     filter: brightness(0) invert(1);
     opacity: 0.9;
