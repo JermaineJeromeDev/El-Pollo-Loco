@@ -22,10 +22,20 @@ class StatusBarHealth extends DrawableObject {
         super();
         this.loadImages(this.IMAGES_HEALTH);
         this.x = 20;
-        this.y = 0;
+        this.y = this.getStatusBarY(0); 
         this.width = 200;
         this.height = 60;
         this.setPercentage(100);
+    }
+
+    /**
+     * Calculates Y-position based on screen size
+     * @param {number} baseY - Base Y-position
+     * @returns {number} Adjusted Y-position
+     */
+    getStatusBarY(baseY) {
+        const isMobile = window.innerWidth <= 900;
+        return isMobile ? baseY + 30 : baseY; 
     }
 
     /**
@@ -76,10 +86,20 @@ class StatusBarBottles extends DrawableObject {
         super();
         this.loadImages(this.IMAGES_BOTTLE);
         this.x = 20;
-        this.y = 50;
+        this.y = this.getStatusBarY(50); // NEU: Dynamische Position
         this.width = 200;
         this.height = 60;
         this.setPercentageBottles(0);
+    }
+
+    /**
+     * Calculates Y-position based on screen size
+     * @param {number} baseY - Base Y-position
+     * @returns {number} Adjusted Y-position
+     */
+    getStatusBarY(baseY) {
+        const isMobile = window.innerWidth <= 900;
+        return isMobile ? baseY + 30 : baseY;
     }
 
     /**
@@ -130,10 +150,20 @@ class StatusBarCoins extends DrawableObject {
         super();
         this.loadImages(this.IMAGES_COIN);
         this.x = 20;
-        this.y = 100;
+        this.y = this.getStatusBarY(100);
         this.width = 200;
         this.height = 60;
         this.setPercentageCoins(0);
+    }
+
+    /**
+     * Calculates Y-position based on screen size
+     * @param {number} baseY - Base Y-position
+     * @returns {number} Adjusted Y-position
+     */
+    getStatusBarY(baseY) {
+        const isMobile = window.innerWidth <= 900;
+        return isMobile ? baseY + 30 : baseY;
     }
 
     /**
