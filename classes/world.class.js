@@ -261,11 +261,13 @@ class World {
         if (!this.character.isColliding(enemy)) return;
         const characterBottom = this.character.y + this.character.height - this.character.offset.bottom;
         const enemyTop = enemy.y + enemy.offset.top;
-        const hitsFromAbove = this.character.speedY < 0 && characterBottom <= enemyTop + enemy.height * 0.3;
+        const isJumpingDown = this.character.speedY < 0;
+        const hitsFromAbove = isJumpingDown && characterBottom <= enemyTop + enemy.height * 0.5;
         if (hitsFromAbove) {
             enemy.energy = 0;
             enemy.die && enemy.die();
-            this.character.speedY = 20;
+            this.character.speedY = 15;
+            this.character.y -= 15;
         } else if (!this.character.isHurt()) {
             this.character.hit();
             this.statusBarHealth.setPercentage(this.character.energy);
