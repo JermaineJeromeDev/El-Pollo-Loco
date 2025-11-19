@@ -236,16 +236,6 @@ function setupStartMenuButtons() {
             startGame();
         }
     }];
-    // Touch-Unterstützung für Start Game Button
-    setTimeout(() => {
-        const btnEl = document.elementFromPoint(x + w / 2, y + h / 2);
-        if (btnEl) {
-            btnEl.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                menuButtons[0].onClick();
-            }, { passive: false });
-        }
-    }, 100);
 }
 
 /**
