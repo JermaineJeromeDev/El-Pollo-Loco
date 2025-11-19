@@ -20,15 +20,14 @@ class Cloud extends MovableObject {
         ];
         let randomIndex = Math.floor(Math.random() * images.length);
         super().loadImage(images[randomIndex]);
-
         this.x = x;
         this.y = y;
-
         this.animate();
     }
 
     /**
-     * Starts cloud animation
+     * Starts the animation for the cloud by moving it to the left at a fixed interval (60 times per second).
+     * Typically used to create a smooth movement effect.
      */
     animate() {
         setInterval(() => {
