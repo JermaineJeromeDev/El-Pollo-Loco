@@ -6,8 +6,6 @@
     <title>El Pollo Loco</title>
     <link rel="icon" type="image/png" href="assets/img/6_salsa_bottle/salsa_bottle.png">
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Class Files -->
     <script src="./classes/drawable-object.class.js"></script>
     <script src="./classes/movable-object.class.js"></script>
     <script src="./classes/character.class.js"></script>
@@ -24,11 +22,7 @@
     <script src="./classes/level.class.js"></script>
     <script src="./classes/throwable-objects.class.js"></script>
     <script src="./classes/endboss.class.js"></script>
-    
-    <!-- Level Data -->
     <script src="./levels/level1.js"></script>
-    
-    <!-- Game Modules (WICHTIG: Reihenfolge beachten!) -->
     <script src="./js/sounds.js"></script>
     <script src="./js/game-ui.js"></script>
     <script src="./js/game-menu.js"></script>
@@ -39,7 +33,6 @@
     <script src="./js/game.js"></script>
 </head>
 <body>
-    <!-- Rotations-Hinweis AUSSERHALB von .container -->
     <div class="rotate-screen-hint" id="rotate-screen-hint">
         <h2>
             Dreh dein Gerät -<br>
@@ -53,16 +46,17 @@
         <canvas id="canvas" width="720" height="480"></canvas>
         <canvas id="overlay-canvas" width="720" height="480" class="d-none"></canvas>
         
-        <!-- Neuer Container für die Top-Icons -->
         <div class="top-controls">
-            <button id="options-top-btn" class="options-btn" aria-label="Open options">
+            <button id="options-top-btn" class="options-btn desktopButton" aria-label="Open options">
                 <img src="assets/img/10_button_icons/options.png" alt="options-toggle">
             </button>
-            <button id="fullscreen-btn" class="fullscreen-btn" aria-label="Toggle fullscreen">
+            <button id="fullscreen-btn" class="fullscreen-btn desktopButton" aria-label="Toggle fullscreen">
                 <img src="assets/img/10_button_icons/fullscreen.png" alt="fullscreen-toggle">
             </button>
-            <button id="mute-btn" class="mute-btn" aria-label="Toggle sound">
+            <button id="mute-btn" class="mute-btn desktopButton" aria-label="Toggle sound">
                 <img src="assets/img/10_button_icons/volume.png" alt="sound-toggle">
+            </button>
+            <button id="responsive-menu-btn" class="responsiveButton" style="display:none;" aria-label="Responsive Menü">
             </button>
         </div>
 
@@ -176,9 +170,7 @@
             </div>
         </div>
 
-        <!-- Win/Lose Overlay - OHNE Snapshot Background -->
         <div class="endscreen-overlay d-none" id="win-overlay">
-            <!-- ENTFERNT: endscreen-snapshot div -->
             <div class="endscreen-content">
                 <img src="assets/img/You won, you lost/You win B.png" alt="You Win!" class="endscreen-image">
                 <div class="endscreen-buttons">
@@ -189,10 +181,9 @@
         </div>
 
         <div class="endscreen-overlay d-none" id="lose-overlay">
-            <!-- ENTFERNT: endscreen-snapshot div -->
             <div class="endscreen-content">
                 <img src="assets/img/You won, you lost/You lost.png" alt="You Lost" class="endscreen-image">
-                <div class="endscreen-buttons">
+                <div class="endsscreen-buttons">
                     <button class="endscreen-btn" onclick="restartGame()">Restart</button>
                     <button class="endscreen-btn" onclick="backToMenu()">Back to Menu</button>
                 </div>
