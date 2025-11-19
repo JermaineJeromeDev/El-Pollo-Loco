@@ -37,7 +37,10 @@ class World {
     }
 
     /**
-     * Sets world reference for character and enemies
+     * Sets the current world instance for the character and all enemies in the level.
+     * For enemies that are instances of Endboss, also calls their setWorld method.
+     *
+     * @returns {void}
      */
     setWorld() {
         this.character.world = this;
@@ -50,7 +53,10 @@ class World {
     }
 
     /**
-     * Main draw loop
+     * Renders the game world onto the canvas.
+     * Handles camera translation, draws background objects, game objects, status bars,
+     * and schedules the next frame using requestAnimationFrame.
+     * Stops rendering if the game is stopped.
      */
     draw() {
         if (this.gameStopped) return; 
@@ -64,7 +70,8 @@ class World {
     }
 
     /**
-     * Draws status bars
+     * Draws the status bars for health, bottles, and coins on the map.
+     * Adds each status bar to the map for rendering.
      */
     drawStatusBars() {
         this.addToMap(this.statusBarHealth);
@@ -73,10 +80,15 @@ class World {
     }
 
     /**
-     * Draws endboss status bar
+     * Draws the status bar for the Endboss enemy on the canvas.
+     * The status bar is displayed when the Endboss is activated,
+     * which occurs when the character approaches within 300 pixels of the Endboss.
+     * The status bar's position is dynamically updated based on the Endboss's coordinates.
+     *
+     * @returns {void}
      */
     drawEndbossStatusBar() {
-        let endboss = this.level.enemies.find(e => e instanceof Endboss);
+        let endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
         if (endboss && endboss.statusBarEndboss) {
             if (!this.endbossActivated && endboss.world && endboss.world.character.x > endboss.x - 300) {
                 this.endbossActivated = true;
@@ -90,7 +102,9 @@ class World {
     }
 
     /**
-     * Draws all game objects
+     * Draws all game objects onto the map, including the main character,
+     * clouds, enemies, coins, bottles, and throwable objects.
+     * Utilizes helper methods to add each type of object to the map.
      */
     drawGameObjects() {
         this.addToMap(this.character);
@@ -141,12 +155,15 @@ class World {
     }
 
     /**
-     * Main game loop
+     * Starts the main game loop, executing collision and object checks at regular intervals.
+     * The loop is paused if `gamePaused` is true, skipping all checks until resumed.
+     * The interval ID is stored in the `intervals` array for later management.
+     *
+     * @returns {void}
      */
     run() {
         let id = setInterval(() => {
             if (this.gamePaused) {
-                console.log('⏸️ Game loop skipped - paused'); // DEBUG
                 return;
             }
             this.checkCollisions();
@@ -158,7 +175,9 @@ class World {
     }
 
     /**
-     * Clears all intervals
+     * Clears all active intervals associated with the world and its enemies.
+     * This method stops all intervals stored in the `intervals` array and resets it.
+     * Additionally, it clears movement, animation, death check, and dead animation intervals for each enemy in the current level.
      */
     clearAllIntervals() {
         this.intervals.forEach(i => clearInterval(i));
@@ -174,7 +193,8 @@ class World {
     }
 
     /**
-     * Checks if throw key is pressed
+     * Checks if the conditions to throw an object are met (keyboard 'D' pressed, character has bottles, and throwing is allowed),
+     * and triggers the throw action if so.
      */
     checkThrowObjects() {
         if(this.keyboard.D && this.character.bottle > 0 && this.canThrow) {
@@ -183,7 +203,12 @@ class World {
     }
 
     /**
-     * Throws a bottle
+     * Throws a bottle in the direction the character is facing.
+     * Creates a new ThrowableObject, adds it to the world, plays a sound if not muted,
+     * decreases the character's bottle count, updates the status bar, and prevents
+     * further throws for 1 second.
+     *
+     * @throws {ThrowableObject} Adds a new throwable object to the world.
      */
     throwBottle() {
         let direction = this.character.otherDirection;
@@ -191,7 +216,7 @@ class World {
         let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, direction);
         bottle.world = this;
         this.throwableObjects.push(bottle);
-        if (!this.gameIsMuted) SoundManager.play('throw', 0.3, true);  // 0.6 → 0.3
+        if (!this.gameIsMuted) SoundManager.play('throw', 0.3, true); 
         this.character.bottle -= 20;
         if(this.character.bottle < 0) this.character.bottle = 0;
         this.statusBarBottles.setPercentageBottles(this.character.bottle);
@@ -202,7 +227,11 @@ class World {
     }
 
     /**
-     * Checks all collisions
+     * Checks for collisions between the player and enemies in the current level.
+     * Handles collisions with chickens and the endboss separately.
+     * Also checks if any enemy is hit with a bottle.
+     *
+     * @returns {void}
      */
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
@@ -291,7 +320,11 @@ class World {
     }
 
     /**
-     * Checks if bottle hits enemy
+     * Checks for collisions between throwable bottles and enemies.
+     * If a bottle collides with a living enemy, processes the hit.
+     *
+     * Iterates through all enemies and throwable objects, and for each collision
+     * where the enemy is not dead, calls `processBottleHit` with the enemy and bottle indices.
      */
     hitEnemyWithBottle() {
         this.level.enemies.forEach((enemy, enemyIndex) => {
@@ -304,7 +337,9 @@ class World {
     }
 
     /**
-     * Checks coin collision
+     * Checks for collisions between the character and coins in the level.
+     * If a collision is detected, increments the character's coin count,
+     * updates the coin status bar, and removes the collected coin from the level.
      */
     checkCoinCollision() {
         this.level.coins.forEach((coin, index) => {
@@ -317,7 +352,9 @@ class World {
     }
 
     /**
-     * Checks bottle collision
+     * Checks for collisions between the character and bottles in the level.
+     * If a collision is detected, adds a bottle to the character, updates the bottle status bar,
+     * and removes the collided bottle from the level.
      */
     checkBottleCollision() {
         this.level.bottles.forEach((bottle, index) => {
@@ -330,7 +367,7 @@ class World {
     }
 
     /**
-     * Stops the game
+     * Stops the game by setting the `gameStopped` flag to true.
      */
     stopGame() {
         this.gameStopped = true;
