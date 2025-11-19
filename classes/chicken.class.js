@@ -27,7 +27,11 @@ class Chicken extends MovableObject {
     ]
 
     /**
-     * Creates a new chicken instance
+     * Creates an instance of the Chicken class.
+     * Initializes the chicken's position, speed, and loads images for walking and dead states.
+     * Starts the animation for the chicken.
+     *
+     * @constructor
      */
     constructor(){
         super().loadImage(this.IMAGES_WALKING[0]);
@@ -40,7 +44,8 @@ class Chicken extends MovableObject {
     }
 
     /**
-     * Initializes chicken movement and death check
+     * Animates the chicken by updating its movement and checking its status.
+     * Calls moveChicken() to handle movement logic and checkIfDead() to verify if the chicken is dead.
      */
     animate() {
         this.moveChicken();
@@ -48,24 +53,26 @@ class Chicken extends MovableObject {
     }
 
     /**
-     * Starts chicken movement and animation intervals
+     * Starts the movement and walking animation intervals for the chicken.
+     * Movement is paused if the game is currently paused.
+     * - Moves the chicken to the left at approximately 60 frames per second.
+     * - Plays the walking animation every 200 milliseconds.
      */
     moveChicken() {
         this.moveInterval = setInterval(() => {
-            // NEU: Prüfe ob Spiel pausiert ist
             if (this.world && this.world.gamePaused) return;
             this.moveLeft();
         }, 1000 / 60);
-        
         this.animationInterval = setInterval(() => {
-            // NEU: Prüfe ob Spiel pausiert ist
             if (this.world && this.world.gamePaused) return;
             this.playAnimation(this.IMAGES_WALKING);
         }, 200);
     }
 
     /**
-     * Checks periodically if chicken is dead
+     * Starts an interval that periodically checks if the chicken is dead.
+     * If the chicken is dead, triggers the death handling logic.
+     * The check runs every 100 milliseconds.
      */
     checkIfDead() {
         this.deathCheckInterval = setInterval(() => {
@@ -76,7 +83,11 @@ class Chicken extends MovableObject {
     }
 
     /**
-     * Handles chicken death animation and falling
+     * Handles the death sequence for the chicken.
+     * - Prevents multiple death handling by checking `isDeadHandled`.
+     * - Loads the dead image.
+     * - Performs cleanup operations.
+     * - Initiates the falling animation after a short delay.
      */
     handleDeath() {
         if (this.isDeadHandled) return;
@@ -87,7 +98,8 @@ class Chicken extends MovableObject {
     }
     
     /**
-     * Clears all active intervals
+     * Cleans up all active intervals associated with this instance.
+     * Stops movement, animation, and death check intervals if they are running.
      */
     cleanup() {
         if (this.moveInterval) clearInterval(this.moveInterval);
@@ -103,7 +115,6 @@ class Chicken extends MovableObject {
 function startFalling(chicken) {
     const fallSpeed = 2;
     const groundLevel = 365;
-    
     let fallInterval = setInterval(() => {
         chicken.y += fallSpeed;
         if (chicken.y >= groundLevel) {
