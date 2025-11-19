@@ -87,7 +87,11 @@ class Character extends MovableObject {
     }
 
     /**
-     * Creates a new character instance
+     * Creates a new Character instance.
+     * Initializes the character by loading all animation images (walking, jumping, idle, long idle, hurt, and dead states),
+     * applying gravity physics, and starting the animation cycle.
+     * 
+     * @constructor
      */
     constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
@@ -102,21 +106,27 @@ class Character extends MovableObject {
     }
 
     /**
-     * Initializes character animations and controls
+     * Initializes and starts all character-related animations and controls.
+     * Triggers movement handling and continuous animation updates.
+     *
+     * @returns {void}
      */
     animate() {
         this.controlCharacter();
         this.animateCharacter();
     }
 
+
     /**
-     * Controls character movement and camera
+     * Starts the character control loop.
+     * Handles movement, jumping and updates the camera position.
+     * Pauses execution automatically when the game is paused or the character is dead.
+     *
+     * @returns {void}
      */
     controlCharacter() {
         setInterval(() => {
-            // NEU: Pausiere wenn Spiel pausiert ist
             if (this.world && this.world.gamePaused) return;
-            
             if (this.isDead()) return;
             this.handleMovement();
             this.handleJump();
@@ -125,7 +135,11 @@ class Character extends MovableObject {
     }
 
     /**
-     * Handles horizontal movement input
+     * Processes horizontal movement based on keyboard input.
+     * Moves the character left or right within the level boundaries and
+     * resets idle time whenever movement occurs.
+     *
+     * @returns {void}
      */
     handleMovement() {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
@@ -141,7 +155,10 @@ class Character extends MovableObject {
     }
 
     /**
-     * Handles jump input
+     * Handles jump input and triggers a jump if the character is on the ground.
+     * Prevents repeated jumping while airborne.
+     *
+     * @returns {void}
      */
     handleJump() {
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
@@ -150,7 +167,11 @@ class Character extends MovableObject {
     }
 
     /**
-     * Handles character animation states
+     * Starts the character animation update loop.
+     * Periodically evaluates the character state and updates the
+     * corresponding animation. Automatically pauses when the game is paused.
+     *
+     * @returns {void}
      */
     animateCharacter() {
         setInterval(() => {
@@ -160,7 +181,11 @@ class Character extends MovableObject {
     }
 
     /**
-     * Updates character state and animation
+     * Determines and applies the current character animation based on its state.
+     * Evaluates conditions in priority order (death, hurt, jump, walk)
+     * and triggers the corresponding animation handler. Defaults to idle animation.
+     *
+     * @returns {void}
      */
     updateCharacterState() {
         if (this.shouldPlayDeathAnimation()) {
@@ -177,8 +202,11 @@ class Character extends MovableObject {
     }
 
     /**
-     * Checks if death animation should play
-     * @returns {boolean}
+     * Determines whether the death animation should be triggered.
+     * Returns true if the character is dead and the death animation
+     * has not been played yet.
+     *
+     * @returns {boolean} True if the death animation should start.
      */
     shouldPlayDeathAnimation() {
         return this.isDead() && !this.deadAnimationPlayed;
@@ -225,7 +253,10 @@ class Character extends MovableObject {
     }
 
     /**
-     * Plays hurt sound if not muted
+     * Plays the hurt sound effect if sound is enabled and no hurt sound
+     * is currently playing. Prevents overlapping audio by using a cooldown.
+     *
+     * @returns {void}
      */
     playHurtSound() {
         if (this._hurtSoundPlaying || this.world.gameIsMuted) return;
@@ -236,7 +267,10 @@ class Character extends MovableObject {
     }
 
     /**
-     * Handles jumping animation
+     * Updates the character's animation to the jumping sequence.
+     * Resets idle time whenever a jump animation is played.
+     *
+     * @returns {void}
      */
     handleJumpingAnimation() {
         this.playAnimation(this.IMAGES_JUMPING);
@@ -244,7 +278,10 @@ class Character extends MovableObject {
     }
 
     /**
-     * Handles walking animation
+     * Updates the character's animation to the walking sequence.
+     * Resets idle time whenever a walking animation is played.
+     *
+     * @returns {void}
      */
     handleWalkingAnimation() {
         this.playAnimation(this.IMAGES_WALKING);
@@ -252,7 +289,10 @@ class Character extends MovableObject {
     }
 
     /**
-     * Handles idle animations based on idle time
+     * Updates the character's idle animation based on the current idle time.
+     * Switches to a long idle animation if the character has been idle for an extended period.
+     *
+     * @returns {void}
      */
     handleIdleAnimation() {
         this.idleTime++;
@@ -264,7 +304,10 @@ class Character extends MovableObject {
     }
 
     /**
-     * Plays death animation and shows lose screen
+     * Plays the character's death animation and then triggers the lose screen.
+     * Marks the death animation as played to prevent it from being triggered again.
+     *
+     * @returns {void}
      */
     playDeadAnimationAndLose() {
         this.deadAnimationPlayed = true;
@@ -292,7 +335,11 @@ class Character extends MovableObject {
     }
 
     /**
-     * Handles lose screen display
+     * Handles the lose screen logic for the character.
+     * Plays the lose sound if the game is not muted, and after a short delay,
+     * stops the game and displays the lose screen if the appropriate method exists.
+     *
+     * @returns {void}
      */
     handleLoseScreen() {
         if (this.world && !this.loseScreenShown) {
@@ -308,7 +355,8 @@ class Character extends MovableObject {
     }
 
     /**
-     * Makes character jump and plays sound
+     * Initiates the character's jump by setting the vertical speed.
+     * Plays the jump sound effect if the game is not muted.
      */
     jump() {
         this.speedY = 20;
@@ -318,7 +366,10 @@ class Character extends MovableObject {
     }
 
     /**
-     * Adds a coin and plays sound
+     * Adds a coin to the character and plays the coin sound if the game is not muted.
+     * Calls the parent class's addCoin method.
+     *
+     * @override
      */
     addCoin() {
         super.addCoin();
@@ -327,7 +378,10 @@ class Character extends MovableObject {
     }
 
     /**
-     * Adds a bottle and plays sound
+     * Adds a bottle to the character's inventory and plays the throw sound if the game is not muted.
+     * Calls the parent class's addBottle method.
+     *
+     * @override
      */
     addBottle() {
         super.addBottle();
