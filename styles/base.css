@@ -26,7 +26,7 @@ body {
 }
 
 canvas {
-    background-color: transparent; /* Zurück zu transparent - Background-Objekte zeichnen selbst */
+    background-color: transparent; 
     display: block;
     margin: 0 auto;
     width: 100%;
