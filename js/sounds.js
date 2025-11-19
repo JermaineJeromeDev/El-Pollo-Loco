@@ -33,7 +33,6 @@ const SoundManager = {
         if (gameIsMuted) return;
         let audio = this.sounds[name];
         if (!audio) return;
-
         if (!allowOverlap) {
             if (!audio.paused) return;
             audio.currentTime = 0;
@@ -61,7 +60,9 @@ const SoundManager = {
     playCoin() { this.play('coin', 0.25, true); },
 
     /**
-     * Starts gameplay loop sound
+     * Plays the gameplay background sound if the game is not muted.
+     * The sound is set to loop and its volume is adjusted.
+     * Handles any errors that may occur when attempting to play the audio.
      */
     playGameplay() {
         if (gameIsMuted) return;
@@ -69,7 +70,6 @@ const SoundManager = {
         if (!audio) return;
         audio.loop = true;
         audio.volume = 0.15;
-        
         const playPromise = audio.play();
         if (playPromise !== undefined) {
             playPromise.catch(() => {});
@@ -77,7 +77,8 @@ const SoundManager = {
     },
 
     /**
-     * Stops gameplay sound
+     * Stops the gameplay sound by pausing the audio and resetting its playback position to the start.
+     * If the gameplay sound is not found, the function does nothing.
      */
     stopGameplay() {
         let audio = this.sounds['gameplay'];
@@ -87,7 +88,8 @@ const SoundManager = {
     },
 
     /**
-     * Pauses gameplay sound (without reset)
+     * Pauses the gameplay audio if it is currently playing.
+     * Checks if the 'gameplay' sound exists before attempting to pause.
      */
     pauseGameplay() {
         let audio = this.sounds['gameplay'];
@@ -96,7 +98,11 @@ const SoundManager = {
     },
 
     /**
-     * Resumes gameplay sound
+     * Resumes the gameplay sound if the game is not muted.
+     * Attempts to play the 'gameplay' audio from the sounds collection.
+     * Handles any play promise rejections silently.
+     *
+     * @returns {void}
      */
     resumeGameplay() {
         if (gameIsMuted) return;
@@ -110,7 +116,8 @@ const SoundManager = {
     },
 
     /**
-     * Stops all sounds
+     * Stops and resets all audio elements in the `sounds` collection.
+     * Pauses each audio and sets its playback position to the beginning.
      */
     stopAll() {
         Object.values(this.sounds).forEach(audio => {
@@ -120,7 +127,8 @@ const SoundManager = {
     },
 
     /**
-     * Pauses all sounds (without reset)
+     * Pauses all currently playing audio objects in the `sounds` collection.
+     * Sets a custom flag `_wasPausedBySystem` to `true` on each audio object that was paused.
      */
     pauseAll() {
         Object.values(this.sounds).forEach(audio => {
@@ -132,7 +140,9 @@ const SoundManager = {
     },
 
     /**
-     * Resumes all previously paused sounds
+     * Resumes playback of all sounds that were previously paused by the system,
+     * unless the game is currently muted. Only sounds marked with `_wasPausedBySystem`
+     * are resumed. Handles promise rejections silently.
      */
     resumeAll() {
         if (gameIsMuted) return;
@@ -148,7 +158,8 @@ const SoundManager = {
     },
 
     /**
-     * Mutes all sounds
+     * Mutes all audio elements stored in the `sounds` object.
+     * Iterates through each audio object and sets its `muted` property to `true`.
      */
     muteAll() {
         Object.values(this.sounds).forEach(audio => {
@@ -157,7 +168,8 @@ const SoundManager = {
     },
 
     /**
-     * Unmutes all sounds
+     * Unmutes all audio elements stored in the `sounds` object.
+     * Iterates through each sound and sets its `muted` property to `false`.
      */
     unmuteAll() {
         Object.values(this.sounds).forEach(audio => {
@@ -165,6 +177,17 @@ const SoundManager = {
         });
     }
 };
+
+/**
+ * Stops all currently playing game sounds using the SoundManager, if available.
+ *
+ * Checks if the SoundManager is defined and calls its stopAll method to halt all audio playback.
+ */
+function stopAllGameSounds() {
+    if (typeof SoundManager !== 'undefined') {
+        SoundManager.stopAll();
+    }
+}
 
 /**
  * Loads the coin collection sound effect.
