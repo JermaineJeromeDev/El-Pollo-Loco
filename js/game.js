@@ -15,7 +15,9 @@ let winSoundPlayed = false;
 let loseSoundPlayed = false;
 
 /**
- * Initializes the game
+ * Initializes the game by setting up the canvas, loading sounds, configuring event listeners,
+ * and preparing UI elements such as mute and fullscreen buttons. Also handles responsive
+ * adjustments and displays the start screen.
  */
 function init() {
     canvas = document.getElementById('canvas');
@@ -35,7 +37,8 @@ function init() {
 }
 
 /**
- * Handles resize events
+ * Handles the window resize event by adjusting the canvas size,
+ * updating icon positions, and refreshing the rotate hint.
  */
 function handleResize() {
     resizeCanvasToContainer(); 
@@ -49,7 +52,12 @@ function handleResize() {
 window.addEventListener('DOMContentLoaded', init);
 
 /**
- * Starts a new game
+ * Initializes and starts a new game session.
+ * - Cleans up any existing game world.
+ * - Resets the game canvas.
+ * - Creates a new game world.
+ * - Sets the game state to 'playing'.
+ * - Plays gameplay sound if the game is not muted.
  */
 function startGame() {
     cleanupOldWorld();
@@ -62,7 +70,9 @@ function startGame() {
 }
 
 /**
- * Cleans up old world instance
+ * Cleans up the current game world by clearing all intervals,
+ * stopping the game, and resetting the world reference.
+ * Does nothing if no world exists.
  */
 function cleanupOldWorld() {
     if (!world) return;
@@ -72,7 +82,10 @@ function cleanupOldWorld() {
 }
 
 /**
- * Resets canvas to default size
+ * Resets the canvas to its default size and clears its contents.
+ * Removes the 'fullscreen' class from the canvas element,
+ * sets the canvas width to 720 and height to 480,
+ * and clears the drawing context.
  */
 function resetCanvas() {
     canvas.classList.remove('fullscreen');
@@ -82,7 +95,9 @@ function resetCanvas() {
 }
 
 /**
- * Creates new world instance
+ * Initializes a new instance of the World class using the provided canvas and keyboard.
+ * Assigns win and lose screen display functions to the world instance.
+ * Resets the lose screen state for the character if it exists.
  */
 function createNewWorld() {
     world = new World(canvas, keyboard);
@@ -94,7 +109,9 @@ function createNewWorld() {
 }
 
 /**
- * Draws the start screen
+ * Draws the start screen of the game by setting the game state,
+ * loading the background image, clearing the canvas, drawing the scaled background,
+ * and setting up and drawing the start menu buttons.
  */
 function drawStartScreen() {
     gameState = 'start';
@@ -109,7 +126,8 @@ function drawStartScreen() {
 }
 
 /**
- * Returns to main menu from win/lose screen
+ * Resets the game overlays and sound flags, then redraws the start screen.
+ * Hides both win and lose overlays, resets sound played flags, and displays the start menu.
  */
 function backToMenu() {
     document.getElementById('win-overlay').classList.add('d-none');
