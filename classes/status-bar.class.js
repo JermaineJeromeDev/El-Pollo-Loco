@@ -16,7 +16,11 @@ class StatusBarHealth extends DrawableObject {
     percentage = 100;
 
     /**
-     * Creates a new health status bar
+     * Creates an instance of the status bar.
+     * Initializes the status bar by loading health images, setting its position,
+     * dimensions, and default percentage value.
+     *
+     * @constructor
      */
     constructor() {
         super();
@@ -80,7 +84,11 @@ class StatusBarBottles extends DrawableObject {
     percentageBottles = 0;
 
     /**
-     * Creates a new bottle status bar
+     * Creates an instance of the status bar for bottles.
+     * Initializes the status bar by loading bottle images, setting its position and size,
+     * and initializing the bottle percentage to 0.
+     *
+     * @constructor
      */
     constructor() {
         super();
@@ -144,7 +152,11 @@ class StatusBarCoins extends DrawableObject {
     percentageCoins = 0;
 
     /**
-     * Creates a new coin status bar
+     * Creates an instance of the status bar.
+     * Initializes the status bar by loading health images, setting its position,
+     * dimensions, and default percentage value.
+     *
+     * @constructor
      */
     constructor() {
         super();
