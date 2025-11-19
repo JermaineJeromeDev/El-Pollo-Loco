@@ -51,7 +51,6 @@ canvas, #overlay-canvas {
 
 .top-controls {
     left: auto;
-    width: 250px;
     display: flex;
     align-items: baseline;
     justify-content: space-evenly;
@@ -68,8 +67,8 @@ canvas, #overlay-canvas {
 }
 
 .top-controls img {
-    width: 56px;
-    height: 56px;
+    width: 36px;
+    height: 36px;
     object-fit: contain;
 }
 
