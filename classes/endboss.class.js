@@ -133,9 +133,14 @@ class Endboss extends MovableObject {
     updateState() {
         if (this.world && this.world.gamePaused) return;
         if (this.isDead()) return this.handleDead();
-        if (this.isHurtEndboss()) return this.handleHurt();
-        if (!this.alertAnimationDone && this.isPlayerNear()) return this.handleAlert();
-        if (this.alertAnimationDone || this.activated) this.handleActive();
+        if (this.isHurtEndboss()) {
+            this.activated = true;
+            return this.handleHurt();
+        }
+        if ((!this.alertAnimationDone && this.isPlayerNear()) || this.activated) {
+            if (!this.alertAnimationDone) return this.handleAlert();
+            this.handleActive();
+        }
         this.updateStatusBar();
     }
 
