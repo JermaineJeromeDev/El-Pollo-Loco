@@ -10,10 +10,11 @@ class Bottle extends MovableObject {
         'assets/img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
         'assets/img/6_salsa_bottle/2_salsa_bottle_on_ground.png'
     ];
+    // Fix: Offset für präzise Kollision
     offset = {
         top: 30,
-        left: 30,
-        right: 60,
+        left: 50,   
+        right: 50,  
         bottom: 60
     };
 
