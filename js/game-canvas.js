@@ -131,27 +131,19 @@ function resetCanvas() {
 }
 
 /**
- * Resizes the canvas element to fit its parent container.
- * On mobile devices (window width <= 900px), the canvas fills the container and covers its area.
- * On larger screens, the canvas matches the container's dimensions and maintains its aspect ratio.
- *
- * Assumes a global `canvas` variable referencing the canvas element.
+ * Resizes canvas to match container size and keeps internal resolution
  */
 function resizeCanvasToContainer() {
     const container = canvas.parentElement;
     const rect = container.getBoundingClientRect();
+
+    // Interne Auflösung bleibt 720x480 für Spiel-Logik
     canvas.width = 720;
     canvas.height = 480;
-    const isMobile = window.innerWidth <= 900;
-    if (isMobile) {
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.objectFit = 'cover';
-    } else {
-        canvas.style.width = rect.width + 'px';
-        canvas.style.height = rect.height + 'px';
-        canvas.style.objectFit = 'contain';
-    }
+
+    // CSS-Größe passt sich dem Container an
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
 }
 
 /**

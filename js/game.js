@@ -91,6 +91,8 @@ function resetCanvas() {
     canvas.classList.remove('fullscreen');
     canvas.width = 720; 
     canvas.height = 480;
+    canvas.style.width = '720px';      // NEU: CSS-Größe zurücksetzen
+    canvas.style.height = '480px';     // NEU: CSS-Größe zurücksetzen
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 

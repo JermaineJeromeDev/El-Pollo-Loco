@@ -311,6 +311,10 @@ class Character extends MovableObject {
      */
     playDeadAnimationAndLose() {
         this.deadAnimationPlayed = true;
+        // Starte den Death-Sound synchron zur Animation
+        if (this.world && !this.world.gameIsMuted) {
+            SoundManager.playLose();
+        }
         this.playDeadAnimation(() => {
             this.handleLoseScreen();
         });
@@ -329,6 +333,7 @@ class Character extends MovableObject {
             frame++;
             if (frame >= frames) {
                 clearInterval(interval);
+                // Zeige Lose-Screen erst nach Animation (und Sound)
                 if (typeof callback === 'function') callback();
             }
         }, frameDuration);
@@ -336,21 +341,19 @@ class Character extends MovableObject {
 
     /**
      * Handles the lose screen logic for the character.
-     * Plays the lose sound if the game is not muted, and after a short delay,
-     * stops the game and displays the lose screen if the appropriate method exists.
+     * Zeigt den Lose-Screen nach Animation und Sound.
      *
      * @returns {void}
      */
     handleLoseScreen() {
         if (this.world && !this.loseScreenShown) {
             this.loseScreenShown = true;
-            if (!this.world.gameIsMuted) SoundManager.play('lose');
             setTimeout(() => {
                 if (typeof this.world.showLoseScreen === 'function') {
                     this.world.stopGame();
                     this.world.showLoseScreen();
                 }
-            }, 400);
+            }, 200); // Kurze Verzögerung für Sound-Ausklang
         }
     }
 

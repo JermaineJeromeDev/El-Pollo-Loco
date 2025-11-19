@@ -38,7 +38,7 @@ class Chicken extends MovableObject {
         this.loadImages(this.IMAGES_WALKING);
         this.loadImage(this.IMAGE_DEAD);
         this.x = 500 + Math.random() * 1800; 
-        this.y = 365;
+        this.y = 360; // Fixiere die Y-Position IMMER auf 360
         this.speed = 0.15 + Math.random() * 0.5;
         this.animate();
     }
