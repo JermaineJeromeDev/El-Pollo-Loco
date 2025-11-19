@@ -16,7 +16,6 @@ function loadAllSounds() {
         { name: 'gameplay', src: 'assets/audio/0_gameplay/gamesound.wav' },
         { name: 'coin', src: 'assets/audio/3_coin/collect.wav' }
     ];
-    
     sounds.forEach(sound => {
         const type = sound.src.endsWith('.wav') ? 'audio/wav' : 'audio/mpeg';
         SoundManager.load(sound.name, [{ src: sound.src, type }]);
@@ -51,9 +50,20 @@ function cleanupOldWorld() {
  */
 function resetCanvas() {
     canvas.classList.remove('fullscreen');
-    canvas.width = 720; 
-    canvas.height = 480;
+    resizeCanvasToContainer();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+/**
+ * Resizes canvas to match container size
+ */
+function resizeCanvasToContainer() {
+    const container = canvas.parentElement;
+    const rect = container.getBoundingClientRect();
+    canvas.width = 720;
+    canvas.height = 480;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
 }
 
 /**
