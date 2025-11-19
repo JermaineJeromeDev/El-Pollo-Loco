@@ -127,14 +127,6 @@ function handleBackToMenuTab() {
 }
 
 /**
- * Deactivates all tab buttons
- * @param {NodeList} tabButtons - All tab buttons
- */
-function deactivateAllTabs(tabButtons) {
-    tabButtons.forEach(b => b.classList.remove('active'));
-}
-
-/**
  * Hides all elements with the class 'tab-content' by adding the 'd-none' class
  * and setting their display style to 'none'.
  */
