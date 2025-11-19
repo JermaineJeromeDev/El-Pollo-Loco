@@ -465,3 +465,10 @@
         pointer-events: none !important; 
     }
 }
+
+@media (min-width: 768px) and (max-height: 420px) and (orientation: landscape) {
+    .start-menu button,
+    .menu button {
+        margin-top: 120px !important; /* Button weiter unten */
+    }
+}

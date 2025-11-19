@@ -168,7 +168,10 @@ function setupStartMenuButtons() {
     const w = Math.min(200, canvas.width * 0.3);
     const h = 60;
     const x = (canvas.width - w) / 2;
-    const y = Math.max(60, canvas.height * 0.125);
+    let y = Math.max(60, canvas.height * 0.125);
+    if (window.innerWidth >= 768 && window.innerHeight <= 420) {
+        y = canvas.height * 0.16;
+    }
     menuButtons = [{
         text: 'Start Game',
         x, y, w, h,
@@ -178,6 +181,16 @@ function setupStartMenuButtons() {
             startGame();
         }
     }];
+    // Touch-Unterstützung für Start Game Button
+    setTimeout(() => {
+        const btnEl = document.elementFromPoint(x + w / 2, y + h / 2);
+        if (btnEl) {
+            btnEl.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                menuButtons[0].onClick();
+            }, { passive: false });
+        }
+    }, 100);
 }
 
 /**
