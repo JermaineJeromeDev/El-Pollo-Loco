@@ -133,16 +133,12 @@ function getMousePos(event) {
 }
 
 /**
- * Checks if a point (x, y) is within the boundaries of a button.
- * 
- * @param {number} mx - The x-coordinate of the point to check.
- * @param {number} my - The y-coordinate of the point to check.
- * @param {Object} btn - The button object containing position and dimensions.
- * @param {number} btn.x - The x-coordinate of the button's top-left corner.
- * @param {number} btn.y - The y-coordinate of the button's top-left corner.
- * @param {number} btn.w - The width of the button.
- * @param {number} btn.h - The height of the button.
- * @returns {boolean} True if the point is within the button boundaries, false otherwise.
+ * Checks if a point is inside a button.
+ *
+ * @param {number} mx - X-coordinate of the point.
+ * @param {number} my - Y-coordinate of the point.
+ * @param {{x: number, y: number, w: number, h: number}} btn - Button position and size.
+ * @returns {boolean} True if the point is inside the button.
  */
 function isPointInButton(mx, my, btn) {
     return mx >= btn.x &amp;&amp; mx &lt;= btn.x + btn.w &amp;&amp; my >= btn.y &amp;&amp; my &lt;= btn.y + btn.h;
