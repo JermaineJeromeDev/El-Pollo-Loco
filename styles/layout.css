@@ -235,8 +235,6 @@
 }
 
 .mobile-btns button {
-    width: 11vh;
-    height: 11vh;
     min-width: 50px;
     min-height: 50px;
     border-radius: 12px;
