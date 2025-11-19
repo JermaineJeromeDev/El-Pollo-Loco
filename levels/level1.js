@@ -91,5 +91,4 @@ function createLevel1() {
     );
 }
 
-// For backward compatibility
 let level1 = createLevel1();
