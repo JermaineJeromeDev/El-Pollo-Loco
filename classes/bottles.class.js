@@ -18,7 +18,10 @@ class Bottle extends MovableObject {
     };
 
     /**
-     * Creates a new bottle
+     * Creates a new bottle object.
+     * Initializes the bottle by loading images, setting a random x position between 400-2200,
+     * setting y position to 350, and starting the animation.
+     * @constructor
      */
     constructor() {
         super()
@@ -30,7 +33,10 @@ class Bottle extends MovableObject {
     }
 
     /**
-     * Starts animation
+     * Starts the animation loop for the object.
+     * Repeatedly plays the bottle animation at a fixed interval.
+     *
+     * @returns {void}
      */
     animate() {
         setInterval(() => {
