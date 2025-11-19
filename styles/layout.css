@@ -42,6 +42,9 @@
     margin: 0;
     padding: 0;
     z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .container.fullscreen .top-controls,
@@ -281,7 +284,11 @@ canvas {
 }
 
 .container.fullscreen canvas {
-    width: 100%;
-    height: 100%;
+    width: 100vw !important;    
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    aspect-ratio: 720 / 480;
     object-fit: contain;
+    margin: auto;
 }
