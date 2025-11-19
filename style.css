@@ -1,13 +1,11 @@
 /* El Pollo Loco - Main Stylesheet */
 
-/* Import Modules - MUSS GANZ OBEN STEHEN */
 @import url('styles/base.css');
 @import url('styles/ui-components.css');
 @import url('styles/layout.css');
 @import url('styles/animations.css');
 @import url('styles/responsive.css');
 
-/* Font Definitions */
 @font-face {
     font-family: "Luckiest Guy";
     src: url('assets/fonts/LuckiestGuy-Regular.ttf') format('truetype');
