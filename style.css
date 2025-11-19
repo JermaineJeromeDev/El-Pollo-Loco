@@ -133,3 +133,37 @@ canvas, #overlay-canvas {
     margin: 0 0 12px 0;
     letter-spacing: 0.01em;
 }
+
+/* Impressum/Datenschutz unten auf dem Canvas mittig */
+.startscreen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.startscreen-links {
+    position: absolute;
+    left: 0;
+    bottom: 32px;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.startscreen-links a {
+    color: #fff;
+    font-size: 1.1rem;
+    margin: 0 18px;
+    text-decoration: underline;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+    background: transparent;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+.startscreen-links a:hover {
+    opacity: 1;
+    background: rgba(255,255,255,0.08);
+}
