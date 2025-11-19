@@ -263,12 +263,14 @@ class World {
         const enemyTop = enemy.y + enemy.offset.top;
         const isJumpingDown = this.character.speedY < 0;
         const hitsFromAbove = isJumpingDown && characterBottom <= enemyTop + enemy.height * 0.5;
-        if (hitsFromAbove) {
+        if (hitsFromAbove && !this.character._alreadyTrampled) {
             enemy.energy = 0;
             enemy.die && enemy.die();
             this.character.speedY = 15;
             this.character.y -= 15;
-        } else if (!this.character.isHurt()) {
+            this.character._alreadyTrampled = true;
+            setTimeout(() => { this.character._alreadyTrampled = false; }, 150);
+        } else if (!hitsFromAbove && !this.character.isHurt()) {
             this.character.hit();
             this.statusBarHealth.setPercentage(this.character.energy);
         }
