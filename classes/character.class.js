@@ -167,12 +167,36 @@ class Character extends MovableObject {
     }
 
     /**
+     * Plays the character's death animation and then triggers the lose screen.
+     * Marks the death animation as played to prevent it from being triggered again.
+     *
+     * @returns {void}
+     */
+    playDeadAnimationAndLose() {
+        this.deadAnimationPlayed = true;
+        if (this.world && !this.world.gameIsMuted) {
+            SoundManager.playLose();
+        }
+        // Setze Animation auf das letzte Bild nach dem Tod
+        this.playDeadAnimation(() => {
+            this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]];
+            this._forceDeadImage = true; // Merker für draw()
+            this.handleLoseScreen();
+        });
+    }
+
+    /**
      * Starts the character animation loop.
      * Decides which animation to play based on the current state.
      */
     animateCharacter() {
         setInterval(() => {
             if (this.world && this.world.gamePaused) return;
+            // Fix: Nach Tod immer das letzte Bild anzeigen
+            if (this._forceDeadImage) {
+                this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]];
+                return;
+            }
             if (this.shouldPlayDeathAnimation()) {
                 this.playDeadAnimationAndLose();
                 return;
@@ -190,7 +214,6 @@ class Character extends MovableObject {
                 return;
             }
             this.handleIdleAnimation();
-
         }, 100);
     }
 
@@ -323,12 +346,16 @@ class Character extends MovableObject {
      *
      * @returns {void}
      */
-        playDeadAnimationAndLose() {
+    playDeadAnimationAndLose() {
         this.deadAnimationPlayed = true;
         if (this.world && !this.world.gameIsMuted) {
             SoundManager.playLose();
         }
-        this.playDeadAnimation(() => this.handleLoseScreen());
+        this.playDeadAnimation(() => {
+            this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]];
+            this._forceDeadImage = true; 
+            this.handleLoseScreen();
+        });
     }
 
     /**
@@ -344,7 +371,6 @@ class Character extends MovableObject {
             frame++;
             if (frame >= frames) {
                 clearInterval(interval);
-                // Zeige Lose-Screen erst nach Animation (und Sound)
                 if (typeof callback === 'function') callback();
             }
         }, frameDuration);
@@ -364,7 +390,7 @@ class Character extends MovableObject {
                     this.world.stopGame();
                     this.world.showLoseScreen();
                 }
-            }, 200); // Kurze Verzögerung für Sound-Ausklang
+            }, 200); 
         }
     }
 
@@ -375,7 +401,7 @@ class Character extends MovableObject {
     jump() {
         this.speedY = 20;
         if (!this.world.gameIsMuted) {
-            SoundManager.play('jump', 0.2, true);  // 0.5 → 0.2
+            SoundManager.play('jump', 0.2, true); 
         }
     }
 
