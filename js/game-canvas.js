@@ -102,11 +102,39 @@ function removeFullscreenClasses(containerEl) {
 }
 
 /**
+ * Resets canvas to default size
+ */
+function resetCanvas() {
+    canvas.classList.remove('fullscreen');
+    resizeCanvasToContainer();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+/**
+ * Resizes canvas to match container size
+ */
+function resizeCanvasToContainer() {
+    const container = canvas.parentElement;
+    const rect = container.getBoundingClientRect();
+    canvas.width = 720;
+    canvas.height = 480;
+    const isMobile = window.innerWidth <= 900;
+    if (isMobile) {
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.objectFit = 'cover';
+    } else {
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        canvas.style.objectFit = 'contain';
+    }
+}
+
+/**
  * Updates canvas dimensions
  */
 function updateCanvasDimensions() {
-    canvas.width = 720;
-    canvas.height = 480;
+    resizeCanvasToContainer();
 }
 
 /**
