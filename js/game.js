@@ -44,7 +44,6 @@ function handleResize() {
     resizeCanvasToContainer(); 
     updateIconPositions();
     updateRotateHint();
-    // NEU: Startscreen neu zeichnen, wenn im Startscreen
     if (gameState === 'start') {
         drawStartScreen();
     }
@@ -67,7 +66,6 @@ window.addEventListener('DOMContentLoaded', init);
 function startGame() {
     cleanupOldWorld();
     resetCanvas();
-    // Fullscreen beibehalten, falls aktiv
     if (isFullscreen && canvas.requestFullscreen) {
         canvas.requestFullscreen();
         canvas.classList.add('fullscreen');
@@ -75,8 +73,11 @@ function startGame() {
     createNewWorld();
     gameState = 'playing';
     if (!gameIsMuted) {
-        setTimeout(() => SoundManager.playGameplay(), 100);
-    }
+    setTimeout(() => SoundManager.playGameplay(), 100);
+    } else {
+    SoundManager.pauseGameplay(); 
+}
+
 }
 
 /**
@@ -148,3 +149,62 @@ function backToMenu() {
     loseSoundPlayed = false;
     drawStartScreen();
 }
+
+/**
+ * Initializes the mute button functionality.
+ * Loads the current mute state, applies it to the game,
+ * updates the mute icon, and sets up the click event listener
+ * to toggle mute on user interaction.
+ */
+function initMuteButton() {
+    loadMuteState();
+    applyMuteState();
+    updateMuteIcon();
+    document.getElementById('mute-btn')?.addEventListener('click', toggleMute);
+}
+
+/**
+ * Loads the mute state of the game from localStorage and updates the global `gameIsMuted` variable.
+ * If a saved value exists, sets `gameIsMuted` to `true` or `false` based on the stored string.
+ */
+function loadMuteState() {
+    const saved = localStorage.getItem('gameIsMuted');
+    if (saved !== null) gameIsMuted = saved === 'true';
+}
+
+/**
+ * Applies the current mute state to the game's sound manager.
+ * Pauses all sounds if the game is muted, otherwise resumes all sounds.
+ *
+ * @function
+ */
+function applyMuteState() {
+    gameIsMuted ? SoundManager.pauseAll() : SoundManager.resumeAll();
+}
+
+/**
+ * Toggles the game's mute state, updates localStorage, 
+ * applies the new mute state, and updates the mute icon.
+ */
+function toggleMute() {
+    gameIsMuted = !gameIsMuted;
+    localStorage.setItem('gameIsMuted', gameIsMuted);
+    applyMuteState();
+    updateMuteIcon();
+}
+
+/**
+ * Updates the mute button icon based on the current mute state of the game.
+ * Changes the icon to a mute or volume image depending on the value of `gameIsMuted`.
+ *
+ * Assumes there is an element with the ID 'mute-btn' containing an <img> tag.
+ */
+function updateMuteIcon() {
+    const muteBtn = document.getElementById('mute-btn');
+    if (gameIsMuted) {
+        muteBtn.querySelector('img').src = 'assets/img/10_button_icons/mute.png';
+    } else {
+        muteBtn.querySelector('img').src = 'assets/img/10_button_icons/volume.png';
+    }
+}
+
