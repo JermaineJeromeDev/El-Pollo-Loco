@@ -52,7 +52,28 @@ function handleResize() {
 /**
  * Initializes the game on DOMContentLoaded
  */
-window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('DOMContentLoaded', () => {
+    init();
+    const optionsModal = document.getElementById('options-modal');
+    const closeBtn = document.getElementById('options-close-btn');
+    if (optionsModal) {
+        // Pause beim Öffnen
+        const observer = new MutationObserver(() => {
+            if (optionsModal.classList.contains('open')) {
+                setGamePaused(true);
+            } else {
+                setGamePaused(false);
+            }
+        });
+        observer.observe(optionsModal, { attributes: true, attributeFilter: ['class'] });
+    }
+    if (closeBtn && optionsModal) {
+        closeBtn.addEventListener('click', () => {
+            optionsModal.classList.remove('open');
+            setGamePaused(false);
+        });
+    }
+});
 
 /**
  * Initializes and starts the game.
@@ -215,5 +236,13 @@ function updateMuteIcon() {
     } else {
         muteBtn.querySelector('img').src = 'assets/img/10_button_icons/volume.png';
     }
+}
+
+/**
+ * Pauses or unpauses the game.
+ * @param {boolean} paused - True to pause the game, false to unpause.
+ */
+function setGamePaused(paused) {
+    if (world) world.gamePaused = paused;
 }
 
