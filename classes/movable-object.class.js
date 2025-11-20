@@ -125,9 +125,14 @@ class MovableObject extends DrawableObject {
 
     /**
      * Increases the bottle count by 20, up to a maximum of 100.
+     * Gibt true zurück, wenn tatsächlich gesammelt wurde.
      */
     addBottle() {
-        this.bottle = Math.min(100, this.bottle + 20);
+        if (this.bottle < 100) {
+            this.bottle = Math.min(100, this.bottle + 20);
+            return true;
+        }
+        return false;
     }
 
     /**
