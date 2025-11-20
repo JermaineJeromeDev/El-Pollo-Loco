@@ -37,6 +37,16 @@
     }
 }
 
+@media (max-width: 720px), (max-height: 480px) {
+    .endscreen-overlay {
+        width: 100vw;
+        height: 100vh;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
 @media (orientation: portrait) {
     .mobile-btns {
         display: block;
@@ -52,42 +62,5 @@
 @media (orientation: landscape) and (min-height: 901px) {
     .mobile-btns {
         display: none;
-    }
-}
-
-@media (max-width: 900px), (orientation: portrait) {
-    .mobile-btns {
-        display: block !important;
-        pointer-events: auto;
-        z-index: 2100 !important;
-    }
-}
-
-@media (min-width: 901px) and (orientation: landscape) {
-    .mobile-btns {
-        display: none !important;
-        pointer-events: none;
-    }
-}
-
-@media (max-width: 950px), (max-height: 500px) {
-    .mobile-btns {
-        display: block !important;
-        z-index: 2100 !important;
-    }
-}
-
-@media (orientation: landscape) and (max-width: 950px) and (max-height: 500px) {
-    .mobile-btns {
-        display: block;
-        z-index: 2100;
-    }
-}
-
-@media (max-width: 1400px), (max-height: 1100px) {
-    .mobile-btns {
-        display: block !important;
-        pointer-events: auto !important;
-        z-index: 2100 !important;
     }
 }
