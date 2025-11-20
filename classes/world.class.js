@@ -348,6 +348,7 @@ class World {
     checkCoinCollision() {
         this.level.coins.forEach((coin, index) => {
             if(this.character.isColliding(coin)) {
+                if (this.character.coin < 100)
                 this.character.addCoin();
                 this.statusBarCoins.setPercentageCoins(this.character.coin);
                 this.level.coins.splice(index, 1)
@@ -357,17 +358,19 @@ class World {
 
     /**
      * Checks for collisions between the character and bottles in the level.
-     * If a collision is detected, adds a bottle to the character, updates the bottle status bar,
-     * and removes the collided bottle from the level.
+     * Flaschen werden nur eingesammelt, wenn Statusbar nicht voll ist.
      */
     checkBottleCollision() {
-        this.level.bottles.forEach((bottle, index) => {
-            if(this.character.isColliding(bottle)) {
-                this.character.addBottle();
-                this.statusBarBottles.setPercentageBottles(this.character.bottle);
-                this.level.bottles.splice(index, 1)
+        for (let i = this.level.bottles.length - 1; i >= 0; i--) {
+            let bottle = this.level.bottles[i];
+            if (this.character.isColliding(bottle)) {
+                if (this.character.bottle < 100) {
+                    this.character.addBottle();
+                    this.statusBarBottles.setPercentageBottles(this.character.bottle);
+                    this.level.bottles.splice(i, 1);
+                }
             }
-        });
+        }
     }
 
     /**
