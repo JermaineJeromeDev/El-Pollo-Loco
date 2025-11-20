@@ -39,6 +39,7 @@ canvas {
     aspect-ratio: 3 / 2;
     box-shadow: 0 0 20px #000;
     transition: width 0.3s, height 0.3s;
+    position: relative;
 }
 
 .d-none {
