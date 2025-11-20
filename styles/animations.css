@@ -54,3 +54,15 @@
         transform: rotate(112.5deg) scale(1.1);
     }
 }
+
+@media only screen and (orientation: portrait) {
+    .rotate-screen-hint {
+        display: flex !important;
+    }
+}
+
+@media only screen and (orientation: landscape) {
+    .rotate-screen-hint {
+        display: none !important;
+    }
+}
