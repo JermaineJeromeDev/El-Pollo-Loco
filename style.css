@@ -82,7 +82,6 @@
     background: rgba(255,255,255,0.08);
 }
 
-/* Mobile-Buttons nur bei wirklich kleinen Geräten oder Portrait anzeigen */
 @media (max-width: 900px), (max-height: 500px), (orientation: portrait) {
     .mobile-btns {
         display: block !important;
