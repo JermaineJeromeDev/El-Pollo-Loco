@@ -367,7 +367,7 @@ canvas.fullscreen {
     bottom: 5%;
     display: flex;
     flex-direction: column-reverse;
-    gap: 16px;
+    gap: clamp(12px, 2vw, 20px);
     align-items: center;
     pointer-events: auto; 
 }
@@ -381,8 +381,8 @@ canvas.fullscreen {
 }
 
 .mobile-btns button {
-    width: 72px;
-    height: 72px;
+    width: clamp(50px, 6vw, 90px);
+    height: clamp(50px, 6vw, 90px);
     background: black;
     border: 2px solid rgba(255, 255, 255, 0.4);
     border-radius: 36%;
@@ -402,8 +402,8 @@ canvas.fullscreen {
 }
 
 .mobile-btns button img {
-    width: 35px;
-    height: 35px;
+    width: clamp(25px, 3vw, 45px);
+    height: clamp(25px, 3vw, 45px);
     object-fit: contain;
     filter: brightness(0) invert(1);
     opacity: 0.9;
