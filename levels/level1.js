@@ -60,6 +60,13 @@ function createLevel1() {
             new Bottle(),
             new Bottle(),
             new Bottle(),
+            new Bottle(),
+            new Bottle(),
+            new Bottle(),
+            new Bottle(),
+            new Bottle(),
+            new Bottle(),
+            new Bottle(),
             new Bottle()
         ],
         
