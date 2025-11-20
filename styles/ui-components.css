@@ -75,7 +75,6 @@
     pointer-events: none;
 }
 
-/* Modal sichtbar, wenn geöffnet (z.B. per Klasse 'open') */
 #options-modal.open {
     opacity: 1;
     visibility: visible;
@@ -413,4 +412,15 @@ a.tab-btn.active {
         transform: scale(1);
         opacity: 1;
     }
+}
+
+#options-modal.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.tab-buttons .tab-btn,
+.tab-btn {
+    pointer-events: auto;
 }
