@@ -157,15 +157,20 @@ function backToMenu() {
 
 /**
  * Initializes the mute button functionality.
- * Loads the current mute state, applies it to the game,
- * updates the mute icon, and sets up the click event listener
- * to toggle mute on user interaction.
+ * Loads and applies the current mute state, updates the mute icon,
+ * and sets up the click event listener to toggle mute state.
  */
 function initMuteButton() {
     loadMuteState();
     applyMuteState();
     updateMuteIcon();
-    document.getElementById('mute-btn')?.addEventListener('click', toggleMute);
+    const muteBtn = document.getElementById('mute-btn');
+    if (muteBtn) {
+        muteBtn.addEventListener('click', (e) => {
+            toggleMute();
+            muteBtn.blur();
+        });
+    }
 }
 
 /**
