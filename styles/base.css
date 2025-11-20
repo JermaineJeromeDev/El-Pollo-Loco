@@ -16,7 +16,6 @@
 
 body, html {
     width: 100vw;
-    height: 100vh;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -28,8 +27,6 @@ body {
     justify-content: center;
     min-height: 100vh;
     min-width: 100vw;
-    /* Fix: Body als Flexbox, horizontal & vertikal zentriert */
-    flex-direction: row;
     background: url('../assets/img/5_background/self_background.png') center center/cover no-repeat;
     font-family: "Luckiest Guy", cursive;
 }
@@ -43,22 +40,6 @@ canvas {
     box-shadow: 0 0 20px #000;
     transition: width 0.3s, height 0.3s;
 }
-
-/* canvas.fullscreen {
-    position: fixed !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: 100vw !important;
-    max-height: 100vh !important;
-    object-fit: contain !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    z-index: 1001;
-    background-color: transparent;
-} */
 
 .d-none {
     display: none !important;

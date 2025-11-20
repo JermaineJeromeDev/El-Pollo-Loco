@@ -2,21 +2,22 @@
 
 .top-controls {
     position: absolute;
-    top: 2%;
-    right: 2%;
+    top: 24px;
+    right: 24px;
+    left: auto;
+    width: auto;
     display: flex;
-    gap: clamp(4px, 1vw, 8px);
-    z-index: 2000;
-    align-items: center;
-    pointer-events: auto;
     flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 22px;
+    z-index: 2001;
 }
-
 .mute-btn,
 .fullscreen-btn,
 .options-btn {
     position: relative;
-    z-index: 2001 !important;
+    z-index: 2001;
     width: clamp(32px, 6vw, 48px);
     height: clamp(32px, 6vw, 48px);
     min-width: 32px;
@@ -27,7 +28,7 @@
     background: transparent;
     padding: 0;
     cursor: pointer;
-    display: flex !important;
+    display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
@@ -95,7 +96,7 @@
 }
 
 .tab-content.d-none {
-    display: none !important;
+    display: none;
 }
 
 .tab-btn {
@@ -126,21 +127,21 @@
 }
 
 a.tab-btn {
-    color: #FFA500 !important;
+    color: #FFA500;
     font-family: "Luckiest Guy", cursive;
     filter: drop-shadow(2px 4px 6px black);
 }
 
 a.tab-btn:hover {
-    color: #FFA500 !important;
+    color: #FFA500;
 }
 
 a.tab-btn:visited {
-    color: #FFA500 !important;
+    color: #FFA500;
 }
 
 a.tab-btn.active {
-    color: #fff !important;
+    color: #fff;
 }
 
 #tab-back-menu {

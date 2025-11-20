@@ -62,10 +62,16 @@ window.addEventListener('DOMContentLoaded', init);
  * - Creates a new game world.
  * - Sets the game state to 'playing'.
  * - Plays gameplay sound if the game is not muted.
+ * - Bleibt im Fullscreen, wenn aktiviert.
  */
 function startGame() {
     cleanupOldWorld();
     resetCanvas();
+    // Fullscreen beibehalten, falls aktiv
+    if (isFullscreen && canvas.requestFullscreen) {
+        canvas.requestFullscreen();
+        canvas.classList.add('fullscreen');
+    }
     createNewWorld();
     gameState = 'playing';
     if (!gameIsMuted) {
