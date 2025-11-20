@@ -158,29 +158,32 @@ function handleTouchMove(event) {
 
 /**
  * Sets up the start menu buttons for the game.
- * Creates a "Start Game" button centered on the canvas and assigns its click handler.
- * Updates the global `menuButtons` array with the button configuration.
+ * Calculates button dimensions and position based on the canvas size and window dimensions.
+ * Adds a "Start Game" button to the menuButtons array with an associated click handler.
  *
- * @function
  * @global
+ * @function
  */
 function setupStartMenuButtons() {
     const w = Math.min(200, canvas.width * 0.3);
     const h = 60;
     const x = (canvas.width - w) / 2;
-    let y = Math.max(60, canvas.height * 0.125);
-    if (window.innerWidth >= 768 && window.innerHeight <= 420) {
-        y = canvas.height * 0.16;
-    }
+    const compact = window.innerWidth >= 768 && window.innerHeight <= 420;
+    const y = compact ? canvas.height * 0.16 : Math.max(60, canvas.height * 0.125);
     menuButtons = [{
-        text: 'Start Game',
-        x, y, w, h,
-        onClick: () => {
-            gameState = 'playing';
-            menuButtons = [];
-            startGame();
-        }
+        text: 'Start Game', x, y, w, h,
+        onClick: () => startGameFromMenu()
     }];
+}
+
+/**
+ * Starts the game from the menu by updating the game state,
+ * clearing menu buttons, and initializing the game.
+ */
+function startGameFromMenu() {
+    gameState = 'playing';
+    menuButtons = [];
+    startGame();
 }
 
 /**
