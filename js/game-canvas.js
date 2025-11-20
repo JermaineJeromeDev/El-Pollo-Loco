@@ -131,19 +131,18 @@ function resetCanvas() {
 }
 
 /**
- * Resizes canvas to match container size and keeps internal resolution
+ * Adjusts the visible size of the canvas to match the current window size,
+ * while keeping the internal resolution at 720x480 for game logic.
+ *
+ * Typically called on initialization or when entering/exiting fullscreen.
  */
 function resizeCanvasToContainer() {
-    const container = canvas.parentElement;
-    const rect = container.getBoundingClientRect();
-
-    // Interne Auflösung bleibt 720x480 für Spiel-Logik
     canvas.width = 720;
     canvas.height = 480;
-
-    // CSS-Größe passt sich dem Container an
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
 }
 
 /**
@@ -187,3 +186,7 @@ function toggleFullscreen() {
     updateCanvasDimensions();
     redrawAfterFullscreen();
 }
+
+document.addEventListener('fullscreenchange', () => {
+    setTimeout(resizeCanvasToContainer, 50);
+});
