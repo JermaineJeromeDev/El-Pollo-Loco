@@ -231,7 +231,6 @@ canvas {
     transform: translate(-50%, -50%);
 }
 
-/* Mobile-Buttons immer sichtbar bei kleinen Breiten oder Höhen */
 @media (max-width: 950px), (max-height: 500px) {
     .mobile-btns {
         display: block !important;
