@@ -27,26 +27,29 @@
     font-style: normal;
 }
 
-canvas {
+/* canvas {
     display: block;
     margin: 0 auto;
-    width: 100%;
-    height: auto;
     max-width: 720px;
+    max-height: 480px;
+    height: auto;
     aspect-ratio: 3 / 2;
     background: transparent;
-    box-shadow: 0 0 20px #000;
     transition: width 0.3s, height 0.3s;
-}
+} */
 
 .top-controls {
+    position: absolute;
+    top: 24px;
+    right: 24px;
     left: auto;
+    width: auto;
     display: flex;
-    align-items: baseline;
-    justify-content: space-evenly;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-end;
     gap: 22px;
     z-index: 150;
-    
 }
 
 .top-controls button {
@@ -60,53 +63,6 @@ canvas {
     width: 36px;
     height: 36px;
     object-fit: contain;
-}
-
-@media (hover: none) and (orientation: landscape) {
-    body {
-        background-color: rgb(19, 18, 18);
-    }
-    .container {
-        position: relative;
-        max-width: 720px;
-        width: 100%;
-        margin: 32px auto 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .top-controls {
-        position: absolute;
-        top: 24px;
-        right: 24px;
-        left: auto;
-        width: auto;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 22px;
-        z-index: 150;
-    }
-    .responsiveButton {
-        display: block !important;
-        position: absolute;
-        top: 12px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 200;
-        background: transparent;
-        border: none;
-        padding: 0;
-        box-shadow: none;
-    }
-    .responsiveButton img {
-        width: 56px;
-        height: 56px;
-        object-fit: contain;
-        filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
-    }
-    .desktopButton {
-        display: inline-block !important;
-    }
 }
 
 #options-modal .tab-content#story-content {
