@@ -342,32 +342,33 @@ class World {
 
     /**
      * Checks for collisions between the character and coins in the level.
-     * If a collision is detected, increments the character's coin count,
-     * updates the coin status bar, and removes the collected coin from the level.
+     * Coins are only collected if the status bar is not full.
      */
     checkCoinCollision() {
-        this.level.coins.forEach((coin, index) => {
-            if(this.character.isColliding(coin)) {
-                if (this.character.coin < 100)
-                this.character.addCoin();
-                this.statusBarCoins.setPercentageCoins(this.character.coin);
-                this.level.coins.splice(index, 1)
+        for (let index = this.level.coins.length - 1; index >= 0; index--) {
+            let coin = this.level.coins[index];
+            if (this.character.isColliding(coin)) {
+                if (this.character.coin < 100) {
+                    this.character.addCoin();
+                    this.statusBarCoins.setPercentageCoins(this.character.coin);
+                    this.level.coins.splice(index, 1);
+                }
             }
-        });
+        }
     }
 
     /**
      * Checks for collisions between the character and bottles in the level.
-     * Flaschen werden nur eingesammelt, wenn Statusbar nicht voll ist.
+     * Bottles are only collected if the status bar is not full.
      */
     checkBottleCollision() {
-        for (let i = this.level.bottles.length - 1; i >= 0; i--) {
-            let bottle = this.level.bottles[i];
+        for (let index = this.level.bottles.length - 1; index >= 0; index--) {
+            let bottle = this.level.bottles[index];
             if (this.character.isColliding(bottle)) {
                 if (this.character.bottle < 100) {
                     this.character.addBottle();
                     this.statusBarBottles.setPercentageBottles(this.character.bottle);
-                    this.level.bottles.splice(i, 1);
+                    this.level.bottles.splice(index, 1);
                 }
             }
         }
