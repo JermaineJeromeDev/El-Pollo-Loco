@@ -141,13 +141,14 @@
 
 #options-modal.fredoka-ui p,
 #options-modal p {
-    margin: 0;
-    text-align: justify;
-    text-justify: inter-word;
-    line-height: 1.65;
-    font-size: 1.05rem;
-    color: ghostwhite;
-    filter: drop-shadow(4px 8px 0px black);
+        margin: 0;
+        text-align: justify;
+        line-height: 1.65;
+        font-size: 1.15rem;
+        color: ghostwhite;
+        filter: drop-shadow(4px 8px 0px black);
+        font-family: "Fredoka", Arial, sans-serif;
+        font-weight: bolder;
 }
 
 @media (orientation: landscape) and (max-width: 950px) and (max-height: 500px) {
