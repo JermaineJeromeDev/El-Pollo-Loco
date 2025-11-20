@@ -70,11 +70,16 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-#options-modal.modal-closing {
     opacity: 0;
     visibility: hidden;
+    pointer-events: none;
+}
+
+/* Modal sichtbar, wenn geöffnet (z.B. per Klasse 'open') */
+#options-modal.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .tab-contents {
