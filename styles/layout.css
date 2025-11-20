@@ -223,3 +223,18 @@ canvas.fullscreen {
     z-index: 1001;
     background-color: transparent;
 }
+
+canvas {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Mobile-Buttons immer sichtbar bei kleinen Breiten oder Höhen */
+@media (max-width: 950px), (max-height: 500px) {
+    .mobile-btns {
+        display: block !important;
+        z-index: 2100 !important;
+    }
+}
