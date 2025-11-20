@@ -1,11 +1,10 @@
 /* Responsive Styles - Media Queries, Mobile Controls */
 
-#canvas,
-#overlay-canvas {
-    width: 100% !important;
-    height: auto !important;
+#canvas{
+    width: 100%;
+    height: auto;
     max-width: 100%;
-    aspect-ratio: 3 / 2 !important;
+    aspect-ratio: 3 / 2;
 }
 
 .container {
@@ -31,13 +30,6 @@
     width: 100%;
     max-width: 720px;
     padding: 0 10px;
-}
-
-#canvas,
-#overlay-canvas {
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 3 / 2 !important;
 }
 
 @media (max-width: 768px) {
