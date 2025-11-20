@@ -150,13 +150,6 @@
     filter: drop-shadow(4px 8px 0px black);
 }
 
-canvas {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
 @media (orientation: landscape) and (max-width: 950px) and (max-height: 500px) {
     .mobile-btns {
         display: block;
