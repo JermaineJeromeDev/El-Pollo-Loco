@@ -43,7 +43,6 @@
     </div>
 
     <canvas id="canvas" width="720" height="480"></canvas>
-    <div class="container">
         <div class="top-controls">
             <button id="options-top-btn" class="options-btn desktopButton" aria-label="Open options">
                 <img src="assets/img/10_button_icons/options.png" alt="options-toggle">
@@ -58,12 +57,11 @@
             </button>
         </div>
 
-        <div class="startscreen" id="startscreen">
+        <div class="startscreen" id="startscreen"></div>
             <div class="startscreen-links">
                 <a id="tab-imprint" href="impressum.html" target="_blank" rel="noopener noreferrer">Impressum</a>
                 <a id="tab-privacy" href="datenschutz.html" target="_blank" rel="noopener noreferrer">Datenschutz</a>
             </div>
-        </div>
 
         <div class="ingame-options d-none" id="ingame-options">
             <button id="audio-btn" onclick="toggleMute()">
@@ -111,7 +109,6 @@
                     <button id="tab-story" class="tab-btn active" role="tab" aria-selected="true">Story</button>
                     <button id="tab-controls" class="tab-btn" role="tab" aria-selected="false">Steuerung</button>
                     <button id="tab-back-menu" class="tab-btn" role="tab" aria-selected="false">Zurück zum Menü</button>
-                    <!-- Entferne Impressum und Datenschutz aus dem Modal -->
                 </div>
 
                 <div class="tab-contents">

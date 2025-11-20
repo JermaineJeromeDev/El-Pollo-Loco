@@ -14,30 +14,37 @@
     font-variation-settings: "wdth" 100;
 }
 
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: url('../assets/img/5_background/self_background.png') center center/cover no-repeat;
-    font-family: "Luckiest Guy", cursive;
-    min-height: 100vh;
+body, html {
+    width: 100vw;
+    height: 100vh;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-width: 100vw;
+    /* Fix: Body als Flexbox, horizontal & vertikal zentriert */
+    flex-direction: row;
+    background: url('../assets/img/5_background/self_background.png') center center/cover no-repeat;
+    font-family: "Luckiest Guy", cursive;
 }
 
 canvas {
-    background-color: transparent; 
     display: block;
-    margin: 0 auto;
-    width: 100%;
-    height: auto;
+    margin: auto;
     max-width: 720px;
+    max-height: 480px; 
     aspect-ratio: 3 / 2;
     box-shadow: 0 0 20px #000;
     transition: width 0.3s, height 0.3s;
 }
 
-canvas.fullscreen {
+/* canvas.fullscreen {
     position: fixed !important;
     left: 50% !important;
     top: 50% !important;
@@ -51,7 +58,7 @@ canvas.fullscreen {
     padding: 0 !important;
     z-index: 1001;
     background-color: transparent;
-}
+} */
 
 .d-none {
     display: none !important;

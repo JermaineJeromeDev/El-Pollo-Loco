@@ -27,17 +27,6 @@
     font-style: normal;
 }
 
-/* canvas {
-    display: block;
-    margin: 0 auto;
-    max-width: 720px;
-    max-height: 480px;
-    height: auto;
-    aspect-ratio: 3 / 2;
-    background: transparent;
-    transition: width 0.3s, height 0.3s;
-} */
-
 .top-controls {
     position: absolute;
     top: 24px;
@@ -87,14 +76,15 @@
 }
 
 .startscreen-links {
-    position: absolute;
-    left: 0;
-    bottom: 32px;
-    width: 100%;
-    text-align: center;
-    z-index: 10;
-    pointer-events: auto;
+    position: fixed;            
+    bottom: 32px;                
+    left: 50%;                     
+    transform: translateX(-50%);   
+    z-index: 1010;                
+    display: flex;
+    gap: 18px;                     
 }
+
 
 .startscreen-links a {
     color: #fff;
