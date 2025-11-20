@@ -357,7 +357,8 @@ class World {
 
     /**
      * Checks for collisions between the character and bottles in the level.
-     * Flaschen werden korrekt entfernt und Statusbar sofort aktualisiert.
+     * If a collision is detected, adds a bottle to the character, updates the bottle status bar,
+     * and removes the collided bottle from the level.
      */
     checkBottleCollision() {
         this.level.bottles.forEach((bottle, index) => {
