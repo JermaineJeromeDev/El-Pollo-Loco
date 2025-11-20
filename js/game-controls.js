@@ -214,3 +214,57 @@ function resumeGameAndSound() {
         SoundManager.resumeAll();
     }
 }
+
+/**
+ * Initializes the fullscreen button by adding a click event listener.
+ * When clicked, toggles fullscreen mode and removes focus from the active element.
+ * If the fullscreen button element is not found, the function returns early.
+ * 
+ * @function initFullscreenButton
+ * @returns {void}
+ */
+function initFullscreenButton() {
+    const fsBtn = document.getElementById('fullscreen-btn');
+    if (!fsBtn) return;
+    fsBtn.addEventListener('click', () => {
+        toggleFullscreen();
+        if (document.activeElement) document.activeElement.blur();
+    });
+}
+
+/**
+ * Initializes the mute button by attaching a click event listener
+ * that toggles the mute state and updates the button icon.
+ * Also ensures the button loses focus after being clicked.
+ * If the mute button is not found in the DOM, the function exits early.
+ */
+function initMuteButton() {
+    const muteBtn = document.getElementById('mute-btn');
+    if (!muteBtn) return;
+    const muteImg = muteBtn.querySelector('img');
+    muteBtn.addEventListener('click', () => {
+        toggleMute(muteBtn, muteImg);
+        muteBtn.blur();
+    });
+    updateMuteIcon(muteImg);
+}
+
+/**
+ * Toggles the mute state of the game, updates the mute button's appearance,
+ * manages game sounds, and updates the mute icon.
+ *
+ * @param {HTMLElement} muteBtn - The button element used to toggle mute.
+ * @param {HTMLImageElement} muteImg - The image element representing the mute icon.
+ */
+function toggleMute(muteBtn, muteImg) {
+    gameIsMuted = !gameIsMuted;
+    muteBtn.classList.toggle('muted', gameIsMuted);
+    if (gameIsMuted) {
+        SoundManager.stopGameplay();
+        SoundManager.muteAll();
+    } else {
+        SoundManager.unmuteAll();
+        setTimeout(() => SoundManager.playGameplay(), 100);
+    }
+    updateMuteIcon(muteImg);
+}
