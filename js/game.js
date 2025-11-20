@@ -55,13 +55,12 @@ function handleResize() {
 window.addEventListener('DOMContentLoaded', init);
 
 /**
- * Initializes and starts a new game session.
- * - Cleans up any existing game world.
- * - Resets the game canvas.
- * - Creates a new game world.
- * - Sets the game state to 'playing'.
- * - Plays gameplay sound if the game is not muted.
- * - Bleibt im Fullscreen, wenn aktiviert.
+ * Initializes and starts the game.
+ * - Cleans up any previous game world and resets the canvas.
+ * - Enables fullscreen mode if supported and requested.
+ * - Hides start screen links on smaller screens.
+ * - Creates a new game world and sets the game state to 'playing'.
+ * - Handles gameplay sound based on mute state.
  */
 function startGame() {
     cleanupOldWorld();
@@ -70,14 +69,17 @@ function startGame() {
         canvas.requestFullscreen();
         canvas.classList.add('fullscreen');
     }
+    const startscreenLinks = document.querySelector('.startscreen-links');
+    if (startscreenLinks && (window.innerWidth <= 1024 || window.innerHeight <= 900)) {
+        startscreenLinks.style.display = 'none';
+    }
     createNewWorld();
     gameState = 'playing';
     if (!gameIsMuted) {
-    setTimeout(() => SoundManager.playGameplay(), 100);
+        setTimeout(() => SoundManager.playGameplay(), 100);
     } else {
-    SoundManager.pauseGameplay(); 
-}
-
+        SoundManager.pauseGameplay(); 
+    }
 }
 
 /**
@@ -139,14 +141,17 @@ function drawStartScreen() {
 }
 
 /**
- * Resets the game overlays and sound flags, then redraws the start screen.
- * Hides both win and lose overlays, resets sound played flags, and displays the start menu.
+ * Resets the game overlays and returns to the start menu.
+ * Hides the win and lose overlays, resets sound flags, 
+ * displays the start screen links, and redraws the start screen.
  */
 function backToMenu() {
     document.getElementById('win-overlay').classList.add('d-none');
     document.getElementById('lose-overlay').classList.add('d-none');
     winSoundPlayed = false;
     loseSoundPlayed = false;
+    const startscreenLinks = document.querySelector('.startscreen-links');
+    if (startscreenLinks) startscreenLinks.style.display = 'flex';
     drawStartScreen();
 }
 
@@ -195,9 +200,8 @@ function toggleMute() {
 
 /**
  * Updates the mute button icon based on the current mute state of the game.
- * Changes the icon to a mute or volume image depending on the value of `gameIsMuted`.
- *
- * Assumes there is an element with the ID 'mute-btn' containing an <img> tag.
+ * Changes the icon to 'mute' if the game is muted, or to 'volume' if unmuted.
+ * Assumes there is an element with id 'mute-btn' containing an <img> tag.
  */
 function updateMuteIcon() {
     const muteBtn = document.getElementById('mute-btn');
