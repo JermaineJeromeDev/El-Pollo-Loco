@@ -76,3 +76,11 @@
         display: none;
     }
 }
+
+@media (max-width: 1400px) and (max-height: 1100px) and (orientation: landscape) {
+    .mobile-btns {
+        display: block !important;
+        pointer-events: none;
+        z-index: 2100;
+    }
+}
