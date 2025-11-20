@@ -278,13 +278,6 @@ a.tab-btn.active {
     filter: drop-shadow(2px 4px 6px black);
 }
 
-.control-text p {
-    font-size: 0.85rem;
-    margin: 0;
-    color: #f7f7f7;
-    line-height: 1.4;
-}
-
 .endscreen-overlay {
     position: absolute;
     top: 0;
