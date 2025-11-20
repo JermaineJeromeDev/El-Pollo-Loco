@@ -55,9 +55,6 @@
 }
 
 #options-modal {
-    display: none;
-    visibility: hidden;
-    opacity: 0;
     position: fixed;
     left: 50%;
     top: 50%;
@@ -67,7 +64,6 @@
     max-height: 80vh;
     background: #00000085;
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border-radius: 16px;
     padding: 48px 24px 24px;
     z-index: 2500;
@@ -112,6 +108,14 @@
     text-decoration: none;
     display: inline-block;
     filter: drop-shadow(4px 8px 0px black);
+}
+
+.tab-buttons .tab-btn {
+    font-size: 1.35rem;
+    font-family: "Fredoka", Arial, sans-serif;
+    font-weight: 600;
+    padding: 14px 28px;
+    letter-spacing: 0.02em;
 }
 
 .tab-btn:hover {
