@@ -3,26 +3,6 @@
  */
 
 /**
- * Sets up event listeners for canvas and window interactions.
- * Adds click, touch, mouse, and keyboard event handlers to manage game menu interactions
- * and user input. Canvas listeners are only added once to prevent duplicates.
- * 
- * @function setupCanvasListeners
- * @returns {void}
- */
-function setupCanvasListeners() {
-    if (!canvas._listenersAdded) {
-        canvas.addEventListener('click', handleMenuClick);
-        canvas.addEventListener('touchstart', handleMenuTouch, { passive: false });
-        canvas.addEventListener('mousemove', handleMenuHover);
-        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-        canvas._listenersAdded = true;
-    }
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-}
-
-/**
  * Handles menu button clicks
  * @param {MouseEvent} event - Mouse event
  */
@@ -225,72 +205,6 @@ function drawButton(btn, idx) {
 }
 
 /**
- * Initializes the fullscreen button by adding a click event listener.
- * When clicked, toggles fullscreen mode and removes focus from the active element.
- * If the fullscreen button element is not found, the function returns early.
- * 
- * @function initFullscreenButton
- * @returns {void}
- */
-function initFullscreenButton() {
-    const fsBtn = document.getElementById('fullscreen-btn');
-    if (!fsBtn) return;
-    fsBtn.addEventListener('click', () => {
-        toggleFullscreen();
-        if (document.activeElement) document.activeElement.blur();
-    });
-}
-
-/**
- * Initializes the mute button by attaching a click event listener
- * that toggles the mute state and updates the button icon.
- * Also ensures the button loses focus after being clicked.
- * If the mute button is not found in the DOM, the function exits early.
- */
-function initMuteButton() {
-    const muteBtn = document.getElementById('mute-btn');
-    if (!muteBtn) return;
-    const muteImg = muteBtn.querySelector('img');
-    muteBtn.addEventListener('click', () => {
-        toggleMute(muteBtn, muteImg);
-        muteBtn.blur();
-    });
-    updateMuteIcon(muteImg);
-}
-
-/**
- * Toggles the mute state of the game, updates the mute button's appearance,
- * manages game sounds, and updates the mute icon.
- *
- * @param {HTMLElement} muteBtn - The button element used to toggle mute.
- * @param {HTMLImageElement} muteImg - The image element representing the mute icon.
- */
-function toggleMute(muteBtn, muteImg) {
-    gameIsMuted = !gameIsMuted;
-    muteBtn.classList.toggle('muted', gameIsMuted);
-    if (gameIsMuted) {
-        SoundManager.stopGameplay();
-        SoundManager.muteAll();
-    } else {
-        SoundManager.unmuteAll();
-        setTimeout(() => SoundManager.playGameplay(), 100);
-    }
-    updateMuteIcon(muteImg);
-}
-
-/**
- * Updates the mute icon image source based on the game's mute state.
- *
- * @param {HTMLImageElement} muteImg - The image element representing the mute/volume icon.
- */
-function updateMuteIcon(muteImg) {
-    if (!muteImg) return;
-    muteImg.src = gameIsMuted
-        ? 'assets/img/10_button_icons/mute.png'
-        : 'assets/img/10_button_icons/volume.png';
-}
-
-/**
  * @type {Array}
  * @name menuButtons
  * Global array that stores the created button objects
@@ -368,37 +282,4 @@ function calculateButtonDimensions() {
     const h = 60;
     const spacing = (canvas.width - (w * 2)) / 3;
     return { w, h, spacing };
-}
-
-/**
- * Handles keydown events during gameplay.
- * Sets corresponding properties on the `keyboard` object to `true` based on the pressed key.
- * Only processes events if the game state is 'playing'.
- *
- * @param {KeyboardEvent} event - The keydown event object.
- */
-function handleKeyDown(event) {
-    if (gameState !== 'playing') return;
-    if (event.code === 'ArrowLeft') keyboard.LEFT = true;
-    if (event.code === 'ArrowRight') keyboard.RIGHT = true;
-    if (event.code === 'Space') keyboard.SPACE = true;
-    if (event.code === 'KeyD') keyboard.D = true;
-}
-
-/**
- * Handles keyup events
- */
-/**
- * Handles the keyup event for game controls.
- * Updates the keyboard state by setting the corresponding key property to false
- * when the user releases a control key, but only if the game is currently playing.
- *
- * @param {KeyboardEvent} event - The keyup event object.
- */
-function handleKeyUp(event) {
-    if (gameState !== 'playing') return;
-    if (event.code === 'ArrowLeft') keyboard.LEFT = false;
-    if (event.code === 'ArrowRight') keyboard.RIGHT = false;
-    if (event.code === 'Space') keyboard.SPACE = false;
-    if (event.code === 'KeyD') keyboard.D = false;
 }
