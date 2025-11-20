@@ -113,7 +113,7 @@
 }
 
 .tab-buttons .tab-btn {
-    font-size: 1.35rem;
+    font-size: 1.5rem;
     font-family: "Fredoka", Arial, sans-serif;
     font-weight: 600;
     padding: 14px 28px;
@@ -353,13 +353,15 @@ canvas.fullscreen {
 
 .mobile-btns {
     position: absolute;
-    inset: 0;
+    left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
-    z-index: 2100;
-    display: none; 
     pointer-events: none; 
+    z-index: 2100;
+    display: none;
 }
+
 
 .mobile-btns .mobile-btns-left,
 .mobile-btns .mobile-btns-right {
