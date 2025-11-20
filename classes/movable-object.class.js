@@ -86,14 +86,14 @@ class MovableObject extends DrawableObject {
      * - Character: loses 10 energy
      * - ChickenSmall: loses 2 energy
      * - Chicken: loses 5 energy
-     * - Endboss: loses 20 energy
+     * - Endboss: loses 10 energy
      * Ensures energy does not drop below 0 and updates the last hit timestamp.
      */
     hit() {
         if (this instanceof Character) this.energy -= 10;
         else if (this instanceof ChickenSmall) this.energy -= 2;
         else if (this instanceof Chicken) this.energy -= 5;
-        else if (this instanceof Endboss) this.energy -= 20;
+        else if (this instanceof Endboss) this.energy -= 10;
         
         if (this.energy < 0) this.energy = 0;
         this.lastHit = new Date().getTime();

@@ -300,7 +300,7 @@ class Endboss extends MovableObject {
         if (muted) return;
         this.alertSound.currentTime = 0;
         this.alertSound.muted = false;
-        this.alertSound.volume = 0.1;  // 0.2 → 0.1
+        this.alertSound.volume = 0.1;  
         this.alertSound.playbackRate = 1.2;
         this.alertSound.play();
     }
@@ -332,12 +332,12 @@ class Endboss extends MovableObject {
     }
 
     /**
-     * Reduces the endboss's energy by 20 points when hit.
+     * Reduces the endboss's energy by 10 points when hit.
      * Ensures energy does not drop below zero.
      * Updates the last hit timestamp and refreshes the endboss's status bar if available.
      */
     hit() {
-        this.energy -= 20;
+        this.energy -= 10;
         if (this.energy < 0) this.energy = 0;
         this.lastHit = new Date().getTime();
         if (this.statusBarEndboss) {
