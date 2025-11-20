@@ -397,32 +397,36 @@ class World {
 
     /**
      * Checks for collisions between the character and coins in the level.
-     * If a collision is detected, increments the character's coin count,
-     * updates the coin status bar, and removes the collected coin from the level.
+     * Coins are only collected if the status bar is not full.
      */
     checkCoinCollision() {
-        this.level.coins.forEach((coin, index) => {
-            if(this.character.isColliding(coin)) {
-                this.character.addCoin();
-                this.statusBarCoins.setPercentageCoins(this.character.coin);
-                this.level.coins.splice(index, 1)
+        for (let index = this.level.coins.length - 1; index >= 0; index--) {
+            let coin = this.level.coins[index];
+            if (this.character.isColliding(coin)) {
+                if (this.character.coin &lt; 100) {
+                    this.character.addCoin();
+                    this.statusBarCoins.setPercentageCoins(this.character.coin);
+                    this.level.coins.splice(index, 1);
+                }
             }
-        });
+        }
     }
 
     /**
      * Checks for collisions between the character and bottles in the level.
-     * If a collision is detected, adds a bottle to the character, updates the bottle status bar,
-     * and removes the collided bottle from the level.
+     * Bottles are only collected if the status bar is not full.
      */
     checkBottleCollision() {
-        this.level.bottles.forEach((bottle, index) => {
-            if(this.character.isColliding(bottle)) {
-                this.character.addBottle();
-                this.statusBarBottles.setPercentageBottles(this.character.bottle);
-                this.level.bottles.splice(index, 1)
+        for (let index = this.level.bottles.length - 1; index >= 0; index--) {
+            let bottle = this.level.bottles[index];
+            if (this.character.isColliding(bottle)) {
+                if (this.character.bottle &lt; 100) {
+                    this.character.addBottle();
+                    this.statusBarBottles.setPercentageBottles(this.character.bottle);
+                    this.level.bottles.splice(index, 1);
+                }
             }
-        });
+        }
     }
 
     /**

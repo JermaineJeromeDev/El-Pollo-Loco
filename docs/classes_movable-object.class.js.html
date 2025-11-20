@@ -175,14 +175,18 @@ class MovableObject extends DrawableObject {
      * Increases the coin count by 20, up to a maximum of 100.
      */
     addCoin() {
-        this.coin = Math.min(100, this.coin + 20);
+        if (this.coin &lt; 100) {
+            this.coin = Math.min(100, this.coin + 20);
+        }
     }
 
     /**
      * Increases the bottle count by 20, up to a maximum of 100.
      */
     addBottle() {
-        this.bottle = Math.min(100, this.bottle + 20);
+        if (this.bottle &lt; 100) {
+            this.bottle = Math.min(100, this.bottle + 20);
+        }
     }
 
     /**
