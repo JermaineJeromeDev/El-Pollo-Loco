@@ -68,73 +68,7 @@ function hideRotateHint(rotateHint) {
  * Prevents scroll events
  * @param {Event} e - Touch event
  */
-function preventScroll(e) {
-    e.preventDefault();
-}
-
-/**
- * Initializes the mute button by setting its icon and adding a click event listener to toggle mute.
- * Ensures the mute button exists before proceeding.
- */
-function initMuteButton() {
-    const muteBtn = document.getElementById('mute-btn');
-    if (!muteBtn) return;
-    
-    updateMuteIcon(muteBtn);
-    muteBtn.addEventListener('click', toggleMute);
-}
-
-/**
- * Updates mute icon based on gameIsMuted
- * @param {HTMLElement} btn - Mute button element
- */
-function updateMuteIcon(btn) {
-    const img = btn.querySelector('img');
-    if (!img) return;
-    img.src = gameIsMuted ? 
-        'assets/img/10_button_icons/mute.png' : 
-        'assets/img/10_button_icons/volume.png';
-}
-
-/**
- * Toggles the mute state of the game.
- * If muted, stops all sounds. If unmuted and the game is playing, resumes gameplay sound.
- * Updates all mute icons in the UI and removes focus from the currently active element.
- *
- * @function
- * @global
- */
-function toggleMute() {
-    gameIsMuted = !gameIsMuted;
-    if (gameIsMuted) {
-        SoundManager.stopAll();
-    } else if (gameState === 'playing') {
-        SoundManager.playGameplay();
-    }
-    updateAllMuteIcons();
-    
-    if (document.activeElement) {
-        document.activeElement.blur();
-    }
-}
-
-/**
- * Updates the mute and volume icons for all relevant audio buttons in the UI
- * based on the current mute state (`gameIsMuted`).
- * Changes the image source of the mute and ingame audio buttons to reflect
- * whether the game audio is muted or not.
- */
-function updateAllMuteIcons() {
-    const muteBtnImg = document.querySelector('#mute-btn img');
-    const ingameAudioImg = document.querySelector('#audio-btn img');
-    if (muteBtnImg) {
-        muteBtnImg.src = gameIsMuted ? 
-            'assets/img/10_button_icons/mute.png' : 
-            'assets/img/10_button_icons/volume.png';
-    }
-    if (ingameAudioImg) {
-        ingameAudioImg.src = gameIsMuted ? 
-            'assets/img/10_button_icons/mute.png' : 
-            'assets/img/10_button_icons/volume.png';
-    }
+function preventScroll(event
+) {
+    event.preventDefault();
 }
