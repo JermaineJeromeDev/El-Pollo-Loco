@@ -1,2 +1,20 @@
-out/
+# Node Modules
 node_modules/
+
+# JSDoc Output
+docs/
+out/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Optional: VSCode folder (falls du ihn nicht teilen willst)
+.vscode/
+
