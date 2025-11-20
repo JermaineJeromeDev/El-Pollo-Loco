@@ -409,20 +409,6 @@ canvas.fullscreen {
     opacity: 0.9;
 }
 
-
-.mobile-btns button:active {
-    background: rgba(52, 73, 94, 0.9);
-    transform: scale(0.95);
-}
-
-.mobile-btns button img {
-    width: 35px;         
-    height: 35px;        
-    object-fit: contain;
-    filter: brightness(0) invert(1);
-    opacity: 0.9;
-}
-
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
