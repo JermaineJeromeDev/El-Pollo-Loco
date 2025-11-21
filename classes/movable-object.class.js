@@ -150,7 +150,6 @@ class MovableObject extends DrawableObject {
         this.animationFrames[animationName]++;
     }
 
-
     /**
      * Moves the object to the right by increasing its x-coordinate by its speed.
      */

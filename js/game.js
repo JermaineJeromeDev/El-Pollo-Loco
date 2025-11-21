@@ -245,4 +245,3 @@ function updateMuteIcon() {
 function setGamePaused(paused) {
     if (world) world.gamePaused = paused;
 }
-

@@ -1,4 +1,13 @@
 /**
+ * game-ui.js
+ * 
+ * Handles UI elements and responsive hints in the game:
+ * - Positions top control icons relative to the canvas
+ * - Shows/hides rotate screen hint based on device orientation and screen size
+ * - Prevents unwanted scrolling when rotate hint is active
+ */
+
+/**
  * Updates the position of the top controls icon relative to the canvas within the container.
  * Calculates the top and right offsets based on the bounding rectangles of the canvas and container,
  * and applies them to the top-controls element's style.

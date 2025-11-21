@@ -1,4 +1,13 @@
 /**
+ * level1.js
+ *
+ * Defines and creates Level 1 for the game.
+ * - Populates clouds, enemies (including Endboss), coins, bottles.
+ * - Sets up layered background objects for parallax effect.
+ * - Returns a Level instance ready to be played.
+ */
+
+/**
  * Creates and returns level 1
  * @returns {Level} Level 1 instance
  */

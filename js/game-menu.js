@@ -1,4 +1,14 @@
 /**
+ * game-menu.js
+ * 
+ * Handles the game's options modal, tab system, and menu interactions:
+ * - Shows and hides modals with transitions
+ * - Pauses/resumes game and sound when modal is opened/closed
+ * - Manages tab activation, content display, and back-to-menu navigation
+ * - Attaches event listeners for buttons and tabs
+ */
+
+/**
  * Shows modal with transition
  * @param {HTMLElement} modal - Modal element
  */

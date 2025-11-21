@@ -1,4 +1,14 @@
 /**
+ * sounds.js
+ *
+ * SoundManager: Centralized management for all game audio.
+ * - Loads, plays, pauses, resumes, mutes, and stops individual or all sounds.
+ * - Handles gameplay background music and sound effects.
+ * - Supports overlapping sounds and system-paused sound resuming.
+ * - Designed to respect game mute state and handle promise rejections gracefully.
+ */
+
+/**
  * Sound manager for all audio files
  * @namespace SoundManager
  */

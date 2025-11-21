@@ -1,4 +1,13 @@
 /**
+ * keyboard.js
+ *
+ * Handles player keyboard input during gameplay.
+ * - Tracks keydown and keyup events for movement and actions.
+ * - Updates the `keyboard` object with current key states.
+ * - Only processes input when the game state is 'playing'.
+ */
+
+/**
  * Handles keydown events during gameplay.
  * Sets corresponding properties on the `keyboard` object to `true` based on the pressed key.
  * Only processes events if the game state is 'playing'.

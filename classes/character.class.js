@@ -116,7 +116,6 @@ class Character extends MovableObject {
         this.animateCharacter();
     }
 
-
     /**
      * Starts the character control loop.
      * Handles movement, jumping and updates the camera position.
@@ -226,7 +225,6 @@ class Character extends MovableObject {
             this.handleIdleAnimation();
         }
     }
-
 
     /**
      * Determines and applies the current character animation based on its state.
