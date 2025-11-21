@@ -43,6 +43,7 @@ function handleMenuHover(event) {
     menuButtons.forEach((btn, idx) => {
         if (isPointInButton(x, y, btn)) hoveredButtonIndex = idx;
     });
+    canvas.style.cursor = hoveredButtonIndex >= 0 ? 'pointer' : 'default';
     redrawMenuScreen();
 }
 
