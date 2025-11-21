@@ -256,21 +256,44 @@ class World {
      */
     handleChickenCollision(enemy) {
         if (!this.character.isColliding(enemy)) return;
+        if (this.isTrample(enemy)) {
+            this.trampleChicken(enemy);
+        } else if (!this.character.isHurt()) {
+            this.hurtByChicken();
+        }
+    }
+
+    /**
+     * Checks if the character tramples the chicken from above
+     * @param {Object} enemy - Chicken enemy
+     * @returns {boolean}
+     */
+    isTrample(enemy) {
         const characterBottom = this.character.y + this.character.height - this.character.offset.bottom;
         const enemyTop = enemy.y + enemy.offset.top;
         const isJumpingDown = this.character.speedY < 0;
-        const hitsFromAbove = isJumpingDown && characterBottom <= enemyTop + enemy.height * 0.5;
-        if (hitsFromAbove && !this.character._alreadyTrampled) {
-            enemy.energy = 0;
-            enemy.die && enemy.die();
-            this.character.speedY = 15;
-            this.character.y -= 15;
-            this.character._alreadyTrampled = true;
-            setTimeout(() => { this.character._alreadyTrampled = false; }, 150);
-        } else if (!hitsFromAbove && !this.character.isHurt()) {
-            this.character.hit();
-            this.statusBarHealth.setPercentage(this.character.energy);
-        }
+        return isJumpingDown && characterBottom <= enemyTop + enemy.height * 0.5 && !this.character._alreadyTrampled;
+    }
+
+    /**
+     * Handles trample action on chicken
+     * @param {Object} enemy - Chicken enemy
+     */
+    trampleChicken(enemy) {
+        enemy.energy = 0;
+        enemy.die && enemy.die();
+        this.character.speedY = 15;
+        this.character.y -= 15;
+        this.character._alreadyTrampled = true;
+        setTimeout(() => { this.character._alreadyTrampled = false; }, 150);
+    }
+
+    /**
+     * Handles character getting hurt by chicken
+     */
+    hurtByChicken() {
+        this.character.hit();
+        this.statusBarHealth.setPercentage(this.character.energy);
     }
 
     /**
@@ -351,7 +374,6 @@ class World {
             }
         }
     }
-
 
     /**
      * Checks for collisions between the character and bottles in the level.
