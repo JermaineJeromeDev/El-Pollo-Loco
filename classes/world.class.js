@@ -348,14 +348,13 @@ class World {
         for (let index = this.level.coins.length - 1; index >= 0; index--) {
             let coin = this.level.coins[index];
             if (this.character.isColliding(coin)) {
-                if (this.character.coin < 100) {
                     this.character.addCoin();
                     this.statusBarCoins.setPercentageCoins(this.character.coin);
                     this.level.coins.splice(index, 1);
-                }
             }
         }
     }
+
 
     /**
      * Checks for collisions between the character and bottles in the level.

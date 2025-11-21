@@ -121,7 +121,7 @@ class MovableObject extends DrawableObject {
      */
     addCoin() {
         if (this.coin < 100) {
-            this.coin = Math.min(100, this.coin + 20);
+            this.coin = Math.min(100, this.coin + 10);
         }
     }
 
