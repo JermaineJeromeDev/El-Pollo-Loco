@@ -26,7 +26,7 @@ class StatusBarBottles extends DrawableObject {
         super();
         this.loadImages(this.IMAGES_BOTTLE);
         this.x = 20;
-        this.y = this.getStatusBarY(50); // NEU: Dynamische Position
+        this.y = this.getStatusBarY(50); 
         this.width = 200;
         this.height = 60;
         this.setPercentageBottles(0);

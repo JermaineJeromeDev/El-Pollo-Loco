@@ -46,9 +46,6 @@ class World {
         this.character.world = this;
         this.level.enemies.forEach(enemy => {
             enemy.world = this; 
-            if (enemy instanceof Endboss) {
-                enemy.setWorld(this);
-            }
         });
     }
 
