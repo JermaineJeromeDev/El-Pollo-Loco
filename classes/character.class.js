@@ -177,44 +177,54 @@ class Character extends MovableObject {
         if (this.world && !this.world.gameIsMuted) {
             SoundManager.playLose();
         }
-        // Setze Animation auf das letzte Bild nach dem Tod
         this.playDeadAnimation(() => {
             this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]];
-            this._forceDeadImage = true; // Merker für draw()
+            this._forceDeadImage = true; 
             this.handleLoseScreen();
         });
     }
 
     /**
-     * Starts the character animation loop.
-     * Decides which animation to play based on the current state.
+     * Starts an interval to animate the character every 100ms.
+     * Animation is skipped if the game is paused or if the character is forced to display the dead image.
+     * Handles character animation logic and updates the character's image accordingly.
      */
     animateCharacter() {
         setInterval(() => {
             if (this.world && this.world.gamePaused) return;
-            // Fix: Nach Tod immer das letzte Bild anzeigen
             if (this._forceDeadImage) {
-                this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]];
+                this.setDeadImage();
                 return;
             }
-            if (this.shouldPlayDeathAnimation()) {
-                this.playDeadAnimationAndLose();
-                return;
-            }
-            if (this.shouldPlayHurtAnimation()) {
-                this.handleHurtAnimation();
-                return;
-            }
-            if (this.shouldPlayJumpAnimation()) {
-                this.handleJumpingAnimation();
-                return;
-            }
-            if (this.shouldPlayWalkAnimation()) {
-                this.handleWalkingAnimation();
-                return;
-            }
-            this.handleIdleAnimation();
+            this.handleCharacterAnimation();
         }, 100);
+    }
+
+    /**
+     * Sets the character's image to the last image in the dead images array,
+     * indicating that the character is dead.
+     */
+    setDeadImage() {
+        this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]];
+    }
+
+    /**
+     * Determines and plays the appropriate character animation based on the current state.
+     * The animation can be death, hurt, jump, walk, or idle.
+     * Animation priority is: death > hurt > jump > walk > idle.
+     */
+    handleCharacterAnimation() {
+        if (this.shouldPlayDeathAnimation()) {
+            this.playDeadAnimationAndLose();
+        } else if (this.shouldPlayHurtAnimation()) {
+            this.handleHurtAnimation();
+        } else if (this.shouldPlayJumpAnimation()) {
+            this.handleJumpingAnimation();
+        } else if (this.shouldPlayWalkAnimation()) {
+            this.handleWalkingAnimation();
+        } else {
+            this.handleIdleAnimation();
+        }
     }
 
 
